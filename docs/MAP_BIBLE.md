@@ -247,6 +247,11 @@ roads:
     w: 3
     points: [[285, 470], [330, 470], [330, 460]]
 
+  T1_bamboo_trail:          # đường mòn xuyên rừng tre (§8, L12) — không đắp nền
+    type: trail
+    w: 1.5
+    points: [[0, 215], [80, 215]]
+
   R6_house_yards:           # lối nhỏ vào từng nhà (sân gạch)
     type: brick_yard
     note: "sinh theo vị trí nhà §7, bán kính sân 6–8 m"
@@ -318,6 +323,7 @@ water:
       - [360, 440, 8]
       - [420, 470, 11]
       - [470, 450, 6]
+      - [330, 450, 2]     # vũng nhỏ tại điểm đẻ trứng W01
     depth: 0.2
     water_class: temporary
 
@@ -442,7 +448,8 @@ Dùng làm điểm tựa định hướng cho người chơi và cho Claude (đ�
 | L02 | Hiên nhà gỗ + lồng chim | (305, 60) | Z01 | nhà H01 |
 | L03 | Cột điện bê tông + dây | (288, 45) | Z08 | ảnh chính: cột bên phải nhà |
 | L04 | Gà mái ở sân | (292, 85) | Z01 | NPC sinh vật |
-| L05 | Chòi rơm / đống rơm | (225, 110) | Z02 | |
+| L05 | Chòi rơm / đống rơm | (225, 110) | Z01 | sát ranh Z02 (rect Z01 bắt đầu từ x = 220) |
+| L05b | Đống rơm 2 | (190, 280) | Z02 | §8 hay_stack |
 | L06 | Cây đa/me lớn (hốc cây) | (170, 150) | Z02b | |
 | L07 | Chòi tre nhỏ | (185, 215) | Z02b | |
 | L08 | Cầu ao + thuyền gỗ | (208, 337) / (190, 352) | Z03 | |
@@ -566,8 +573,20 @@ environment:
 
 ---
 
-## 15. Changelog
+## 15. Pipeline sinh map (Blender)
+
+- **Dữ liệu máy đọc**: `tools/blender/map_spec.json` là bản sao số liệu của file này. Sửa Bible → sửa JSON cho khớp
+  (cùng một commit). `generate_map.py` tự kiểm tra luật §7/§14 và in cảnh báo `⚠ BIBLE` (`--strict` để dừng).
+- **Sinh map**: `blender -b -P tools/blender/generate_map.py` → Terrain, Road, Pond, Canal, Rice Field, Forest,
+  Grassland, House placeholders, Fence, các `*Point`, Zone, Spawn, Camera bounds.
+- **Thay model thật**: `tools/blender/asset_manifest.json` + `swap_assets.py` (`HousePoint_01 → house_vn_01.glb`…).
+- Hướng dẫn chi tiết: `tools/blender/README.md`.
+
+---
+
+## 16. Changelog
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-03 | Thêm §15 pipeline + `tools/blender/map_spec.json`. Sửa nhất quán (không đổi vị trí): L05 thuộc Z01 (toạ độ (225,110) nằm trong rect Z01); thêm vũng `[330,450,2]` cho W01; khai báo đường mòn tre T1 (đã có ở §8/L12). |
 | 2026-10-03 | Bản đầu tiên: số liệu đo từ minimap của ảnh MASTER REFERENCE. Kích thước 500 × 540 m (tỉ lệ minimap), khác ví dụ 500 × 400 ban đầu để giữ đúng bố cục ảnh. |
