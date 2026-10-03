@@ -11,3 +11,6 @@
 
 # Ảnh tài liệu nhỏ (blockout/reference) lưu thẳng trong git, không qua LFS
 docs/reference/**/*.png -filter -diff -merge binary
+
+# Model đã dọn cho map (assets/, mỗi file nhỏ) lưu thẳng trong git, không qua LFS
+assets/**/*.glb -filter -diff -merge binary
