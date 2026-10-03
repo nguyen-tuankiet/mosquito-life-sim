@@ -23,14 +23,14 @@
 
   "roads": {
     "R1_main_spine":  {"type": "dirt_road",  "w": 5,   "y": 0.3, "points": [[285, 40], [285, 185], [285, 335], [285, 470]]},
-    "R2_bridge_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 100], [215, 100], [114, 100], [60, 100]]},
+    "R2_bridge_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 100], [215, 100], [111, 100], [60, 100]]},
     "R3_pond_lane":   {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 337], [215, 337]]},
-    "R4_field_bund":  {"type": "bund",       "w": 1.5, "y": 0.4, "points": [[322, 300], [490, 300]]},
+    "R4_field_bund":  {"type": "bund",       "w": 1.5, "y": 0.4, "points": [[287.5, 300], [490, 300]]},
     "R5_meadow_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 470], [330, 470], [330, 460]]},
     "T1_bamboo_trail":{"type": "trail",      "w": 1.5, "y": null, "points": [[0, 215], [80, 215]]}
   },
   "bridges": {
-    "B1_R2": {"road": "R2_bridge_lane", "at": [114, 100], "len": 16, "w": 3, "deck_y": 1.2}
+    "B1_R2": {"road": "R2_bridge_lane", "at": [111, 100], "len": 24, "w": 3, "deck_y": 1.2}
   },
 
   "water": {
@@ -39,7 +39,7 @@
       "centerline": [[95, 0], [115, 80], [100, 162], [85, 243], [110, 335], [165, 432], [250, 497], [385, 524], [500, 525]]
     },
     "canal_branch": {
-      "zone": "Z05", "class": "stagnant_slow", "w": 4, "bank_w": 1.5, "depth": 0.8, "surface_y": 0.0, "bed_y": -0.8, "bank_y": 0.25,
+      "zone": "Z05", "class": "stagnant_slow", "w": 4, "bank_w": 1.5, "depth": 0.8, "surface_y": -0.25, "bed_y": -1.05, "bank_y": 0.25,
       "centerline": [[308, 190], [308, 300], [308, 405], [300, 450], [270, 495]]
     },
     "pond_main": {
@@ -47,7 +47,7 @@
     },
     "paddy_main": {
       "zone": "Z04", "class": "shallow_nutrient", "rect": [322, 190, 490, 405], "surface_y": 0.15, "bund_y": 0.4, "bund_w": 1.0,
-      "plot_cols": 2, "plot_rows": 6
+      "plot_cols": 2, "plot_rows": 6, "split_z": 300
     },
     "puddles_meadow": {
       "zone": "Z07", "class": "temporary", "surface_y_above_ground": 0.03, "depth": 0.2, "rain_only": true,
@@ -64,7 +64,7 @@
     "W04b_tire":       {"pos": [262, 150],   "y": 0.1,  "y_mode": "above_ground", "zone": "Z01", "game_site": null,     "kind": "tire"},
     "W05_pond":        {"pos": [170, 337],   "y": -0.2, "y_mode": "absolute",     "zone": "Z03", "game_site": "pond",   "kind": "water"},
     "W06_canal":       {"pos": [100, 162],   "y": -0.3, "y_mode": "absolute",     "zone": "Z05", "game_site": "canal",  "kind": "water"},
-    "W07_paddy":       {"pos": [406, 297],   "y": 0.15, "y_mode": "absolute",     "zone": "Z04", "game_site": "paddy",  "kind": "water"}
+    "W07_paddy":       {"pos": [385, 282],   "y": 0.15, "y_mode": "absolute",     "zone": "Z04", "game_site": "paddy",  "kind": "water"}
   },
 
   "houses": {
@@ -107,7 +107,7 @@
     "L07": {"name": "Chòi tre nhỏ",                   "pos": [185, 215], "kind": "hut",      "zone": "Z02"},
     "L08": {"name": "Cầu ao",                         "pos": [208, 337], "kind": "jetty",    "zone": "Z03"},
     "L08b":{"name": "Thuyền gỗ",                      "pos": [190, 352], "kind": "boat",     "zone": "Z03"},
-    "L09": {"name": "Cầu bắc qua sông",               "pos": [114, 100], "kind": "bridge_ref","zone": "Z05"},
+    "L09": {"name": "Cầu bắc qua sông",               "pos": [111, 100], "kind": "bridge_ref","zone": "Z05"},
     "L10": {"name": "Chòi ruộng",                     "pos": [440, 330], "kind": "hut",      "zone": "Z04"},
     "L10b":{"name": "Trâu",                           "pos": [400, 250], "kind": "buffalo",  "zone": "Z04"},
     "L11": {"name": "Cống nhỏ cấp nước ruộng",        "pos": [308, 300], "kind": "culvert",  "zone": "Z05"},

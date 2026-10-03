@@ -227,8 +227,8 @@ roads:
   R2_bridge_lane:           # nối nhà → bờ Tây (rừng tre) qua cầu bắc kênh
     type: dirt_path
     w: 3
-    points: [[285, 100], [215, 100], [114, 100], [60, 100]]
-    bridge: { at: [114, 100], len: 16, w: 3, deck_y: 1.2, material: "ván gỗ + lan can tre" }
+    points: [[285, 100], [215, 100], [111, 100], [60, 100]]
+    bridge: { at: [111, 100], len: 24, w: 3, deck_y: 1.2, material: "ván gỗ + lan can tre" }
 
   R3_pond_lane:             # từ đường chính ra ao
     type: dirt_path
@@ -239,7 +239,7 @@ roads:
   R4_field_bund:            # bờ ruộng đi xuyên ruộng lúa
     type: bund
     w: 1.5
-    points: [[322, 300], [490, 300]]
+    points: [[287.5, 300], [490, 300]]   # nối R1, qua kênh nhánh bằng cống L11
     height_y: 0.4
 
   R5_meadow_lane:           # ra đồng cỏ
@@ -284,7 +284,7 @@ water:
       - [250, 497]
       - [385, 524]
       - [500, 525]          # thoát khỏi map
-    crossings: [R2 bridge @ (114,100)]
+    crossings: [R2 bridge @ (111,100)]
     water_class: natural_flowing   # §6
 
   canal_branch:             # ⑤ kênh nhánh dọc rìa Tây ruộng lúa, song song R1
@@ -292,7 +292,7 @@ water:
     type: irrigation_ditch
     w: 4
     depth: 0.8
-    surface_y: 0.0
+    surface_y: -0.25          # thấp hơn ruộng (tiêu nước), nối êm vào canal_main (-0.3)
     centerline: [[308, 190], [308, 300], [308, 405], [300, 450], [270, 495]]
     note: "nối vào canal_main tại ≈ (270, 495); cấp nước cho ruộng qua cống nhỏ"
     water_class: stagnant_slow
@@ -313,7 +313,7 @@ water:
     rect: [322, 190, 490, 405]
     depth: 0.15             # nước nông trên mặt ruộng
     surface_y: 0.15
-    plots: "6 thửa × 2 hàng chia bởi bờ R4 và các bờ phụ cách ~35 m"
+    plots: "6 thửa × 2 hàng: bờ R4 (z = 300) chia ruộng làm 2 nửa, mỗi nửa 3 hàng thửa đều nhau (~35 m)"
     water_class: shallow_nutrient
 
   puddles_meadow:           # ⑦ vũng sau mưa (chỉ có sau mưa)
@@ -356,7 +356,7 @@ egg_sites:
   W04b_tire:        { pos: [262, 0.1, 150],   zone: Z01, note: "lốp xe cũ cạnh nhà sau" }
   W05_pond:         { pos: [170, -0.2, 337],  zone: Z03, game_site: pond }
   W06_canal:        { pos: [100, -0.3, 162],  zone: Z05, game_site: canal }
-  W07_paddy:        { pos: [406, 0.15, 297],  zone: Z04, game_site: paddy }
+  W07_paddy:        { pos: [385, 0.15, 282],  zone: Z04, game_site: paddy }
 ```
 
 ---
@@ -426,7 +426,7 @@ elevation:
   pond_bank:    { y: 0.2 }
   pond_water:   { y: -0.2, bed: -2.7 }
   canal_main:   { water: -0.3, bed: -2.1, bank_y: 0.3 }
-  canal_branch: { water: 0.0,  bed: -0.8 }
+  canal_branch: { water: -0.25, bed: -1.05 }
   road_R1:      { y: 0.3, camber: "gờ nhẹ 0.1 m" }
   house_pad:    { y: 0.6 }
   garden:       { y: 0.4 }
@@ -453,7 +453,7 @@ Dùng làm điểm tựa định hướng cho người chơi và cho Claude (đ�
 | L06 | Cây đa/me lớn (hốc cây) | (170, 150) | Z02b | |
 | L07 | Chòi tre nhỏ | (185, 215) | Z02b | |
 | L08 | Cầu ao + thuyền gỗ | (208, 337) / (190, 352) | Z03 | |
-| L09 | Cầu bắc qua sông | (114, 100) | Z05 | R2 |
+| L09 | Cầu bắc qua sông | (111, 100) | Z05 | R2 |
 | L10 | Chòi ruộng + trâu | (440, 330) / (400, 250) | Z04 | trâu đi lại trong ruộng |
 | L11 | Cống nhỏ cấp nước ruộng | (308, 300) | Z05b | |
 | L12 | Đường mòn rừng tre | (40, 215) | Z06 | |
@@ -501,7 +501,7 @@ journey_order:        # thứ tự trong ảnh "CÁC KHU VỰC TRONG MAP (theo h
 | jar | (10.5, 6.5) | (300, 80) |
 | pond | (21, −4) | (170, 337) |
 | canal | (9, 19.2) | (100, 162) |
-| paddy | (−22, −17) | (406, 297) |
+| paddy | (−22, −17) | (385, 282) |
 
 ---
 
@@ -593,6 +593,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-03 | **Duyệt M1** (`check_greybox.py`) — sửa lỗi hình học: cầu R2 dời về đúng tâm kênh (114 → 111) và dài 16 → 24 m để phủ hết hai bờ; W07 dời (406,297) → (385,282) vì cũ nằm trên giao điểm bờ ruộng (khô); bờ thửa ruộng căn theo R4 (z = 300) thay vì chia đều 6 hàng (trước đó có 2 bờ cách nhau 2.5 m); R4 nối tới R1 qua cống L11; kênh nhánh hạ mặt nước 0.0 → −0.25 m để hợp lưu êm với kênh chính. |
 | 2026-10-03 | Tổ chức lại: spec → `docs/map_spec.json`, script → `blender/scripts/`, manifest → `assets/`; thêm M0 blockout + 3 loại reference (§15). Không đổi số liệu bố cục. |
 | 2026-10-03 | Thêm §15 pipeline + `map_spec.json`. Sửa nhất quán (không đổi vị trí): L05 thuộc Z01 (toạ độ (225,110) nằm trong rect Z01); thêm vũng `[330,450,2]` cho W01; khai báo đường mòn tre T1 (đã có ở §8/L12). |
 | 2026-10-03 | Bản đầu tiên: số liệu đo từ minimap của ảnh MASTER REFERENCE. Kích thước 500 × 540 m (tỉ lệ minimap), khác ví dụ 500 × 400 ban đầu để giữ đúng bố cục ảnh. |

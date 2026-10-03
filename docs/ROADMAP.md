@@ -31,7 +31,7 @@ Tải asset trước dễ dẫn tới *"có model đẹp → cố nhét model v�
 
 - [x] `docs/reference/layout/00_blockout_2d.png` — toàn map, 8 zone, đường, nước, nhà, rào, landmark, điểm đẻ trứng
 - [x] `01_house.png` … `08_road.png` — Reference B, mỗi zone 1 sheet (khung, kích thước, nội dung)
-- [ ] **Xác nhận**: đặt `00_blockout_2d.png` cạnh minimap của ảnh reference — vị trí tương đối 8 zone, hình chữ S của
+- [x] **Xác nhận** (duyệt cùng M1): đặt `00_blockout_2d.png` cạnh minimap của ảnh reference — vị trí tương đối 8 zone, hình chữ S của
       kênh, cụm nhà Đông-Bắc, ruộng Đông, đồng cỏ Đông-Nam, rừng tre Tây phải khớp
 
 Tạo lại: `python blender/scripts/blockout_2d.py` (cần numpy + Pillow; không cần Blender).
@@ -43,13 +43,17 @@ terrain · water · road · 8 zones (+ placeholder nhà/rào/landmark, spawn, ca
 - [x] Script: `blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot`
       → `blender/master_map.blend`, `blender/exports/vietnamese_rural_village_greybox.glb`, `map_layout.json`
 - [x] Godot: mở `godot/world/greybox_viewer.tscn` → F6. Phím 1–8 bay tới từng zone, 0 = toàn cảnh, Tab = nhãn
-- [ ] **Xác nhận**: đi một vòng theo hành trình (1 → 8): tỉ lệ nhà/đường/ao/ruộng hợp lý ở góc nhìn người và muỗi,
+- [x] Kiểm tra tự động: `python blender/scripts/check_greybox.py` → [`M1_check.md`](reference/greybox/M1_check.md)
+- [x] Ảnh duyệt (Cycles CPU, không cần GPU): `python blender/scripts/render_views.py` → `docs/reference/greybox/`
+- [x] **Xác nhận**: đi một vòng theo hành trình (1 → 8): tỉ lệ nhà/đường/ao/ruộng hợp lý ở góc nhìn người và muỗi,
       không có vật thể chìm/lơ lửng, đường đi liền mạch, mặt nước đúng cao độ
+      → [`M1_REVIEW.md`](reference/greybox/M1_REVIEW.md): ĐẠT, 7 lỗi đã sửa, **1 điểm mở (key shot) chờ quyết định**
 
 ### M2 — Environment · *phải giống VISUAL*
 
 house · trees · rice · bamboo · pond · canal.
 
+- [ ] Chốt điểm mở key shot của M1 (`M1_REVIEW.md` §4: (a) đổi khung hình hay (b) thêm nhà cạnh ao)
 - [ ] Làm/tải asset **P0** (34 asset) theo `docs/ASSET_GUIDELINES.md §6`, cleanup theo §4
 - [ ] `generate_map.py --stage env --swap --godot` (thực vật procedural + thay placeholder)
 - [ ] Godot: MultiMesh cho cỏ/lúa/tre đọc `map_points.json`
@@ -76,8 +80,8 @@ mosquito · larva · pupa · predators · food · egg laying · quests.
 
 | Milestone | Ngày | Người duyệt | Kết quả / ghi chú |
 |---|---|---|---|
-| M0 2D Blockout | | | |
-| M1 3D Greybox | | | |
+| M0 2D Blockout | 2026-10-03 | Claude (thay mặt chủ dự án) | Đạt — duyệt cùng M1; blockout sinh lại sau các sửa M1 |
+| M1 3D Greybox | 2026-10-03 | Claude (thay mặt chủ dự án) | **Đạt** — [`M1_REVIEW.md`](reference/greybox/M1_REVIEW.md). Mở: key shot A↔B |
 | M2 Environment | | | |
 | M3 Cinematic | | | |
 | M4 Gameplay | | | |

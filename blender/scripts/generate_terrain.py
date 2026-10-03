@@ -49,18 +49,14 @@ def heightfield(spec, X, Z, res):
     x0, z0, x1, z1 = pd["rect"]
     inside = C.in_rects(X, Z, [pd["rect"]])
     H[inside] = spec["zones"]["Z04"]["ground_y"]
-    bund = np.zeros(X.shape, bool)
-    for i in range(pd["plot_cols"] + 1):
-        bund |= np.abs(X - (x0 + (x1 - x0) * i / pd["plot_cols"])) < pd["bund_w"] / 2 + res / 2
-    for j in range(pd["plot_rows"] + 1):
-        bund |= np.abs(Z - (z0 + (z1 - z0) * j / pd["plot_rows"])) < pd["bund_w"] / 2 + res / 2
+    bund = C.paddy_bund_mask(spec, X, Z, pd["bund_w"] / 2 + res / 2)
     H[inside & bund] = pd["bund_y"]
 
     # nền nhà
     Hs = spec["houses"]
     for h in Hs["list"].values():
         (cx, cz), (sw, sd) = h["pos"], h["size"]
-        r = max(sw, sd) / 2 + 1.0
+        r = max(sw, sd) / 2 + 1.0 + res  # + res: mép nền phẳng cả khi lấy mẫu giữa hai ô lưới
         m = (np.abs(X - cx) < r) & (np.abs(Z - cz) < r)
         H[m] = Hs["pad_y"]
 
@@ -144,7 +140,7 @@ def build(spec, ctx):
         cols[flat == k, :3] = z["color"]
     road = C.Masks(spec).road(X, Z).ravel()
     cols[road, :3] = spec["zones"]["Z08"]["color"]
-    wet = (H.ravel() < -0.05)
+    wet = (H.ravel() < -0.35)  # chỉ lòng chìm dưới mọi mặt nước; bờ trên mặt nước giữ màu zone (không răng cưa)
     cols[wet, :3] = (0.30, 0.26, 0.20)
     ca = me.color_attributes.new("zone_color", "FLOAT_COLOR", "POINT")
     ca.data.foreach_set("color", cols.ravel())

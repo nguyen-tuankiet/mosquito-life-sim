@@ -15,6 +15,8 @@ import numpy as np  # noqa: E402
 
 import common as C  # noqa: E402
 
+# độ nâng khác nhau để chỗ giao nhau không bị z-fighting (đường chính nằm trên)
+ROAD_Y_OFF = {"dirt_road": 0.05, "dirt_path": 0.04, "bund": 0.035, "trail": 0.03}
 ROAD_COLORS = {"dirt_road": (0.55, 0.38, 0.26), "dirt_path": (0.58, 0.42, 0.30),
                "bund": (0.45, 0.40, 0.28), "trail": (0.40, 0.33, 0.22)}
 
@@ -95,7 +97,7 @@ def build(spec, ctx):
     for rid, r in spec["roads"].items():
         mat = C.material("MAT_Road_" + r["type"], ROAD_COLORS[r["type"]], 0.95)
         ob = C.ribbon("Road_" + rid, r["points"], r["w"], lambda x, z: _h(ctx, x, z), fr, rcol, mat,
-                      step=2.0, y_off=0.03)
+                      step=2.0, y_off=ROAD_Y_OFF[r["type"]])
         ob["road"] = rid
         ob["road_type"] = r["type"]
         ob["zone"] = "Z08"
