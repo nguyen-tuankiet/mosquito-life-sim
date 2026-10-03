@@ -1,0 +1,151 @@
+{
+  "_comment": "Bản máy-đọc-được của docs/MAP_BIBLE.md. Toạ độ Bible: gốc Tây-Bắc, +x Đông, +z Nam, y lên, đơn vị mét. Sửa Bible trước, rồi sửa file này cho khớp.",
+  "map": {
+    "name": "vietnamese_rural_village",
+    "width_x": 500,
+    "depth_z": 540,
+    "playable_margin": 10
+  },
+
+  "zones": {
+    "Z01": {"name": "Nhà dân",                "key": "house",        "rects": [[220, 40, 425, 185]],                     "ground_y": 0.3,  "color": [0.78, 0.55, 0.42]},
+    "Z02": {"name": "Vườn cây / Chuồng trại", "key": "garden",       "rects": [[35, 140, 85, 225], [130, 100, 215, 290]], "ground_y": 0.4,  "color": [0.36, 0.55, 0.22]},
+    "Z03": {"name": "Ao / Hồ",                "key": "pond",         "rects": [[125, 290, 215, 385]],                    "ground_y": 0.2,  "color": [0.45, 0.62, 0.40]},
+    "Z04": {"name": "Ruộng lúa",              "key": "rice_field",   "rects": [[322, 190, 490, 405]],                    "ground_y": 0.0,  "color": [0.55, 0.75, 0.25]},
+    "Z05": {"name": "Kênh mương",             "key": "canal",        "rects": [],                                         "ground_y": null, "color": [0.20, 0.40, 0.45]},
+    "Z06": {"name": "Rừng tre / Bụi rậm",     "key": "bamboo",       "rects": [[0, 0, 80, 430], [0, 430, 150, 540]],     "ground_y": 0.5,  "color": [0.20, 0.38, 0.15]},
+    "Z07": {"name": "Đồng cỏ / Bãi đất trống","key": "meadow",       "rects": [[310, 410, 500, 505]],                    "ground_y": 0.2,  "color": [0.62, 0.70, 0.35]},
+    "Z08": {"name": "Đường làng",             "key": "village_road", "rects": [],                                         "ground_y": 0.3,  "color": [0.60, 0.42, 0.30]}
+  },
+  "zone_priority": ["Z02", "Z01", "Z03", "Z04", "Z07", "Z06"],
+  "filler": {"ground_y": 0.25, "color": [0.50, 0.62, 0.32]},
+  "bamboo_hump": {"center": [40, 215], "radius": 120, "height": 0.3},
+
+  "roads": {
+    "R1_main_spine":  {"type": "dirt_road",  "w": 5,   "y": 0.3, "points": [[285, 40], [285, 185], [285, 335], [285, 470]]},
+    "R2_bridge_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 100], [215, 100], [114, 100], [60, 100]]},
+    "R3_pond_lane":   {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 337], [215, 337]]},
+    "R4_field_bund":  {"type": "bund",       "w": 1.5, "y": 0.4, "points": [[322, 300], [490, 300]]},
+    "R5_meadow_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 470], [330, 470], [330, 460]]},
+    "T1_bamboo_trail":{"type": "trail",      "w": 1.5, "y": null, "points": [[0, 215], [80, 215]]}
+  },
+  "bridges": {
+    "B1_R2": {"road": "R2_bridge_lane", "at": [114, 100], "len": 16, "w": 3, "deck_y": 1.2}
+  },
+
+  "water": {
+    "canal_main": {
+      "zone": "Z05", "class": "natural_flowing", "w": 14, "bank_w": 6, "depth": 1.8, "surface_y": -0.3, "bed_y": -2.1, "bank_y": 0.3,
+      "centerline": [[95, 0], [115, 80], [100, 162], [85, 243], [110, 335], [165, 432], [250, 497], [385, 524], [500, 525]]
+    },
+    "canal_branch": {
+      "zone": "Z05", "class": "stagnant_slow", "w": 4, "bank_w": 1.5, "depth": 0.8, "surface_y": 0.0, "bed_y": -0.8, "bank_y": 0.25,
+      "centerline": [[308, 190], [308, 300], [308, 405], [300, 450], [270, 495]]
+    },
+    "pond_main": {
+      "zone": "Z03", "class": "clean_still", "center": [170, 337], "radii": [40, 32], "depth": 2.5, "surface_y": -0.2, "bed_y": -2.7, "bank_scale": 1.15
+    },
+    "paddy_main": {
+      "zone": "Z04", "class": "shallow_nutrient", "rect": [322, 190, 490, 405], "surface_y": 0.15, "bund_y": 0.4, "bund_w": 1.0,
+      "plot_cols": 2, "plot_rows": 6
+    },
+    "puddles_meadow": {
+      "zone": "Z07", "class": "temporary", "surface_y_above_ground": 0.03, "depth": 0.2, "rain_only": true,
+      "patches": [[360, 440, 8], [420, 470, 11], [470, 450, 6], [330, 450, 2]]
+    }
+  },
+
+  "egg_sites": {
+    "W01_puddle_rain": {"pos": [330, 450],   "y": 0.05, "y_mode": "above_ground", "zone": "Z07", "game_site": "puddle", "kind": "puddle"},
+    "W02_bucket":      {"pos": [292, 66],    "y": 0.3,  "y_mode": "above_ground", "zone": "Z01", "game_site": "bucket", "kind": "bucket"},
+    "W02b_bucket_red": {"pos": [298, 70],    "y": 0.3,  "y_mode": "above_ground", "zone": "Z01", "game_site": null,     "kind": "bucket"},
+    "W03_jar_chum":    {"pos": [300, 80],    "y": 0.45, "y_mode": "above_ground", "zone": "Z01", "game_site": "jar",    "kind": "jar", "spawn_first_life": true},
+    "W04a_basin":      {"pos": [296, 90],    "y": 0.3,  "y_mode": "above_ground", "zone": "Z01", "game_site": null,     "kind": "basin"},
+    "W04b_tire":       {"pos": [262, 150],   "y": 0.1,  "y_mode": "above_ground", "zone": "Z01", "game_site": null,     "kind": "tire"},
+    "W05_pond":        {"pos": [170, 337],   "y": -0.2, "y_mode": "absolute",     "zone": "Z03", "game_site": "pond",   "kind": "water"},
+    "W06_canal":       {"pos": [100, 162],   "y": -0.3, "y_mode": "absolute",     "zone": "Z05", "game_site": "canal",  "kind": "water"},
+    "W07_paddy":       {"pos": [406, 297],   "y": 0.15, "y_mode": "absolute",     "zone": "Z04", "game_site": "paddy",  "kind": "water"}
+  },
+
+  "houses": {
+    "default_footprint": [14.4, 9.4],
+    "wall_h": 3.4,
+    "pad_y": 0.6,
+    "yard_radius": 7,
+    "min_spacing": 25,
+    "min_water_clearance": 12,
+    "list": {
+      "H01": {"pos": [310, 65],  "size": [14.4, 9.4], "facing": "south", "hero": true},
+      "H02": {"pos": [360, 70],  "size": [12, 8],     "facing": "auto"},
+      "H03": {"pos": [395, 95],  "size": [12, 8],     "facing": "auto"},
+      "H04": {"pos": [255, 80],  "size": [12, 8],     "facing": "auto"},
+      "H05": {"pos": [255, 150], "size": [12, 8],     "facing": "auto"},
+      "H06": {"pos": [330, 155], "size": [12, 8],     "facing": "auto"},
+      "H07": {"pos": [385, 160], "size": [12, 8],     "facing": "auto"}
+    },
+    "_facing_auto": "quay cửa về phía đường R1 (x = 285)"
+  },
+
+  "fences": {
+    "segment_len": 3.0,
+    "height": 1.1,
+    "runs": [
+      {"along": "R1_main_spine", "from_z": 42, "to_z": 185, "offset": 4.0, "sides": [-1, 1], "door_gap": 5.0},
+      {"along": "R3_pond_lane",  "offset": 3.0, "sides": [-1, 1], "door_gap": 0}
+    ]
+  },
+
+  "landmarks": {
+    "L01": {"name": "Chum sành lớn (spawn lần đầu)", "pos": [300, 80],  "kind": "jar_ref",  "zone": "Z01"},
+    "L02": {"name": "Hiên nhà gỗ + lồng chim",       "pos": [305, 60],  "kind": "house_ref","zone": "Z01"},
+    "L03": {"name": "Cột điện bê tông",               "pos": [288, 45],  "kind": "power_pole","zone": "Z08"},
+    "L04": {"name": "Gà mái ở sân",                   "pos": [292, 85],  "kind": "chicken",  "zone": "Z01"},
+    "L05": {"name": "Đống rơm",                       "pos": [225, 110], "kind": "haystack", "zone": "Z01"},
+    "L05b":{"name": "Đống rơm 2",                     "pos": [190, 280], "kind": "haystack", "zone": "Z02"},
+    "L06": {"name": "Cây đa/me lớn (hốc cây)",        "pos": [170, 150], "kind": "big_tree", "zone": "Z02"},
+    "L06b":{"name": "Cây bóng mát lớn 2",             "pos": [150, 240], "kind": "big_tree", "zone": "Z02"},
+    "L07": {"name": "Chòi tre nhỏ",                   "pos": [185, 215], "kind": "hut",      "zone": "Z02"},
+    "L08": {"name": "Cầu ao",                         "pos": [208, 337], "kind": "jetty",    "zone": "Z03"},
+    "L08b":{"name": "Thuyền gỗ",                      "pos": [190, 352], "kind": "boat",     "zone": "Z03"},
+    "L09": {"name": "Cầu bắc qua sông",               "pos": [114, 100], "kind": "bridge_ref","zone": "Z05"},
+    "L10": {"name": "Chòi ruộng",                     "pos": [440, 330], "kind": "hut",      "zone": "Z04"},
+    "L10b":{"name": "Trâu",                           "pos": [400, 250], "kind": "buffalo",  "zone": "Z04"},
+    "L11": {"name": "Cống nhỏ cấp nước ruộng",        "pos": [308, 300], "kind": "culvert",  "zone": "Z05"},
+    "L12": {"name": "Đường mòn rừng tre",             "pos": [40, 215],  "kind": "marker",   "zone": "Z06"},
+    "L13": {"name": "Đồng cỏ + vũng sau mưa",         "pos": [420, 470], "kind": "marker",   "zone": "Z07"}
+  },
+
+  "foliage": {
+    "_comment": "Không AI-generate từng cây: mỗi loại = asset library + rải procedural. sparse=empty riêng, cloud=point cloud + Geometry Nodes (export JSON cho MultiMesh).",
+    "seed": 1729,
+    "types": {
+      "TreePoint":     {"mode": "sparse", "zones": ["Z02"],               "min_dist": 7.0,  "scale": [0.8, 1.2]},
+      "BananaPoint":   {"mode": "sparse", "zones": ["Z01", "Z02"],        "min_dist": 8.0,  "count": 25, "scale": [0.8, 1.2]},
+      "CoconutPoint":  {"mode": "sparse", "zones": ["Z01", "Z07", "Z04_rim"], "min_dist": 12.0, "count": 18, "scale": [0.9, 1.3]},
+      "BambooPoint":   {"mode": "cloud",  "zones": ["Z06"],               "min_dist": 1.7,  "scale": [0.8, 1.3]},
+      "ShrubPoint":    {"mode": "cloud",  "zones": ["Z06_under", "canal_banks"], "min_dist": 3.0, "scale": [0.7, 1.3]},
+      "ReedPoint":     {"mode": "cloud",  "zones": ["pond_rim", "canal_banks", "paddy_rim"], "min_dist": 0.9, "scale": [0.8, 1.2]},
+      "LilyPoint":     {"mode": "cloud",  "zones": ["pond_water"],        "min_dist": 1.2,  "keep": 0.3, "scale": [0.6, 1.2]},
+      "RicePoint":     {"mode": "cloud",  "zones": ["Z04"],               "min_dist": 1.0,  "jitter": 0.1, "scale": [0.9, 1.1], "_note": "1 RicePoint = 1 mảng lúa 1×1 m"},
+      "GrassTallPoint":{"mode": "cloud",  "zones": ["Z07"],               "min_dist": 1.2,  "scale": [0.7, 1.3]},
+      "GrassPoint":    {"mode": "cloud",  "zones": ["filler", "Z01", "Z02", "Z03"], "min_dist": 2.0, "scale": [0.6, 1.2]}
+    }
+  },
+
+  "player_spawn": {
+    "first_life": {"egg_site": "W03_jar_chum", "facing": "south"},
+    "adult_emerge_offset_y": 1.2
+  },
+
+  "camera": {
+    "playable_rect": [10, 10, 490, 530],
+    "hard_rect": [0, 0, 500, 540],
+    "soft_edge": 10,
+    "adult_min_y": 0.15,
+    "adult_max_y": 25,
+    "sky_ceiling_y": 60,
+    "indoor_ceiling_y": 3.4
+  },
+
+  "journey_order": ["Z01", "Z02", "Z03", "Z04", "Z05", "Z06", "Z07", "Z08"]
+}
