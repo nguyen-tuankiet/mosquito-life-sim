@@ -98,11 +98,41 @@ def polyline_frames(pts, step):
         n = max(1, int(math.ceil(L / step)))
         for i in range(n):
             t = i / n
-            out.append((ax + tx * L * t, az + tz * L * t, tx, tz))
+            jx, jz = tx, tz
+            if i == 0 and out:
+                # điểm nối: tiếp tuyến phân giác để dải mesh (kênh, đường) không bị gấp nếp ở khúc cua
+                px, pz = out[-1][2], out[-1][3]
+                m = math.hypot(px + tx, pz + tz) or 1.0
+                jx, jz = (px + tx) / m, (pz + tz) / m
+            out.append((ax + tx * L * t, az + tz * L * t, jx, jz))
     (ax, az), (bx, bz) = pts[-2], pts[-1]
     L = math.hypot(bx - ax, bz - az) or 1.0
     out.append((bx, bz, (bx - ax) / L, (bz - az) / L))
     return out
+
+
+def paddy_bund_lines(spec):
+    """Toạ độ các bờ ruộng: (xs dọc, zs ngang). Bờ ngang căn theo R4 (split_z): mỗi nửa chia đều."""
+    pd = spec["water"]["paddy_main"]
+    x0, z0, x1, z1 = pd["rect"]
+    xs = [x0 + (x1 - x0) * i / pd["plot_cols"] for i in range(pd["plot_cols"] + 1)]
+    sz = pd.get("split_z")
+    if sz is None:
+        zs = [z0 + (z1 - z0) * j / pd["plot_rows"] for j in range(pd["plot_rows"] + 1)]
+    else:
+        top, bot = pd["plot_rows"] // 2, pd["plot_rows"] - pd["plot_rows"] // 2
+        zs = [z0 + (sz - z0) * j / top for j in range(top)] + [sz + (z1 - sz) * j / bot for j in range(bot + 1)]
+    return xs, zs
+
+
+def paddy_bund_mask(spec, X, Z, half_w):
+    xs, zs = paddy_bund_lines(spec)
+    m = np.zeros(np.shape(X), dtype=bool)
+    for x in xs:
+        m |= np.abs(X - x) < half_w
+    for z in zs:
+        m |= np.abs(Z - z) < half_w
+    return m
 
 
 def house_facing(spec, h):

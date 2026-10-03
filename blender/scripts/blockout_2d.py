@@ -78,13 +78,7 @@ class Map2D:
         m["road"] = M.road(X, Z)
         m["Z08"] = m["road"]
         m["puddle"] = M.puddle(X, Z)
-        pd = W["paddy_main"]
-        x0, z0, x1, z1 = pd["rect"]
-        bund = np.zeros(X.shape, bool)
-        for i in range(pd["plot_cols"] + 1):
-            bund |= np.abs(X - (x0 + (x1 - x0) * i / pd["plot_cols"])) < pd["bund_w"] / 2 + 0.4
-        for j in range(pd["plot_rows"] + 1):
-            bund |= np.abs(Z - (z0 + (z1 - z0) * j / pd["plot_rows"])) < pd["bund_w"] / 2 + 0.4
+        bund = C.paddy_bund_mask(self.s, X, Z, W["paddy_main"]["bund_w"] / 2 + 0.4)
         m["paddy"] = M.paddy(X, Z)
         m["bund"] = m["paddy"] & bund
         return m

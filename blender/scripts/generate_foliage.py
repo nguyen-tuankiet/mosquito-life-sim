@@ -93,13 +93,7 @@ def allowed(spec, M, t, X, Z):
         return ok & ~base_block
     if t == "RicePoint":
         # không trên bờ ruộng / bờ R4
-        pd = W["paddy_main"]
-        x0, z0, x1, z1 = pd["rect"]
-        bund = np.zeros(X.shape, bool)
-        for i in range(pd["plot_cols"] + 1):
-            bund |= np.abs(X - (x0 + (x1 - x0) * i / pd["plot_cols"])) < pd["bund_w"]
-        for j in range(pd["plot_rows"] + 1):
-            bund |= np.abs(Z - (z0 + (z1 - z0) * j / pd["plot_rows"])) < pd["bund_w"]
+        bund = C.paddy_bund_mask(spec, X, Z, W["paddy_main"]["bund_w"])
         return ok & ~bund & ~base_block & ~M.landmark(X, Z, 6.0)
 
     block = base_block | M.water(X, Z, 0.8) | M.puddle(X, Z, 0.5)

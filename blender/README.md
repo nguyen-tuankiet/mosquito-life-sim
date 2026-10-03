@@ -17,7 +17,9 @@ blender/
     ├── generate_village.py   Road, Bridge, HousePoint_* (+HOUSE_PLACEHOLDER), FencePoint_*, Jar/Bucket/Basin/TirePoint,
     │                         LandmarkPoint_*, Zone_*, PlayerSpawn, CameraBounds
     ├── generate_foliage.py   Forest (tre), Grassland, lúa, sậy, cây… procedural, seed cố định (chỉ stage env)
-    └── swap_assets.py        placeholder → .glb thật theo assets/asset_manifest.json (chỉ stage env)
+    ├── swap_assets.py        placeholder → .glb thật theo assets/asset_manifest.json (chỉ stage env)
+    ├── check_greybox.py      M1: kiểm tra tự động (chìm/lơ lửng, nền nhà, đường, mặt nước, bounds)
+    └── render_views.py       ảnh duyệt 3D bằng Cycles CPU (toàn cảnh, 8 zone, key shot, tầm muỗi)
 ```
 
 ## Chạy
@@ -28,6 +30,10 @@ python blender/scripts/blockout_2d.py
 
 # M1 — 3D greybox → blender/master_map.blend + exports/*_greybox.glb, copy sang godot/world/generated/
 blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot
+
+# Duyệt M1 không cần Godot/GPU: kiểm tra tự động + ảnh 3D → docs/reference/greybox/
+python blender/scripts/check_greybox.py --report docs/reference/greybox/M1_check.md
+python blender/scripts/render_views.py
 
 # M2 — environment (CHỈ sau khi M1 được xác nhận) → thực vật procedural + thay model thật
 blender -b -P blender/scripts/generate_map.py -- --stage env --swap --godot
