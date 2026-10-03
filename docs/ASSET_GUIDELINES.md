@@ -33,6 +33,8 @@ Concept / ảnh crop từ reference
   `godot/world/generated/` — không copy tay.
 - Model CC0 cũ trong `godot/assets/models/` (đang dùng cho bản demo) chỉ là **fallback** tạm trong manifest.
 
+Concept đã có cho 5 model AI 3D ưu tiên (nhà ×2, lu, rào tre, trâu): [`reference/concepts/`](reference/concepts/README.md).
+
 ## 2. Thư mục
 
 ```
