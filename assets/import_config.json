@@ -1,0 +1,29 @@
+{
+  "_comment": [
+    "Cấu hình dọn model thật — đọc bởi blender/scripts/import_asset.py.",
+    "source: file thô trong assets/_incoming/ (gitignore). folder: thư mục đích trong assets/.",
+    "rotate_z: độ, để mặt trước nhìn -Y. size: {\"x\"|\"y\"|\"z\": mét} (giữ tỉ lệ) hoặc {\"xyz\": [x, y, z]} (từng trục).",
+    "tris: ngân sách tam giác. materials: keep | auto_house | single:<vật liệu procedural trong assetgen/assets_v1.M()>.",
+    "water_disc: thêm mặt nước tại tỉ lệ chiều cao (lu, xô)."
+  ],
+  "assets": {
+    "house_vn_01": {"source": "house_vn_01.glb", "folder": "environment/houses", "rotate_z": 0,
+                     "size": {"x": 14.4}, "tris": 15000, "materials": "auto_house",
+                     "regions": {"plinth": 0.07, "roof_from": 0.30, "porch_depth": 0.2},
+                     "origin": "Hunyuan3D-2.1 (shape, chưa paint) từ concept OpenArt vdJDFrYbbNyPcgdDEBJj"},
+    "house_vn_02": {"source": "house_vn_02.glb", "folder": "environment/houses", "rotate_z": 180,
+                     "size": {"x": 11.0}, "tris": 15000, "materials": "keep", "max_tex": 1024,
+                     "origin": "AI 3D có texture từ concept OpenArt yjju7dzhF0Iwxx2j9qn0"},
+    "water_jar_vn": {"source": "water_jar_vn.glb", "folder": "props/water_jars", "rotate_z": 0,
+                      "size": {"z": 0.9}, "tris": 6000, "materials": "single:glaze", "uv": "cylindrical", "water_disc": 0.86,
+                      "_tris_note": "vượt ngân sách 2k có chủ đích: chum W03 là điểm spawn, nhìn cận ở tầm muỗi",
+                      "origin": "Hunyuan3D-2.1 (shape, chưa paint) từ concept OpenArt rdkkPjnxNaN74STtaPxh"},
+    "bamboo_fence": {"source": "bamboo_fence.glb", "folder": "environment/roads", "rotate_z": 0,
+                      "size": {"xyz": [3.0, 0.2, 1.1]}, "tris": 6000, "materials": "single:bamboo_dry",
+                      "_tris_note": "nan tre mảnh: < 6k tam giác thì vỡ hình (đã thử 1.5k)",
+                      "origin": "Hunyuan3D-2.1 (shape, chưa paint) từ concept OpenArt dZz8eOZIvuK4FSNCqa63"},
+    "flower_pot_vn": {"source": "potted_plant_02_4k.gltf.zip", "folder": "environment/gardens", "rotate_z": 0,
+                       "size": {"z": 0.84}, "tris": 8000, "materials": "keep", "max_tex": 1024, "smooth": true,
+                       "origin": "Poly Haven potted_plant_02 (CC0)"}
+  }
+}

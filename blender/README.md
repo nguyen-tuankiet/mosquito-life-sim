@@ -22,6 +22,7 @@ blender/
     ├── render_views.py       ảnh duyệt 3D bằng Cycles CPU (greybox: góc xiên; env: postcard tầm mắt người)
     ├── compare_reference.py  ghép ảnh reference ↔ render (duyệt M2/M3)
     ├── make_assets.py        M2: dựng asset P0 procedural v1 → assets/_procedural/ (+ contact sheet)
+    ├── import_asset.py       dọn model thật (AI 3D / library) từ assets/_incoming/ theo assets/import_config.json
     └── assetgen/             thư viện dựng mesh + texture procedural, assets_v1.py = từng model
 ```
 
@@ -40,6 +41,7 @@ python blender/scripts/render_views.py
 
 # M2 — environment (CHỈ sau khi M1 được xác nhận) → asset tạm + thực vật procedural + thay model
 python blender/scripts/make_assets.py --sheet                        # assets/_procedural/*.glb
+python blender/scripts/import_asset.py --preview                     # model thật: assets/_incoming → assets/…
 blender -b -P blender/scripts/generate_map.py -- --stage env --res 1 --swap --godot
 python blender/scripts/render_views.py && python blender/scripts/compare_reference.py   # docs/reference/env/
 ```
