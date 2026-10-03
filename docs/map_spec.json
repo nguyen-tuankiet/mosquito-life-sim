@@ -122,7 +122,7 @@
       "TreePoint":     {"mode": "sparse", "zones": ["Z02"],               "min_dist": 7.0,  "scale": [0.8, 1.2]},
       "BananaPoint":   {"mode": "sparse", "zones": ["Z01", "Z02"],        "min_dist": 8.0,  "count": 25, "scale": [0.8, 1.2]},
       "CoconutPoint":  {"mode": "sparse", "zones": ["Z01", "Z07", "Z04_rim"], "min_dist": 12.0, "count": 18, "scale": [0.9, 1.3]},
-      "BambooPoint":   {"mode": "cloud",  "zones": ["Z06"],               "min_dist": 1.7,  "scale": [0.8, 1.3]},
+      "BambooPoint":   {"mode": "cloud",  "zones": ["Z06"],               "min_dist": 2.6,  "scale": [0.8, 1.3]},
       "ShrubPoint":    {"mode": "cloud",  "zones": ["Z06_under", "canal_banks"], "min_dist": 3.0, "scale": [0.7, 1.3]},
       "ReedPoint":     {"mode": "cloud",  "zones": ["pond_rim", "canal_banks", "paddy_rim"], "min_dist": 1.2, "keep": 0.35, "scale": [0.8, 1.2]},
       "LilyPoint":     {"mode": "cloud",  "zones": ["pond_water"],        "min_dist": 1.2,  "keep": 0.3, "scale": [0.6, 1.2]},

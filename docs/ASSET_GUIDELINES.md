@@ -91,7 +91,8 @@ Thêm `environment/roads/` so với đề xuất ban đầu vì zone 08 Đườn
 Ưu tiên: **P0** = cần cho M2 (map nhìn giống ảnh) · **P1** = cần cho M3 (cinematic) · **P2** = trang trí thêm.
 Cột *Point* = tên điểm trong map mà asset sẽ thay (xem `assets/asset_manifest.json`).
 **Model thật đã có** (2026-10-03, xem [`assets/CREDITS.md`](../assets/CREDITS.md), ảnh dọn xong ở
-[`reference/assets/imported_*.webp`](reference/assets/)): `house_vn_01`, `house_vn_02`, `water_jar_vn`, `bamboo_fence`
+[`reference/assets/imported_*.webp`](reference/assets/)): `house_vn_01`, `house_vn_02`, `water_jar_vn`, `bamboo_fence`,
+`bamboo_clump_01/02`, `banana_clump_vn`, `coconut_palm`, `water_buffalo` (trâu châu Phi — tạm), `chicken_vn` (P1)
 (+ `flower_pot_vn` P2). Model trắng từ Hunyuan3D (chưa chạy Paint) được gán vật liệu tạm bằng `import_asset.py` —
 nên tô texture thật (Hunyuan3D-Paint / Meshy) khi có GPU ≥ 21 GB.
 

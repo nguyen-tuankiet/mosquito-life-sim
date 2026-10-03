@@ -55,8 +55,9 @@ house · trees · rice · bamboo · pond · canal.
 
 - [x] Chốt điểm mở key shot của M1 → hướng **(a)**: giữ layout, key shot ở bờ ao cạnh cầu ao (mặc định, chưa có trả lời khác)
 - [x] Asset P0 **procedural v1**: 33/34 (`python blender/scripts/make_assets.py`), thiếu `water_buffalo` (đang dùng `cow.glb` CC0)
-- [ ] Thay asset P0 bằng model **AI 3D / library thật** — đang có 4/34: `house_vn_01`, `house_vn_02`, `water_jar_vn`,
-      `bamboo_fence` (dọn bằng `import_asset.py`, xem `assets/CREDITS.md`)
+- [ ] Thay asset P0 bằng model **AI 3D / library thật** — đang có 9/34: `house_vn_01`, `house_vn_02`, `water_jar_vn`,
+      `bamboo_fence`, `bamboo_clump_01/02`, `banana_clump_vn`, `coconut_palm`, `water_buffalo` (+ `chicken_vn` P1)
+      (dọn bằng `import_asset.py`, xem `assets/CREDITS.md`)
 - [x] `generate_map.py --stage env --res 1 --swap --godot` (thực vật procedural + thay placeholder)
 - [x] Godot: MultiMesh cho cỏ/lúa/tre đọc `map_points.json` (`godot/world/foliage_loader.gd`) + shader nước
 - [x] Ảnh so sánh: key shot + 8 postcard cạnh ảnh reference → [`M2_REVIEW.md`](reference/env/M2_REVIEW.md)

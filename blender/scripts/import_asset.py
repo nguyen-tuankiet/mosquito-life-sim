@@ -40,19 +40,27 @@ def load_source(path):
         path = next(os.path.join(r, f) for r, _, fs in os.walk(tmp) for f in fs if f.endswith((".gltf", ".glb")))
     bpy.ops.import_scene.gltf(filepath=path)
     bpy.context.view_layer.update()
-    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
-    for o in bpy.context.scene.objects:
-        o.select_set(o.type == "MESH")
-    bpy.context.view_layer.objects.active = meshes[0]
-    if len(meshes) > 1:
+    # "Nướng" từng mesh ở trạng thái đã tính (khung xương, empty cha, transform) sang toạ độ thế giới,
+    # để model có rig (gà, trâu…) giữ đúng tư thế và hướng khi bỏ khung xương.
+    dg = bpy.context.evaluated_depsgraph_get()
+    # bỏ mesh chỉ dùng làm hình hiển thị xương (importer glTF tạo "Icosphere" cho armature)
+    bone_shapes = {pb.custom_shape for a in bpy.context.scene.objects if a.type == "ARMATURE"
+                   for pb in a.pose.bones if pb.custom_shape}
+    baked = []
+    for o in [o for o in bpy.context.scene.objects if o.type == "MESH" and o not in bone_shapes]:
+        e = o.evaluated_get(dg)
+        me = bpy.data.meshes.new_from_object(e, preserve_all_data_layers=True, depsgraph=dg)
+        me.transform(e.matrix_world)
+        baked.append(bpy.data.objects.new(o.name + "_baked", me))
+    for o in list(bpy.context.scene.objects):
+        bpy.data.objects.remove(o)
+    for o in baked:
+        bpy.context.scene.collection.objects.link(o)
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = baked[0]
+    if len(baked) > 1:
         bpy.ops.object.join()
     ob = bpy.context.view_layer.objects.active
-    ob.parent = None
-    ob.matrix_world = ob.matrix_world.copy()
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    for o in list(bpy.context.scene.objects):
-        if o is not ob:
-            bpy.data.objects.remove(o)
     return ob
 
 
