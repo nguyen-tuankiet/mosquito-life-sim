@@ -8,3 +8,4 @@ blender/exports/*
 !blender/exports/.gitkeep
 godot/world/generated/
 assets/_procedural/
+assets/_incoming/
