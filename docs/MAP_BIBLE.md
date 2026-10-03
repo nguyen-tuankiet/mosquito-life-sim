@@ -402,7 +402,7 @@ vegetation:
   coconut_palm:  { zones: [Z01, Z04_rim, Z07], density: "~18 cây, nằm ở rìa, KHÔNG trong ruộng", height: [10, 16] }
   big_shade_tree:{ zones: [Z02b], count: 2, pos: [[170, 150], [150, 240]], note: "cây đa/me lớn có hốc cây — thân to trong ảnh 2. Vườn cây" }
   fruit_garden:  { zones: [Z02], density: "mật độ cao, xen rau, chậu hoa" }
-  bamboo_grove:  { zones: [Z06], density: "rất dày (~0.35 khóm/m²)", height: [8, 14], note: "đường mòn xuyên rừng ở z≈215" }
+  bamboo_grove:  { zones: [Z06], density: "dày (~0.15 khóm/m², mỗi khóm ~15 cây, tán ~6 m)", height: [8, 14], note: "đường mòn xuyên rừng ở z≈215" }
   dense_shrub:   { zones: [Z06, canal_banks], height: [1, 2.5] }
   reeds_cattail: { zones: [pond_rim, canal_banks, paddy_bunds], height: [1.5, 2.5] }
   water_lily:    { zones: [pond_main], coverage: 0.2 }
@@ -593,6 +593,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-03 | Mật độ rừng tre 0.35 → ~0.15 khóm/m² (`min_dist` 1.7 → 2.6 m) khi thay bằng model tre thật (khóm lớn ~15 cây, tán 6 m): rừng vẫn kín, giảm ~55% số khóm cho Godot. Không đổi vị trí zone. |
 | 2026-10-03 | **Duyệt M1** (`check_greybox.py`) — sửa lỗi hình học: cầu R2 dời về đúng tâm kênh (114 → 111) và dài 16 → 24 m để phủ hết hai bờ; W07 dời (406,297) → (385,282) vì cũ nằm trên giao điểm bờ ruộng (khô); bờ thửa ruộng căn theo R4 (z = 300) thay vì chia đều 6 hàng (trước đó có 2 bờ cách nhau 2.5 m); R4 nối tới R1 qua cống L11; kênh nhánh hạ mặt nước 0.0 → −0.25 m để hợp lưu êm với kênh chính. |
 | 2026-10-03 | Tổ chức lại: spec → `docs/map_spec.json`, script → `blender/scripts/`, manifest → `assets/`; thêm M0 blockout + 3 loại reference (§15). Không đổi số liệu bố cục. |
 | 2026-10-03 | Thêm §15 pipeline + `map_spec.json`. Sửa nhất quán (không đổi vị trí): L05 thuộc Z01 (toạ độ (225,110) nằm trong rect Z01); thêm vũng `[330,450,2]` cho W01; khai báo đường mòn tre T1 (đã có ở §8/L12). |
