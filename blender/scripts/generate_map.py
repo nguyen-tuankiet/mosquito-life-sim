@@ -1,17 +1,21 @@
-"""Entry point: sinh toàn bộ map làng quê Việt Nam từ docs/MAP_BIBLE.md (map_spec.json).
+"""Entry point: sinh map làng quê Việt Nam từ docs/MAP_BIBLE.md (docs/map_spec.json).
 
-Chạy:
-  blender -b -P tools/blender/generate_map.py -- [--res 2] [--out tools/blender/out] [--no-glb] [--swap]
-  (hoặc với module bpy của pip:  python tools/blender/generate_map.py --res 2)
+Chạy (theo milestone, xem docs/ROADMAP.md):
+  M1 greybox : blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot
+  M2 env     : blender -b -P blender/scripts/generate_map.py -- --stage env --swap --godot
+  (hoặc với module bpy của pip:  python blender/scripts/generate_map.py --stage greybox --godot)
 
-Tạo ra (trong --out):
-  vietnamese_rural_village.blend   — scene đầy đủ (Terrain, Road, Pond, Canal, Rice Field, Forest,
-                                     Grassland, House placeholders, Fence, Points…)
-  vietnamese_rural_village.glb     — cho Godot (không gồm point cloud thực vật)
-  map_points.json                  — point cloud thực vật (toạ độ Godot) cho MultiMesh
-  map_layout.json                  — mọi *Point / EggSite / Zone / Spawn (toạ độ Godot + props)
+Stage:
+  greybox  Terrain, Water (Canal, Pond, Rice Field, vũng), Road, 8 Zone, House placeholders, Fence,
+           Point/Landmark placeholders, Spawn, Camera bounds. KHÔNG cây cỏ, KHÔNG thay asset.
+  env      greybox + thực vật procedural (Forest, Grassland, lúa…) + có thể --swap model thật.
 
---swap: chạy luôn swap_assets.py (asset_manifest.json) trước khi lưu/xuất.
+Tạo ra:
+  blender/master_map.blend                  — scene đầy đủ (file sinh ra, KHÔNG sửa tay)
+  blender/exports/<map>_<stage>.glb         — GLB cho Godot (pipeline chính: Blender → GLB → Godot)
+  blender/exports/map_layout.json           — mọi *Point / EggSite / Zone / Spawn (toạ độ Godot + props)
+  blender/exports/map_points.json           — point cloud thực vật cho MultiMesh (chỉ stage env)
+  --godot: copy các file trên sang godot/world/generated/
 """
 import json
 import os
@@ -77,8 +81,12 @@ def export_glb(path):
 
 
 def main():
-    a = C.parse_args({"res": 2.0, "out": os.path.join(C.HERE, "out"), "glb": True, "swap": False,
-                      "strict": False})
+    a = C.parse_args({"stage": "greybox", "res": 2.0, "out": C.EXPORT_DIR, "blend": C.BLEND_PATH,
+                      "glb": True, "swap": False, "strict": False, "godot": False})
+    if a.stage not in ("greybox", "env"):
+        sys.exit("--stage phải là greybox hoặc env")
+    if a.swap and a.stage != "env":
+        sys.exit("--swap chỉ dùng ở stage env (M2). Greybox phải được xác nhận trước khi thay asset.")
     t0 = time.time()
     spec = C.load_spec()
     warns = C.validate_spec(spec)
@@ -92,22 +100,37 @@ def main():
     print("→ Terrain");  generate_terrain.build(spec, ctx)
     print("→ Water");    generate_water.build(spec, ctx)
     print("→ Village");  generate_village.build(spec, ctx)
-    print("→ Foliage");  generate_foliage.build(spec, ctx)
+    if a.stage == "env":
+        print("→ Foliage");  generate_foliage.build(spec, ctx)
 
     if a.swap:
         import swap_assets
         print("→ Swap assets")
         swap_assets.run(swap_assets.load_manifest())
 
-    os.makedirs(a.out, exist_ok=True)
-    name = spec["map"]["name"]
+    out = os.path.abspath(a.out)
+    os.makedirs(out, exist_ok=True)
+    name = f"{spec['map']['name']}_{a.stage}"
     bpy = C.bpy_mod()
-    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(os.path.abspath(a.out), name + ".blend"))
-    export_points(spec, ctx, os.path.join(a.out, "map_points.json"))
-    export_layout(spec, os.path.join(a.out, "map_layout.json"))
+    bpy.context.scene["map_stage"] = a.stage
+    if a.blend:
+        os.makedirs(os.path.dirname(os.path.abspath(a.blend)), exist_ok=True)
+        bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(a.blend))
+    files = [os.path.join(out, "map_layout.json")]
+    export_layout(spec, files[0])
+    if a.stage == "env":
+        files.append(os.path.join(out, "map_points.json"))
+        export_points(spec, ctx, files[-1])
     if a.glb:
-        export_glb(os.path.join(os.path.abspath(a.out), name + ".glb"))
-    print(f"✓ Xong trong {time.time() - t0:.1f}s → {os.path.abspath(a.out)}")
+        files.append(os.path.join(out, name + ".glb"))
+        export_glb(files[-1])
+    if a.godot:
+        import shutil
+        os.makedirs(C.GODOT_WORLD_DIR, exist_ok=True)
+        for f in files:
+            shutil.copy2(f, C.GODOT_WORLD_DIR)
+        print("→ Godot:", C.GODOT_WORLD_DIR)
+    print(f"✓ Xong ({a.stage}) trong {time.time() - t0:.1f}s → {out}")
 
 
 if __name__ == "__main__":

@@ -573,14 +573,19 @@ environment:
 
 ---
 
-## 15. Pipeline sinh map (Blender)
+## 15. Pipeline sinh map (Blender → GLB → Godot)
 
-- **Dữ liệu máy đọc**: `tools/blender/map_spec.json` là bản sao số liệu của file này. Sửa Bible → sửa JSON cho khớp
-  (cùng một commit). `generate_map.py` tự kiểm tra luật §7/§14 và in cảnh báo `⚠ BIBLE` (`--strict` để dừng).
-- **Sinh map**: `blender -b -P tools/blender/generate_map.py` → Terrain, Road, Pond, Canal, Rice Field, Forest,
-  Grassland, House placeholders, Fence, các `*Point`, Zone, Spawn, Camera bounds.
-- **Thay model thật**: `tools/blender/asset_manifest.json` + `swap_assets.py` (`HousePoint_01 → house_vn_01.glb`…).
-- Hướng dẫn chi tiết: `tools/blender/README.md`.
+File này là **Reference B (Layout)**. Hai reference còn lại: A Visual = [`ART_DIRECTION.md`](ART_DIRECTION.md),
+C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milestone: [`ROADMAP.md`](ROADMAP.md).
+
+- **Dữ liệu máy đọc**: [`docs/map_spec.json`](map_spec.json) là bản sao số liệu của file này. Sửa Bible → sửa JSON cho khớp
+  (cùng một commit). Các script tự kiểm tra luật §7/§14 và in cảnh báo `⚠ BIBLE` (`--strict` để dừng).
+- **M0 2D blockout**: `python blender/scripts/blockout_2d.py` → `docs/reference/layout/00_blockout_2d.png` + 8 sheet zone.
+- **M1 3D greybox**: `blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot` → Terrain, Water, Road,
+  8 Zone, House placeholders, Fence, các `*Point`, Spawn, Camera bounds → xem bằng `godot/world/greybox_viewer.tscn`.
+- **M2 thay model thật** (chỉ sau khi M1 được xác nhận): `--stage env --swap` với `assets/asset_manifest.json`
+  (`HousePoint_01 → house_vn_01.glb`…).
+- Hướng dẫn chi tiết: [`blender/README.md`](../blender/README.md).
 
 ---
 
@@ -588,5 +593,6 @@ environment:
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-10-03 | Thêm §15 pipeline + `tools/blender/map_spec.json`. Sửa nhất quán (không đổi vị trí): L05 thuộc Z01 (toạ độ (225,110) nằm trong rect Z01); thêm vũng `[330,450,2]` cho W01; khai báo đường mòn tre T1 (đã có ở §8/L12). |
+| 2026-10-03 | Tổ chức lại: spec → `docs/map_spec.json`, script → `blender/scripts/`, manifest → `assets/`; thêm M0 blockout + 3 loại reference (§15). Không đổi số liệu bố cục. |
+| 2026-10-03 | Thêm §15 pipeline + `map_spec.json`. Sửa nhất quán (không đổi vị trí): L05 thuộc Z01 (toạ độ (225,110) nằm trong rect Z01); thêm vũng `[330,450,2]` cho W01; khai báo đường mòn tre T1 (đã có ở §8/L12). |
 | 2026-10-03 | Bản đầu tiên: số liệu đo từ minimap của ảnh MASTER REFERENCE. Kích thước 500 × 540 m (tỉ lệ minimap), khác ví dụ 500 × 400 ban đầu để giữ đúng bố cục ảnh. |

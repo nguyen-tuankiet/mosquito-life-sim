@@ -8,3 +8,6 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.hdr filter=lfs diff=lfs merge=lfs -text
+
+# Ảnh tài liệu nhỏ (blockout/reference) lưu thẳng trong git, không qua LFS
+docs/reference/**/*.png -filter -diff -merge binary
