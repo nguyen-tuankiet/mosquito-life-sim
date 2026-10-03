@@ -53,11 +53,13 @@ terrain · water · road · 8 zones (+ placeholder nhà/rào/landmark, spawn, ca
 
 house · trees · rice · bamboo · pond · canal.
 
-- [ ] Chốt điểm mở key shot của M1 (`M1_REVIEW.md` §4: (a) đổi khung hình hay (b) thêm nhà cạnh ao)
-- [ ] Làm/tải asset **P0** (34 asset) theo `docs/ASSET_GUIDELINES.md §6`, cleanup theo §4
-- [ ] `generate_map.py --stage env --swap --godot` (thực vật procedural + thay placeholder)
-- [ ] Godot: MultiMesh cho cỏ/lúa/tre đọc `map_points.json`
-- [ ] **Xác nhận**: dựng lại key shot (sân H01 nhìn ra ao/ruộng) + 8 postcard shot, đặt cạnh ảnh reference
+- [x] Chốt điểm mở key shot của M1 → hướng **(a)**: giữ layout, key shot ở bờ ao cạnh cầu ao (mặc định, chưa có trả lời khác)
+- [x] Asset P0 **procedural v1**: 33/34 (`python blender/scripts/make_assets.py`), thiếu `water_buffalo` (đang dùng `cow.glb` CC0)
+- [ ] Thay asset P0 bằng model **AI 3D / library thật** (thả cùng tên vào `assets/…`, tự thắng bản procedural)
+- [x] `generate_map.py --stage env --res 1 --swap --godot` (thực vật procedural + thay placeholder)
+- [x] Godot: MultiMesh cho cỏ/lúa/tre đọc `map_points.json` (`godot/world/foliage_loader.gd`) + shader nước
+- [x] Ảnh so sánh: key shot + 8 postcard cạnh ảnh reference → [`M2_REVIEW.md`](reference/env/M2_REVIEW.md)
+- [ ] **Xác nhận** (chủ dự án): xem `compare_reference.webp` — đúng bố cục/thành phần, chưa giống chất liệu + ánh sáng
 
 ### M3 — Cinematic · *phải giống MOOD*
 

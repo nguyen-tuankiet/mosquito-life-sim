@@ -89,20 +89,18 @@ def lib_collection(path):
     if path in _LIB:
         return _LIB[path]
     name = "LIB_" + os.path.splitext(os.path.basename(path))[0]
-    lib_root = C.collection("ASSET_LIBRARY", C.collection("MAP"))
+    lib_root = C.library_collection("ASSET_LIBRARY")
     col = bpy.data.collections.get(name)
     if col is None:
         col = bpy.data.collections.new(name)
         lib_root.children.link(col)
         before = set(bpy.data.objects)
         bpy.ops.import_scene.gltf(filepath=path)
+        bpy.context.view_layer.update()   # matrix_world đúng trước khi rời scene (đo bbox bên dưới)
         for ob in set(bpy.data.objects) - before:
             for c in list(ob.users_collection):
                 c.objects.unlink(ob)
             col.objects.link(ob)
-    lib_root.hide_render = True
-    lib_root.hide_viewport = True
-    bpy.context.view_layer.update()
     lo, hi = Vector((1e9,) * 3), Vector((-1e9,) * 3)
     for ob in col.all_objects:
         if ob.type != "MESH":
@@ -154,14 +152,18 @@ def fit_scale(fit, lo, hi, point, ph):
     return 1.0
 
 
-def _instance(name, col, lib, lo, hi, scale, parent=None):
+def _instance(name, col, lib, lo, hi, scale, parent=None, align="base", source=""):
     bpy = C.bpy_mod()
     inst = bpy.data.objects.new(name, None)
     inst.instance_type = "COLLECTION"
     inst.instance_collection = lib
-    # đặt đáy-tâm của asset vào gốc point
-    inst.location = (-(lo.x + hi.x) / 2 * scale, -(lo.y + hi.y) / 2 * scale, -lo.z * scale)
+    if align == "origin":
+        inst.location = (0.0, 0.0, 0.0)   # giữ gốc model (mặt sàn cầu, mực nước thuyền)
+    else:
+        # đặt đáy-tâm của asset vào gốc point
+        inst.location = (-(lo.x + hi.x) / 2 * scale, -(lo.y + hi.y) / 2 * scale, -lo.z * scale)
     inst.scale = (scale,) * 3
+    inst["source_file"] = os.path.relpath(source, C.REPO) if source else ""
     col.objects.link(inst)
     if parent is not None:
         inst.parent = parent
@@ -204,7 +206,9 @@ def swap_points(manifest):
             ordinal[rule["match"]] = k + 1
         lib, lo, hi = lib_collection(paths[int(k) % len(paths)])
         s = fit_scale(rule.get("fit"), lo, hi, p, ph)
-        _instance(p.name + ASSET_SUFFIX, p.users_collection[0], lib, lo, hi, s, parent=p)
+        path = paths[int(k) % len(paths)]
+        _instance(p.name + ASSET_SUFFIX, p.users_collection[0], lib, lo, hi, s, parent=p,
+                  align=rule.get("align", "base"), source=path)
         _set_ph_visible(ph, False)
         stats["swapped"] += 1
     return stats
@@ -230,7 +234,7 @@ def swap_clouds(manifest):
                     acol.objects.link(o)
             stats[t] = "placeholder"
             continue
-        stash = C.collection("ASSET_PROXY_STASH", bpy.data.collections["ASSET_LIBRARY"])
+        stash = C.library_collection("ASSET_PROXY_STASH", C.library_collection("ASSET_LIBRARY"))
         for o in proxies:  # proxy ra khỏi collection để Collection Info chỉ thấy asset thật
             acol.objects.unlink(o)
             if o.name not in stash.objects:
@@ -238,7 +242,7 @@ def swap_clouds(manifest):
         for i, path in enumerate(paths):
             lib, lo, hi = lib_collection(path)
             s = fit_scale(rule.get("fit"), lo, hi, {}, None)
-            _instance(f"{t}_v{i:02d}{ASSET_SUFFIX}", acol, lib, lo, hi, s)
+            _instance(f"{t}_v{i:02d}{ASSET_SUFFIX}", acol, lib, lo, hi, s, align=rule.get("align", "base"), source=path)
         stats[t] = [os.path.basename(p) for p in paths]
     return stats
 

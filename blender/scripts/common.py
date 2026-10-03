@@ -267,6 +267,19 @@ def collection(name, parent=None):
     return col
 
 
+def library_collection(name, parent=None):
+    """Collection KHÔNG gắn vào scene (chỉ để instance: Geometry Nodes, collection instance).
+    Không tự render, không vào glTF trực tiếp, nhưng instance của nó vẫn render/xuất bình thường."""
+    bpy = bpy_mod()
+    col = bpy.data.collections.get(name)
+    if col is None:
+        col = bpy.data.collections.new(name)
+        col.use_fake_user = True
+        if parent is not None:
+            parent.children.link(col)
+    return col
+
+
 def link(obj, col):
     for c in list(obj.users_collection):
         c.objects.unlink(obj)

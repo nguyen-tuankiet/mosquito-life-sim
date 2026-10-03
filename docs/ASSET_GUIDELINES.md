@@ -2,7 +2,7 @@
 
 > Đọc cùng [`ART_DIRECTION.md`](ART_DIRECTION.md) (Reference A) và [`MAP_BIBLE.md`](MAP_BIBLE.md) (Reference B).
 >
-> ⛔ **Chưa tải / tạo asset nào cho tới khi M1 Greybox được XÁC NHẬN GIỐNG** (xem [`ROADMAP.md`](ROADMAP.md)).
+> M1 Greybox đã được xác nhận (2026-10-03) → được làm asset theo bảng §6, P0 trước (xem [`ROADMAP.md`](ROADMAP.md)).
 > Map đúng concept → tìm model phù hợp map. **Không** "có model đẹp → nhét vào map".
 
 ---
@@ -88,7 +88,12 @@ Thêm `environment/roads/` so với đề xuất ban đầu vì zone 08 Đườn
 
 Ưu tiên: **P0** = cần cho M2 (map nhìn giống ảnh) · **P1** = cần cho M3 (cinematic) · **P2** = trang trí thêm.
 Cột *Point* = tên điểm trong map mà asset sẽ thay (xem `assets/asset_manifest.json`).
-Trạng thái hiện tại: **tất cả chưa có** (đúng quy trình — đợi xác nhận M1).
+Trạng thái (2026-10-03): **procedural v1** cho 33/34 asset P0 + `house_vn_03`, `old_tire`, `bamboo_hut_vn`,
+`shrub_tropical_02`, `fern_clump` — sinh bằng `python blender/scripts/make_assets.py` vào `assets/_procedural/`
+(gitignore; contact sheet [`reference/assets/procedural_v1.webp`](reference/assets/procedural_v1.webp)).
+Vật liệu nền P0 = bảng màu địa hình (`generate_terrain.py → LOOK`); shader nước = `godot/shaders/water_surface.gdshader`.
+**Chưa có**: `water_buffalo` (fallback `cow.glb`, sai loài). **Chưa có bản thật** cho mọi asset: bản procedural chỉ là tạm —
+thả model AI 3D / library cùng tên vào đúng thư mục dưới đây là tự thay.
 
 ### 01 Nhà dân — 10 assets
 

@@ -12,12 +12,12 @@ import numpy as np  # noqa: E402
 
 import common as C  # noqa: E402
 
-WATER_COLORS = {
-    "natural_flowing": (0.22, 0.42, 0.48),
-    "stagnant_slow": (0.28, 0.38, 0.28),
-    "clean_still": (0.20, 0.45, 0.52),
-    "shallow_nutrient": (0.40, 0.50, 0.32),
-    "temporary": (0.42, 0.40, 0.32),
+WATER_COLORS = {   # ART_DIRECTION §3: ao #4E7680, nước tù #5B6B48
+    "natural_flowing": (0.30, 0.46, 0.50),
+    "stagnant_slow": (0.36, 0.42, 0.28),
+    "clean_still": (0.31, 0.46, 0.50),
+    "shallow_nutrient": (0.42, 0.50, 0.36),
+    "temporary": (0.45, 0.42, 0.34),
 }
 
 

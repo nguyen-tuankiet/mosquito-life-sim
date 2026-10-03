@@ -1,10 +1,12 @@
 extends Node3D
-## M1 — Xem 3D greybox của map để XÁC NHẬN GIỐNG layout trước khi làm asset (docs/ROADMAP.md).
+## Xem map để duyệt milestone (docs/ROADMAP.md): M1 greybox, M2 environment (nhà, cây, lúa, tre, nước).
 ## Nạp GLB lúc chạy (không cần Godot import) từ res://world/generated/, sinh bởi:
-##   blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot
+##   blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot          (M1)
+##   blender -b -P blender/scripts/generate_map.py -- --stage env --swap --godot       (M2, ưu tiên nếu có)
 ##
 ## Điều khiển: giữ chuột phải + kéo = nhìn · WASD = bay · Q/E = xuống/lên · Shift = nhanh
 ##             1…8 = bay tới zone 1…8 · 0 = toàn cảnh · Tab = bật/tắt nhãn · F = bật/tắt sương
+##             G = bật/tắt cây cỏ · R = mưa (hiện vũng nước tạm thời)
 
 const GEN_DIR := "res://world/generated/"
 const MAP_NAME := "vietnamese_rural_village"
@@ -20,6 +22,17 @@ var yaw := 0.0
 var pitch := -0.6
 var env: Environment
 var info: Label
+var foliage: Node3D
+var puddles: Array[Node3D] = []
+const WATER_SHADER := preload("res://shaders/water_surface.gdshader")
+# mặt nước theo tên mesh (MAP_BIBLE §5 / §6): màu, hướng chảy
+const WATER_LOOK := {
+	"Water_canal_main": [Color(0.30, 0.46, 0.50, 0.85), Vector2(0.0, 0.25)],
+	"Water_canal_branch": [Color(0.36, 0.42, 0.28, 0.9), Vector2(0.0, 0.08)],
+	"Water_pond_main": [Color(0.306, 0.463, 0.502, 0.85), Vector2.ZERO],
+	"Water_paddy_main": [Color(0.42, 0.50, 0.36, 0.55), Vector2.ZERO],
+	"Water_puddle": [Color(0.45, 0.42, 0.34, 0.8), Vector2.ZERO],
+}
 
 
 func _ready() -> void:
@@ -55,8 +68,17 @@ func _ready() -> void:
 	add_child(root)
 	_fix_materials(root)
 	_load_layout()
+	var n_fol := 0
+	if stage == "env":
+		var loader = preload("res://world/foliage_loader.gd").new()   # không định kiểu: gọi build() của script
+		loader.name = "Foliage"
+		add_child(loader)
+		n_fol = loader.build(GEN_DIR + "map_points.json", GEN_DIR + "foliage/")
+		foliage = loader
 	_fly_overview()
-	info.text = "M1 GREYBOX · %s (%s)\nChuột phải: nhìn · WASD/QE: bay · Shift: nhanh · 1–8: zone · 0: toàn cảnh · Tab: nhãn · F: sương" % [MAP_NAME, stage]
+	info.text = ("%s · %s · %d cây cỏ\nChuột phải: nhìn · WASD/QE: bay · Shift: nhanh · 1–8: zone · 0: toàn cảnh"
+		+ " · Tab: nhãn · F: sương · G: cây cỏ · R: mưa") % [
+			"M2 ENVIRONMENT" if stage == "env" else "M1 GREYBOX", MAP_NAME, n_fol]
 
 
 func _setup_env() -> void:
@@ -95,6 +117,17 @@ func _fix_materials(n: Node) -> void:
 				m2.vertex_color_use_as_albedo = true
 				m2.albedo_color = Color.WHITE
 				mi.set_surface_override_material(i, m2)
+	if n is MeshInstance3D and n.name.begins_with("Water_"):
+		var key := "Water_puddle" if n.name.begins_with("Water_puddle") else String(n.name)
+		if WATER_LOOK.has(key):
+			var sm := ShaderMaterial.new()
+			sm.shader = WATER_SHADER
+			sm.set_shader_parameter("water_color", WATER_LOOK[key][0])
+			sm.set_shader_parameter("flow", WATER_LOOK[key][1])
+			(n as MeshInstance3D).material_override = sm
+		if key == "Water_puddle":
+			(n as Node3D).visible = false   # chỉ có khi mưa (MAP_BIBLE §5 rain_only)
+			puddles.append(n as Node3D)
 	for c in n.get_children():
 		_fix_materials(c)
 
@@ -178,6 +211,11 @@ func _unhandled_input(e: InputEvent) -> void:
 			labels.visible = not labels.visible
 		elif k == KEY_F:
 			env.fog_enabled = not env.fog_enabled
+		elif k == KEY_G and foliage:
+			foliage.visible = not foliage.visible
+		elif k == KEY_R:
+			for p in puddles:
+				p.visible = not p.visible
 
 
 func _process(dt: float) -> void:

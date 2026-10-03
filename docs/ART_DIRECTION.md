@@ -71,8 +71,10 @@ Màu zone trong greybox (`map_spec.json → zones.*.color`) chỉ để phân bi
 
 ## 5. Bố cục khung hình (camera)
 
-- Key shot = **ảnh chính**: đứng ở sân nhà H01 nhìn về phía ao/ruộng — tiền cảnh lu + xô, trung cảnh ao + cầu ao,
-  hậu cảnh ruộng lúa + hàng dừa + mái nhà xa + núi. Map phải dựng lại được khung hình này (dùng làm ảnh so sánh M2/M3).
+- Key shot = **ảnh chính**. Vì layout (Reference B) đặt ao cách nhà H01 ~270 m, khung hình được dựng lại theo hướng (a)
+  ([`M1_REVIEW.md §4`](reference/greybox/M1_REVIEW.md)): đứng ở **bờ Đông ao cạnh cầu ao L08**, nhìn về Tây — tiền cảnh
+  bờ + sậy, trung cảnh ao + cầu ao + bèo, hậu cảnh vườn + rừng tre. Tinh thần "lu + xô + sân nhà" được giữ ở postcard 1.
+  Camera: `blender/scripts/render_views.py → POSTCARDS`.
 - Mỗi ảnh nhỏ 1–8 trong reference = 1 "postcard shot" của zone đó; M3 phải có 8 camera bookmark tương ứng.
 
 ## 6. Không được

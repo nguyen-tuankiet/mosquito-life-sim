@@ -102,6 +102,11 @@ def allowed(spec, M, t, X, Z):
         block |= M.paddy(X, Z, 0.5 if t != "CoconutPoint" else 3.0)
     if t in ("BambooPoint", "ShrubPoint") and "Z02" in spec["zones"]:
         block |= zid == "Z02"  # vườn bờ Tây (Z02a) nằm trong rừng tre → để trống
+    if t in ("BambooPoint", "ShrubPoint"):
+        # lối mòn trong rừng: chừa rộng hơn (bụi tre xoè ~2 m) để còn lối đi và ánh sáng lọt xuống
+        for r in spec["roads"].values():
+            if r["type"] == "trail":
+                block |= C.dist_to_polyline(X, Z, r["points"]) < r["w"] / 2 + 3.0
     return ok & ~block
 
 
@@ -133,7 +138,7 @@ def _instancer_tree(name):
     ci = N.new("GeometryNodeCollectionInfo")
     ci.transform_space = "ORIGINAL"
     ci.inputs["Separate Children"].default_value = True
-    ci.inputs["Reset Children"].default_value = True
+    ci.inputs["Reset Children"].default_value = False   # giữ scale/offset "fit" của asset (khớp foliage_loader.gd)
     m2p = N.new("GeometryNodeMeshToPoints")
     iop = N.new("GeometryNodeInstanceOnPoints")
     iop.inputs["Pick Instance"].default_value = True
@@ -173,7 +178,7 @@ def build(spec, ctx):
     M = C.Masks(spec)
     F = spec["foliage"]
     root = C.collection("Foliage", ctx["root"])
-    lib = C.collection("ASSET_LIBRARY", ctx["root"])  # proxy / asset thật cho cloud instancing
+    lib = C.library_collection("ASSET_LIBRARY")  # proxy / asset thật cho cloud instancing (ngoài scene)
     ctx.setdefault("clouds", {})
     W, D = fr.W, fr.D
 
@@ -207,12 +212,9 @@ def build(spec, ctx):
             continue
 
         # cloud
-        acol = C.collection("ASSET_" + t, lib)
+        acol = C.library_collection("ASSET_" + t, lib)
         if not acol.objects:
-            px = _proxy(t, acol)
-            px.location = (0, 0, -1000)  # proxy nằm xa; Reset Children đưa về gốc khi instance
-        lib.hide_render = True
-        lib.hide_viewport = True
+            _proxy(t, acol)
 
         verts = np.stack([X - W / 2, -(Z - D / 2), Y], -1).astype(np.float32)
         me = bpy.data.meshes.new(t.replace("Point", "Points"))
