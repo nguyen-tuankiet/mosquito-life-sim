@@ -19,7 +19,10 @@ blender/
     ├── generate_foliage.py   Forest (tre), Grassland, lúa, sậy, cây… procedural, seed cố định (chỉ stage env)
     ├── swap_assets.py        placeholder → .glb thật theo assets/asset_manifest.json (chỉ stage env)
     ├── check_greybox.py      M1: kiểm tra tự động (chìm/lơ lửng, nền nhà, đường, mặt nước, bounds)
-    └── render_views.py       ảnh duyệt 3D bằng Cycles CPU (toàn cảnh, 8 zone, key shot, tầm muỗi)
+    ├── render_views.py       ảnh duyệt 3D bằng Cycles CPU (greybox: góc xiên; env: postcard tầm mắt người)
+    ├── compare_reference.py  ghép ảnh reference ↔ render (duyệt M2/M3)
+    ├── make_assets.py        M2: dựng asset P0 procedural v1 → assets/_procedural/ (+ contact sheet)
+    └── assetgen/             thư viện dựng mesh + texture procedural, assets_v1.py = từng model
 ```
 
 ## Chạy
@@ -35,8 +38,10 @@ blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot
 python blender/scripts/check_greybox.py --report docs/reference/greybox/M1_check.md
 python blender/scripts/render_views.py
 
-# M2 — environment (CHỈ sau khi M1 được xác nhận) → thực vật procedural + thay model thật
-blender -b -P blender/scripts/generate_map.py -- --stage env --swap --godot
+# M2 — environment (CHỈ sau khi M1 được xác nhận) → asset tạm + thực vật procedural + thay model
+python blender/scripts/make_assets.py --sheet                        # assets/_procedural/*.glb
+blender -b -P blender/scripts/generate_map.py -- --stage env --res 1 --swap --godot
+python blender/scripts/render_views.py && python blender/scripts/compare_reference.py   # docs/reference/env/
 ```
 
 Không cài Blender: `pip install bpy numpy` (Python 3.11) rồi `python blender/scripts/generate_map.py --stage greybox --godot`.
@@ -52,7 +57,8 @@ Blender 4.2+ (đã test với Blender 5.0).
 | `--out`, `--blend` | `blender/exports`, `blender/master_map.blend` | Đổi chỗ lưu |
 
 Xem trong Godot: mở `godot/world/greybox_viewer.tscn` → **F6**. Chuột phải + kéo = nhìn, WASD/Q/E = bay,
-Shift = nhanh, **1–8 = bay tới zone**, 0 = toàn cảnh, Tab = nhãn, F = sương. Scene tự nạp `*_env.glb` nếu có, không thì `*_greybox.glb`.
+Shift = nhanh, **1–8 = bay tới zone**, 0 = toàn cảnh, Tab = nhãn, F = sương, G = cây cỏ, R = mưa.
+Scene tự nạp `*_env.glb` nếu có (kèm cây cỏ MultiMesh từ `map_points.json` + `foliage/*.glb`, shader nước), không thì `*_greybox.glb`.
 
 ## Kết quả
 
@@ -87,9 +93,10 @@ Mỗi vật thể cần model là một **empty tên cố định**, placeholder
 {"match": "HousePoint_03", "asset": "house_vn_01.glb", "fallback": "house2.glb", "fit": "footprint"}
 ```
 
-- File được tìm **theo tên, đệ quy** trong `assets/environment`, `assets/props`, `assets/creatures`, rồi mới tới thư viện
-  CC0 cũ `godot/assets/models/` (fallback tạm). Không có cả hai → giữ placeholder.
+- File được tìm **theo tên, đệ quy**; không tìm thấy ở đâu → giữ placeholder.
 - `fit`: `footprint` (khớp nền nhà/placeholder), `length` (khớp đoạn rào/cầu), `height:<m>`.
+- `align: "origin"`: giữ gốc model (mặt sàn cầu/cầu ao, mực nước thuyền) thay vì đặt đáy model xuống point.
+- Thứ tự tìm: `assets/environment|props|creatures` (model thật) → `assets/_procedural` (bản tạm) → CC0 cũ.
 - Chạy lại bao nhiêu lần cũng được; trên file có sẵn:
   `blender -b blender/master_map.blend -P blender/scripts/swap_assets.py -- --save --glb`
 - `.glb` trong repo nằm trên Git LFS → `git lfs pull` trước, nếu không swap sẽ báo và giữ placeholder.

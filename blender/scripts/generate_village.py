@@ -17,8 +17,9 @@ import common as C  # noqa: E402
 
 # độ nâng khác nhau để chỗ giao nhau không bị z-fighting (đường chính nằm trên)
 ROAD_Y_OFF = {"dirt_road": 0.05, "dirt_path": 0.04, "bund": 0.035, "trail": 0.03}
-ROAD_COLORS = {"dirt_road": (0.55, 0.38, 0.26), "dirt_path": (0.58, 0.42, 0.30),
-               "bund": (0.45, 0.40, 0.28), "trail": (0.40, 0.33, 0.22)}
+# tuyến tính (≈ sRGB #9A6B45 đường đất, #6E4B33 đất ẩm — ART_DIRECTION §3)
+ROAD_COLORS = {"dirt_road": (0.32, 0.15, 0.06), "dirt_path": (0.30, 0.15, 0.07),
+               "bund": (0.16, 0.30, 0.05), "trail": (0.16, 0.08, 0.035)}
 
 
 def _h(ctx, x, z):

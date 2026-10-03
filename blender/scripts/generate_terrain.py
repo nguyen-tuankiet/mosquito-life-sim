@@ -103,6 +103,57 @@ def heightfield(spec, X, Z, res):
     return H, zid
 
 
+# Bảng màu nền stage env — docs/ART_DIRECTION.md §3 (sRGB hex → tuyến tính khi gán vào màu đỉnh).
+LOOK = {
+    "grass": "#5E8A34", "grass_dry": "#8A9A4A", "yard": "#8A6A48", "litter": "#5C4A2E", "mud": "#5A4430",
+    "paddy_mud": "#4E4430", "bund": "#6F9A36", "road": "#9A6B45", "meadow": "#7FA040", "garden": "#4E7A2A",
+}
+
+
+def _lin(h):
+    c = np.array([int(h.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4)], np.float32)
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def _noise(X, Z, scale, seed):
+    """Value noise mượt (nội suy song tuyến lưới ngẫu nhiên) — biến thiên màu tự nhiên."""
+    rng = np.random.default_rng(seed)
+    gx, gz = X / scale, Z / scale
+    nx, nz = int(gx.max()) + 2, int(gz.max()) + 2
+    g = rng.random((nz, nx))
+    i0, j0 = gz.astype(int), gx.astype(int)
+    fz, fx = gz - i0, gx - j0
+    fx, fz = fx * fx * (3 - 2 * fx), fz * fz * (3 - 2 * fz)
+    return (g[i0, j0] * (1 - fx) + g[i0, j0 + 1] * fx) * (1 - fz) + (g[i0 + 1, j0] * (1 - fx) + g[i0 + 1, j0 + 1] * fx) * fz
+
+
+def look_colors(spec, X, Z, H, zid):
+    M = C.Masks(spec)
+    n = 0.55 * _noise(X, Z, 9.0, 1) + 0.3 * _noise(X, Z, 3.0, 2) + 0.15 * _noise(X, Z, 40.0, 3)
+    pick = {"filler": "grass", "Z01": "grass", "Z02": "garden", "Z03": "grass", "Z04": "paddy_mud",
+            "Z06": "litter", "Z07": "meadow"}
+    out = np.zeros(X.shape + (3,), np.float32)
+    for k, v in pick.items():
+        out[zid == k] = _lin(LOOK[v])
+    # sân đất loang cỏ, rừng tre loang rêu, cỏ loang cỏ khô
+    mix = np.clip((n - 0.45) * 3, 0, 1)[..., None]
+    alt = np.zeros_like(out)
+    for k, v in {"filler": "grass_dry", "Z01": "grass", "Z02": "grass", "Z03": "grass_dry", "Z06": "garden",
+                 "Z07": "grass_dry", "Z04": "paddy_mud"}.items():
+        alt[zid == k] = _lin(LOOK[v])
+    out = out * (1 - mix * 0.6) + alt * mix * 0.6
+    # sân đất quanh nhà (bán kính sân + mép loang), còn lại của Z01 là cỏ
+    Hs = spec["houses"]
+    yard = M.house(X, Z, Hs["yard_radius"] + 3.0 * n)
+    out[yard] = out[yard] * 0.25 + _lin(LOOK["yard"]) * 0.75
+    out[C.paddy_bund_mask(spec, X, Z, spec["water"]["paddy_main"]["bund_w"] / 2 + 0.3) & M.paddy(X, Z)] = _lin(LOOK["bund"])
+    out[M.road(X, Z)] = _lin(LOOK["road"])
+    near = M.water(X, Z, 2.5) & (H < 0.15)          # bờ bùn ven kênh/ao
+    out[near] = _lin(LOOK["mud"])
+    out *= (0.85 + 0.3 * n)[..., None]
+    return np.clip(out, 0, 1)
+
+
 def build(spec, ctx):
     bpy = C.bpy_mod()
     fr = ctx["frame"]
@@ -131,17 +182,20 @@ def build(spec, ctx):
     me.update(calc_edges=True)
     me.validate()
 
-    # màu đỉnh theo zone (để xem trước bố cục; texture thật thay sau)
     cols = np.zeros((nz * nx, 4), np.float32)
     cols[:, 3] = 1
-    flat = zid.ravel()
-    cols[:, :3] = spec["filler"]["color"]
-    for k, z in spec["zones"].items():
-        cols[flat == k, :3] = z["color"]
-    road = C.Masks(spec).road(X, Z).ravel()
-    cols[road, :3] = spec["zones"]["Z08"]["color"]
-    wet = (H.ravel() < -0.35)  # chỉ lòng chìm dưới mọi mặt nước; bờ trên mặt nước giữ màu zone (không răng cưa)
-    cols[wet, :3] = (0.30, 0.26, 0.20)
+    if ctx.get("stage") == "env":
+        cols[:, :3] = look_colors(spec, X, Z, H, zid).reshape(-1, 3)
+    else:
+        # greybox: màu theo zone (để duyệt bố cục)
+        flat = zid.ravel()
+        cols[:, :3] = spec["filler"]["color"]
+        for k, z in spec["zones"].items():
+            cols[flat == k, :3] = z["color"]
+        road = C.Masks(spec).road(X, Z).ravel()
+        cols[road, :3] = spec["zones"]["Z08"]["color"]
+        wet = (H.ravel() < -0.35)  # chỉ lòng chìm dưới mọi mặt nước; bờ trên mặt nước giữ màu zone (không răng cưa)
+        cols[wet, :3] = (0.30, 0.26, 0.20)
     ca = me.color_attributes.new("zone_color", "FLOAT_COLOR", "POINT")
     ca.data.foreach_set("color", cols.ravel())
 

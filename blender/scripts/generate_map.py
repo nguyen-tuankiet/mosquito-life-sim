@@ -41,16 +41,32 @@ def _in_skipped(ob):
 
 def export_points(spec, ctx, path):
     fr = ctx["frame"]
-    out = {"_format": "mỗi loại: stride 6 = [x, y, z, rot_y, scale, variant], toạ độ Godot (m)",
+    out = {"_format": "mỗi loại: stride 6 = [x, y, z, rot_y, scale, variant], toạ độ Godot (m). "
+                      "assets[variant % len]: world = T(pos)·R_y(rot)·S(scale)·T(offset)·S(asset_scale)",
            "map": spec["map"]["name"], "types": {}}
     for t, c in ctx.get("clouds", {}).items():
         gx, gz = c["x"] - fr.W / 2, c["z"] - fr.D / 2
         # rot quanh Z Blender (ngược chiều kim đồng hồ nhìn từ trên) = rot quanh Y Godot
         arr = np.stack([gx, c["y"], gz, c["rot"], c["scale"], c["variant"]], -1)
-        out["types"][t] = {"count": int(len(arr)), "stride": 6,
+        out["types"][t] = {"count": int(len(arr)), "stride": 6, "assets": cloud_assets(t),
                            "data": [round(float(v), 3) for v in arr.ravel()]}
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
+
+
+def cloud_assets(t):
+    """Asset thật đã swap vào ASSET_<t> (rỗng nếu còn proxy) — để Godot dựng MultiMesh giống Blender."""
+    bpy = C.bpy_mod()
+    col = bpy.data.collections.get("ASSET_" + t)
+    out = []
+    for o in sorted(col.objects if col else [], key=lambda o: o.name):
+        src = o.get("source_file")
+        if not src:
+            continue
+        x, y, z = o.location
+        out.append({"file": os.path.basename(src), "source": src, "scale": round(o.scale.x, 5),
+                    "offset": [round(x, 4), round(z, 4), round(-y, 4)]})
+    return out
 
 
 def export_layout(spec, path):
@@ -96,7 +112,7 @@ def main():
         sys.exit("Spec vi phạm MAP_BIBLE — dừng (--strict).")
 
     C.reset_scene()
-    ctx = {"frame": C.Frame(spec), "res": a.res, "root": C.collection("MAP")}
+    ctx = {"frame": C.Frame(spec), "res": a.res, "root": C.collection("MAP"), "stage": a.stage}
     print("→ Terrain");  generate_terrain.build(spec, ctx)
     print("→ Water");    generate_water.build(spec, ctx)
     print("→ Village");  generate_village.build(spec, ctx)
@@ -129,6 +145,13 @@ def main():
         os.makedirs(C.GODOT_WORLD_DIR, exist_ok=True)
         for f in files:
             shutil.copy2(f, C.GODOT_WORLD_DIR)
+        # asset thực vật cho MultiMesh (Godot không đọc được assets/ ngoài project)
+        fol = os.path.join(C.GODOT_WORLD_DIR, "foliage")
+        shutil.rmtree(fol, ignore_errors=True)   # bỏ asset cũ không còn dùng
+        os.makedirs(fol, exist_ok=True)
+        for t in ctx.get("clouds", {}):
+            for asset in cloud_assets(t):
+                shutil.copy2(os.path.join(C.REPO, asset["source"]), fol)
         print("→ Godot:", C.GODOT_WORLD_DIR)
     print(f"✓ Xong ({a.stage}) trong {time.time() - t0:.1f}s → {out}")
 

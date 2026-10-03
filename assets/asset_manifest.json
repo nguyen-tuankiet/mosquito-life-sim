@@ -6,9 +6,11 @@
     "  asset   : tên file hoặc danh sách biến thể (chọn theo prop 'variant' hoặc xoay vòng).",
     "  fallback: dùng khi asset chưa có (vd. model AI 3D chưa làm xong) — mặc định lấy từ thư viện CC0 hiện có.",
     "  fit     : 'footprint' (khớp kích thước nền nhà), 'length' (khớp chiều dài đoạn rào), 'height:<m>', hoặc bỏ trống.",
+    "  align   : 'origin' = giữ gốc của model (mặt sàn cầu/cầu ao, mực nước thuyền) thay vì đặt đáy model xuống point.",
+    "_procedural/: bản dựng bằng script (blender/scripts/make_assets.py), thua file thật cùng tên trong environment|props|creatures.",
     "clouds: asset cho point-cloud thực vật (Geometry Nodes). KHÔNG AI-generate từng cây: dùng asset library."
   ],
-  "asset_dirs": ["environment", "props", "creatures", "../godot/assets/models"],
+  "asset_dirs": ["environment", "props", "creatures", "_procedural", "../godot/assets/models"],
 
   "points": [
     {"match": "HousePoint_01", "asset": "house_vn_01.glb", "fallback": "house2.glb", "fit": "footprint"},
@@ -24,7 +26,7 @@
     {"match": "BasinPoint_*",  "asset": "basin_vn.glb",     "fallback": "bucket.glb", "fit": "height:0.18"},
     {"match": "TirePoint_*",   "asset": "old_tire.glb",                               "fit": "height:0.22"},
     {"match": "FencePoint_*",  "asset": "bamboo_fence.glb", "fallback": "fence.glb",  "fit": "length"},
-    {"match": "BridgePoint_*", "asset": "bridge_vn.glb",    "fallback": "bridge.glb", "fit": "length"},
+    {"match": "BridgePoint_*", "asset": "bridge_vn.glb",    "fallback": "bridge.glb", "fit": "length", "align": "origin"},
 
     {"match": "TreePoint_*",    "asset": ["fruit_tree_01.glb", "fruit_tree_02.glb"], "fallback": "trees.glb", "fit": "height:7"},
     {"match": "BananaPoint_*",  "asset": "banana_clump_vn.glb", "fallback": "banana.glb",                 "fit": "height:4"},
@@ -35,8 +37,8 @@
     {"match": "LandmarkPoint_L05*", "asset": "haystack_vn.glb",   "fallback": "hay.glb",  "fit": "height:3"},
     {"match": "LandmarkPoint_L06*", "asset": "banyan_tree.glb",   "fallback": "trees.glb","fit": "height:14"},
     {"match": "LandmarkPoint_L07",  "asset": "bamboo_hut_vn.glb", "fallback": "hut.glb",  "fit": "height:2.6"},
-    {"match": "LandmarkPoint_L08",  "asset": "pond_jetty_vn.glb", "fallback": "dock.glb", "fit": "footprint"},
-    {"match": "LandmarkPoint_L08b", "asset": "wooden_boat_vn.glb","fallback": "boat.glb", "fit": "footprint"},
+    {"match": "LandmarkPoint_L08",  "asset": "pond_jetty_vn.glb", "fallback": "dock.glb", "align": "origin"},
+    {"match": "LandmarkPoint_L08b", "asset": "wooden_boat_vn.glb","fallback": "boat.glb", "align": "origin"},
     {"match": "LandmarkPoint_L10",  "asset": "field_hut_vn.glb",  "fallback": "hut.glb",  "fit": "height:2.6"},
     {"match": "LandmarkPoint_L10b", "asset": "water_buffalo.glb", "fallback": "cow.glb",  "fit": "height:1.5"},
     {"match": "LandmarkPoint_L11",  "asset": "culvert_vn.glb",                            "fit": "footprint"}
@@ -49,6 +51,6 @@
     "LilyPoint":      {"asset": "lily_pad_vn.glb",  "fallback": "lilypad.glb"},
     "RicePoint":      {"asset": "rice_patch_1m.glb", "fallback": "wheat.glb",  "fit": "height:0.9"},
     "GrassTallPoint": {"asset": "grass_tall.glb",   "fallback": "grass.glb",   "fit": "height:1"},
-    "GrassPoint":     {"asset": "grass_clump_vn.glb", "fallback": "grass.glb",  "fit": "height:0.3"}
+    "GrassPoint":     {"asset": "grass_clump_vn.glb", "fallback": "grass.glb",  "fit": "height:0.45"}
   }
 }
