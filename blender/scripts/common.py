@@ -17,7 +17,11 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
-SPEC_PATH = os.path.join(HERE, "map_spec.json")
+SPEC_PATH = os.path.join(REPO, "docs", "map_spec.json")
+MANIFEST_PATH = os.path.join(REPO, "assets", "asset_manifest.json")
+BLEND_PATH = os.path.join(REPO, "blender", "master_map.blend")
+EXPORT_DIR = os.path.join(REPO, "blender", "exports")
+GODOT_WORLD_DIR = os.path.join(REPO, "godot", "world", "generated")
 
 FACING_ROT = {"south": 0.0, "east": math.pi / 2, "north": math.pi, "west": -math.pi / 2}
 

@@ -1,4 +1,9 @@
 .godot/
 *.tmp
-tools/blender/out/
 __pycache__/
+# sinh bởi blender/scripts/generate_map.py — tái tạo được, không commit
+blender/master_map.blend
+blender/*.blend1
+blender/exports/*
+!blender/exports/.gitkeep
+godot/world/generated/

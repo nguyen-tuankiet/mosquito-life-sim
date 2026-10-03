@@ -5,7 +5,7 @@
   BambooPoints  → ASSET_BambooPoint ← bamboo_clump_01.glb, bamboo_clump_02.glb …
 
 Chạy trên file .blend đã sinh:
-  blender -b tools/blender/out/vietnamese_rural_village.blend -P tools/blender/swap_assets.py -- [--save] [--glb]
+  blender -b blender/master_map.blend -P blender/scripts/swap_assets.py -- [--save] [--glb]
 Hoặc: generate_map.py --swap
 
 Chạy lại bao nhiêu lần cũng được (idempotent): asset cũ bị gỡ, placeholder được khôi phục rồi swap lại.
@@ -18,7 +18,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
 
-MANIFEST_PATH = os.path.join(C.HERE, "asset_manifest.json")
+MANIFEST_PATH = C.MANIFEST_PATH
 ASSET_SUFFIX = "__ASSET"
 
 
@@ -34,6 +34,21 @@ def _as_list(v):
     return [] if v is None else (v if isinstance(v, list) else [v])
 
 
+_INDEX = {}
+
+
+def _index(d):
+    """Tên file → [đường dẫn] (tìm đệ quy, để asset nằm trong assets/environment/<zone>/ vẫn tìm được)."""
+    if d not in _INDEX:
+        idx = {}
+        for root, _, files in os.walk(d):
+            for f in sorted(files):
+                if f.lower().endswith((".glb", ".gltf")):
+                    idx.setdefault(f, []).append(os.path.join(root, f))
+        _INDEX[d] = idx
+    return _INDEX[d]
+
+
 def _is_lfs_pointer(path):
     with open(path, "rb") as f:
         return f.read(24).startswith(b"version https://git-lfs")
@@ -43,8 +58,7 @@ def resolve(manifest, rule):
     """Danh sách đường dẫn .glb dùng được cho một luật (biến thể đã qua fallback)."""
     def find(name):
         for d in manifest["_dirs"]:
-            p = os.path.join(d, name)
-            if os.path.isfile(p):
+            for p in _index(d).get(name, []):
                 if _is_lfs_pointer(p):
                     print(f"  ⚠ {p} là con trỏ Git LFS chưa tải — chạy: git lfs pull")
                     continue

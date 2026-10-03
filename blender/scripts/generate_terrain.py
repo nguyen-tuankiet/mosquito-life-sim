@@ -1,6 +1,6 @@
 """Sinh địa hình (Terrain) theo MAP_BIBLE §3 + §9.
 
-Độc lập:  blender -b -P tools/blender/generate_terrain.py -- --res 2
+Độc lập:  blender -b -P blender/scripts/generate_terrain.py -- --res 2
 Trong pipeline: generate_map.py gọi build(spec, ctx).
 
 Kết quả: object "Terrain" (lưới đều, màu đỉnh theo zone), và ctx["height"](x, z) để các bước sau
