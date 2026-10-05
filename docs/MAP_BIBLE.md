@@ -574,6 +574,14 @@ environment:
     Z01: "người sinh hoạt theo đồng hồ; ngủ khó phát hiện; xem TV ít chú ý; đi lại/chơi rất tinh mắt"
     Z08: "người + vật nuôi qua lại ban ngày — nguy hiểm nhất"
     Z06: "gần như vắng người — an toàn nghỉ ngơi"
+  residents:                           # MAP v2.2 — người dân sống theo lịch (adult.gd → RES_SCHED)
+    who: "1–2 người mỗi nhà H02–H18 (≈ 29 người): nông dân, người buôn bán, cụ già, em bé"
+    farmer: "5:00 sân → 5:36 ra đồng (bờ R4) → 10:48 về nghỉ trưa → 13:36 ra đồng → 17:00 về → 18:36 ngồi hóng mát → 20:36 vào nhà"
+    trader: "4:54 ra chợ → 10:48 về → 14:36 chợ chiều → 18:00 về → 19:00 hóng mát → 21:00 vào nhà"
+    elder:  "5:48 ngồi trước nhà → 7:30 ra bờ ao → 10:00 về → nghỉ trưa → 14:30 hóng mát → 15:48 đi chợ → 17:18 về → 19:30 vào nhà"
+    kid:    "6:36 ra sân → 7:12 đi học (ra khỏi làng theo R1 phía Bắc) → 16:12 ra ao chơi → 17:36 về sân → 18:48 vào nhà"
+    movement: "theo đường/ngõ/lối nhỏ (A* trên map_spec roads); ngoài 60 m quanh muỗi thì đi nhanh và ẩn để kịp ngày 75 s"
+    mosquito: "chạng vạng 18–21h: nhiều người ngồi ngoài sân — giờ vàng để hút máu; trưa và đêm: người ở trong nhà (khuất)"
   mosquito_habitat_affinity:           # độ hợp (0–1) để điều chỉnh AI/nhiệm vụ
     Z01: { container_breeders: 1.0, human_blood: 1.0 }
     Z02: { tree_hole_breeders: 0.9, animal_blood: 0.7 }
@@ -619,6 +627,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-05 | **MAP v2.2 — người dân sống theo lịch** (§13 residents): ≈ 29 người ở 17 nhà đi làm ruộng, đi chợ, ra ao, đi học, nghỉ trưa, hóng mát theo giờ; đi theo mạng đường làng. Không đổi bố cục. |
 | 2026-10-05 | **MAP v2.1 — chợ làng** (§7.1) ở ngã ba R1 × ngõ mới M1, lấp khoảng trống giữa làng chính và xóm ao. Không đổi zone/nước/nhà. |
 | 2026-10-05 | **MAP v2 — làng đông đúc, tự nhiên hơn** (theo yêu cầu chủ dự án: "nhà cách xa nhau quá, map trống trải"): 7 → 18 nhà thành 3 xóm; thêm ngõ N1 (xóm Đông), N2 (sau H01); Z01 thêm rect xóm ao [220,300,282,375] sát ao; nhà lệch hướng vài độ; mỗi nhà có lô đất (chum, xô, gà, rơm, cây vườn, chuối, dừa, rào tre) + lối nhỏ ra đường. Khoảng cách tối thiểu 25 → 16 m. Không đổi kích thước map, zone khác, nước, ruộng, điểm đẻ trứng, H01. |
 | 2026-10-05 | **M4** — game dùng map này cho giai đoạn trưởng thành (§11.1 đã migrate). Không đổi số liệu bố cục; `map_spec.json` được copy sang `godot/world/generated/` để game tra zone/đường/kênh/vùng bay. |

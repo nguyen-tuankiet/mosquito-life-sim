@@ -29,6 +29,7 @@ Game bắt đầu bằng một **story giới thiệu** (~70 giây): 9 tranh min
 - Bản đồ là một **làng quê Việt Nam** 500 × 540 m (map thật trong `world/generated/`, theo `docs/MAP_BIBLE.md`): (1) nhà dân, (2) vườn cây / chuồng trại, (3) ao / hồ, (4) ruộng lúa, (5) kênh mương, (6) rừng tre / bụi rậm, (7) đồng cỏ, (8) đường làng. Mini map góc trái dưới vẽ cả làng, đánh số các khu vực và nhấp nháy **chặng hành trình kế tiếp**.
 - **Hành trình 1 → 8:** bay vào khu vực kế tiếp theo thứ tự để được tính thêm một nhiệm vụ (thêm trứng) và xem thông tin về muỗi ở khu đó. Tiến độ giữ qua các thế hệ của dòng họ.
 - Làng rộng: **bay cao (Space) để bay nhanh hơn** (tới 6,5 m/s khi cao ≥ 7,5 m), nhưng chuồn chuồn ở ao, ruộng, kênh, đồng cỏ săn muỗi; bay thấp trong rừng tre để ẩn.
+- **Người dân sống theo lịch** (≈ 29 người ở 17 nhà): sáng ra đồng / ra chợ / ra ao / đi học, trưa về nhà nghỉ, chiều đi làm tiếp, chạng vạng (18–21h) ngồi hóng mát trước sân — lúc dễ hút máu nhất; đêm ở trong nhà. Đến gần sẽ thấy nhãn việc đang làm.
 - Người & vật nuôi theo khu vực: gia đình trong nhà, gà ngoài sân, lợn trong vườn, trâu + bác nông dân ngoài ruộng, người qua đường trên đường làng (hai người này chỉ ra ngoài ban ngày).
 - 6 nguồn nước đẻ trứng: vũng nước mưa, xô, chum nước, ao làng, kênh mương, ruộng lúa → môi trường dưới nước ở thế hệ sau khác nhau. Muỗi luôn vũ hóa ngoài trời, tại đúng nguồn nước nơi nó lớn lên.
 - Chuyển giai đoạn mô phỏng đời thực: trứng nở (vỏ rỗng còn nổi), lột xác (xác lột trôi đi), hóa nhộng, vũ hóa (vỏ nhộng nổi trên mặt nước, cánh nhăn nở dần khi hong khô).

@@ -775,6 +775,7 @@ const VILLAGE_SHOTS := {
 	"canal": [16.0, Vector2(112, 118), 1.3, .3, -.1, 1.0], "night": [21.5, Vector2(300, 98), 2.0, 0.0, -.05, 1.4],
 	"high": [17.3, Vector2(300, 140), 9.0, .2, -.15, 1.4],
 	"market": [8.5, Vector2(262, 262), 1.7, 0.05, -.06, 1.1], "market_top": [8.5, Vector2(258, 268), 9.0, 0.0, -.5, 1.4],
+	"evening": [19.3, Vector2(318, 128), 1.8, PI - .15, -.08, 1.2], "field": [8.0, Vector2(330, 297), 1.8, -PI / 2.0 + .1, -.06, 1.1],
 	"lane": [9.5, Vector2(296, 121), 1.5, -PI / 2.0 + .05, -.05, 1.0], "hamlet": [16.0, Vector2(252, 330), 1.8, PI / 2.0 + .35, -.06, 1.0],
 }
 func _village_shot(k: String) -> void:
@@ -791,6 +792,7 @@ func _village_shot(k: String) -> void:
 	adult.view_pitch = c[4]
 	adult.debug_cam_dist = c[5]
 	adult._update_zone(adult.body.global_position)
+	adult.snap_residents()
 	print("[shot] ", k, " local=", adult.body.global_position, " zone=", adult.zone)
 
 func _save_shot() -> void:
@@ -982,6 +984,45 @@ func _test_village() -> void:
 	adult.body.global_position = Vector3(mr.get_center().x, adult.gy(mr.get_center().x, mr.get_center().y) + 1.5, mr.get_center().y)
 	adult._update_zone(adult.body.global_position)
 	_tv(adult.in_market and adult.zone == "Z08", "bay vào chợ → khu vực Chợ làng (Z08)")
+	# 7c. người dân sống theo lịch (MAP v2.2): giữ nguyên giờ, cho đi 30 s (muỗi ở xa → đi nhanh), kiểm chỗ đứng
+	var res: Array = []
+	for h in adult.hosts:
+		if h.def.has("res"): res.append(h)
+	adult.body.global_position = Vector3(adult.bounds.position.x + 2, 20.0, adult.bounds.end.y - 2)
+	var settle := func(hr: float) -> Dictionary:
+		var t0 := Time.get_ticks_usec()
+		for k in 300:
+			adult.A["clock"] = hr
+			adult.update(.1)
+		var cnt := {"_ms": (Time.get_ticks_usec() - t0) / 300000.0}
+		for h in res:
+			var key: String = "away" if h.away else String(h.act)
+			if not h.away and h.pos.distance_to(h.def["tg"][h.act]) > 4.0:
+				key = "đang đi"
+				print("  [đang đi] ", h.k, " ", h.act, " pos=", h.pos, " tgt=", h.def["tg"][h.act], " wp=", h.wp.size(), " st=", h.st, " react=", h.react)
+			cnt[key] = int(cnt.get(key, 0)) + 1
+		return cnt
+	var c8: Dictionary = settle.call(8.0)
+	var c12: Dictionary = settle.call(12.5)
+	var c19: Dictionary = settle.call(19.2)
+	var c22: Dictionary = settle.call(22.0)
+	print("[village] %d người dân · 8h %s · 12h30 %s · 19h12 %s · 22h %s" % [res.size(), c8, c12, c19, c22])
+	_tv(res.size() >= 20, "%d người dân trong 17 nhà" % res.size())
+	_tv(int(c8.get("field", 0)) > 0 and int(c8.get("market", 0)) > 0 and int(c8.get("pond", 0)) + int(c8.get("away", 0)) > 0 and not c8.has("đang đi"),
+		"8h: ra đồng, đi chợ, ra ao/đi học — ai cũng đã tới nơi")
+	_tv(int(c12.get("away", 0)) == res.size(), "12h30: nghỉ trưa trong nhà / đi học (%d/%d khuất)" % [int(c12.get("away", 0)), res.size()])
+	_tv(int(c19.get("sit", 0)) > 0, "19h12: ngồi hóng mát trước nhà")
+	_tv(int(c22.get("away", 0)) == res.size(), "22h: mọi người đã vào nhà")
+	_tv(float(c8["_ms"]) < 8.0, "cập nhật cả làng %.2f ms/khung (headless)" % float(c8["_ms"]))
+	var sample: Object = null
+	for h in res:
+		if h.def["res"] == "farmer": sample = h; break
+	if sample != null:
+		var r2: Array = vm.route(sample.def["tg"]["in"], sample.def["tg"]["field"])
+		var dlen := 0.0
+		for i in range(r2.size() - 1): dlen += (r2[i] as Vector2).distance_to(r2[i + 1])
+		var straight: float = (sample.def["tg"]["in"] as Vector2).distance_to(sample.def["tg"]["field"])
+		_tv(r2.size() > 3 and dlen < straight * 2.5, "đường ra đồng theo đường làng: %d điểm, %.0f m (đường chim bay %.0f m)" % [r2.size(), dlen, straight])
 	# 8. nguồn mật & chỗ ẩn
 	_tv(adult.flowers.size() >= 30 and adult.bushes.size() >= 100, "%d hoa, %d chỗ ẩn nấp" % [adult.flowers.size(), adult.bushes.size()])
 	print("[village] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])

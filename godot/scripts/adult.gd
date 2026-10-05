@@ -47,8 +47,6 @@ const VILLAGE_HOMES := {"mouse": Vector2(-16, 1), "dog": Vector2(-12, 8), "cat":
 const VILLAGE_HOSTS := {
 	"hen": {"name": "Gà mái", "model": "chicken", "h": .5, "reward": .7, "nr": 1.6, "alert": 1.2, "swat": 1.0, "reach": .8, "home": "L04", "amp": 1.6, "sp": .5, "r": .18, "cy": .25, "walk": "Walk", "idle": "Idle", "eat": "Bite_Front", "zone": "Z01"},
 	"pig": {"name": "Lợn", "model": "pig", "h": .75, "reward": 1.0, "nr": 1.5, "alert": .6, "swat": .8, "reach": 1.0, "home": "L07", "amp": 0.0, "sp": 0.0, "r": .4, "cy": .38, "walk": "Idle", "idle": "Idle", "zone": "Z02"},
-	"farmer": {"name": "Bác nông dân", "model": "man", "h": 1.72, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[300, 300], [400, 300], [488, 300]], "sp": 1.0, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z04"},
-	"neighbor": {"name": "Bác hàng xóm", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[290, 121], [318, 123], [350, 120], [382, 124], [416, 122]], "sp": .9, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z01"},
 	"villager": {"name": "Người qua đường", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "path": [[287, 45], [287, 185], [287, 335], [287, 465]], "sp": 1.25, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "day": true, "zone": "Z08"},
 }
 # Chợ làng (MAP v2.1): người bán + người mua, chỉ có mặt giờ họp chợ (map_spec.json → market.hours).
@@ -60,6 +58,23 @@ const MARKET_HOSTS := {
 	"buyer1": {"name": "Người đi chợ", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "home": "market", "off": Vector2(-2, 0), "amp": 5.0, "sp": .22, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "market": true, "zone": "Z08"},
 	"buyer2": {"name": "Người đi chợ", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "home": "market", "off": Vector2(5, 2), "amp": 4.0, "sp": .27, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "market": true, "zone": "Z08"},
 	"buyer3": {"name": "Em bé đi chợ", "model": "hoodie", "h": 1.15, "reward": .9, "nr": 3.0, "alert": 1.3, "swat": .95, "reach": 1.5, "home": "market", "off": Vector2(1, -3), "amp": 3.5, "sp": .4, "r": .25, "cy": .6, "walk": "Walk", "idle": "Idle", "market": true, "zone": "Z08"},
+}
+# ── MAP v2.2: người dân sống theo lịch ──
+# Mỗi nhà H02–H18 có 1–2 người; mỗi vai một lịch [giờ bắt đầu, việc]. Đi lại theo đường/ngõ/lối nhỏ (VillageMap.route).
+# in = trong nhà (khuất, muỗi không đốt được) · yard = sân · sit = ngồi hóng mát trước nhà · field = bờ ruộng R4
+# market = chợ (chỉ khi chợ họp, không thì ở sân) · pond = bờ ao · school = đi học (ra khỏi làng theo R1 phía Bắc)
+const RES_SCHED := {
+	"farmer": [[0.0, "in"], [5.0, "yard"], [5.6, "field"], [10.8, "in"], [13.6, "field"], [17.0, "yard"], [18.6, "sit"], [20.6, "in"]],
+	"trader": [[0.0, "in"], [4.9, "market"], [10.8, "yard"], [11.6, "in"], [14.6, "market"], [18.0, "yard"], [19.0, "sit"], [21.0, "in"]],
+	"elder": [[0.0, "in"], [5.8, "sit"], [7.5, "pond"], [10.0, "sit"], [11.5, "in"], [14.5, "sit"], [15.8, "market"], [17.3, "sit"], [19.5, "in"]],
+	"kid": [[0.0, "in"], [6.6, "yard"], [7.2, "school"], [16.2, "pond"], [17.6, "yard"], [18.8, "in"]],
+}
+const RES_TXT := {"in": "trong nhà", "yard": "ở sân", "sit": "ngồi hóng mát", "field": "làm ruộng", "market": "đi chợ",
+	"pond": "ra ao", "school": "đi học"}
+const RES_ROLE := {"farmer": "Nông dân", "trader": "Người buôn bán", "elder": "Cụ già", "kid": "Em bé"}
+const RES_MODEL := {  # model → [chiều cao, cy, đi, đứng, ngồi]
+	"man": [1.72, 1.0, "Man_Walk", "Man_Idle", "Man_Sitting"], "woman": [1.6, .95, "Female_Walk", "Female_Idle", "Female_Sitting"],
+	"hoodie": [1.15, .6, "Walk", "Idle", "Idle"],
 }
 # chuồn chuồn (kẻ săn muỗi trưởng thành) theo zone: nhiều ở ao, ruộng, kênh, đồng cỏ (Bible x, z)
 const VILLAGE_DRAGONS := [[170, 337], [195, 320], [400, 250], [100, 200], [400, 460], [270, 120]]
@@ -109,6 +124,8 @@ class Host extends RefCounted:
 	var resting := false
 	var rest_anim := 0
 	var path: Array = []      # M4: đường đi lại (local) cho người qua đường / nông dân
+	var fast := 14.0          # MAP v2.2: tốc độ "đi xa" của người dân (đủ tới nơi trong ~2 s game-time)
+	var hidden_move := false  # đang đi xa ngoài tầm nhìn → ẩn, hiện lại khi tới nơi hoặc khi muỗi lại gần
 	var seg := 0
 	var dir := 1
 
@@ -1181,6 +1198,7 @@ func _village_hosts() -> Dictionary:
 		var d: Dictionary = ANIMALS[k].duplicate()
 		d["home"] = _home_local(VILLAGE_HOMES.get(k, d["home"]))
 		out[k] = d
+	_residents(out)
 	var extra := VILLAGE_HOSTS.duplicate()
 	if vmap.market_rect().has_area():
 		extra.merge(MARKET_HOSTS)
@@ -1196,6 +1214,125 @@ func _village_hosts() -> Dictionary:
 			d["home"] = _home_local(d["home"], d.get("off", Vector2.ZERO))
 		out[k] = d
 	return out
+
+## MAP v2.2: 1–2 người cho mỗi nhà H02–H18 (vai + chỗ làm cố định theo seed của nhà).
+func _residents(out: Dictionary) -> void:
+	vmap.build_paths()
+	var mr := vmap.market_rect()
+	for key in vmap.nodes_with_prefix("HousePoint_"):
+		var hid: String = "H" + String(key).substr(11)
+		if hid == "H01":
+			continue
+		var door := vmap.house_door(hid)
+		if door == Vector2.INF:
+			continue
+		var hp := vmap.node_local(key)
+		var front := (door - Vector2(hp.x, hp.z)).normalized()
+		var side := Vector2(-front.y, front.x)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = 7700 + int(String(key).substr(11))
+		var roles := ["farmer" if rng.randf() < .55 else "trader"]
+		if rng.randf() < .65:
+			roles.append("elder" if rng.randf() < .5 else "kid")
+		for i in roles.size():
+			var role: String = roles[i]
+			var model := "hoodie" if role == "kid" else ("woman" if role == "trader" or rng.randf() < .5 else "man")
+			var mdl: Array = RES_MODEL[model]
+			var sgn := -1.0 if i == 0 else 1.0
+			var tg := {
+				"in": door,
+				"yard": door + front * 2.5 + side * sgn * rng.randf_range(1.0, 3.0),
+				"sit": door + front * 1.4 + side * sgn * 2.2,
+				"field": vmap.bible_to_local(Vector2(rng.randf_range(300, 480), 300 + rng.randf_range(-.3, .3))),
+				"market": (mr.get_center() + Vector2(rng.randf_range(-11, 11), rng.randf_range(-5, 5))) if mr.has_area() else door,
+				"pond": vmap.bible_to_local(Vector2(rng.randf_range(214, 220), 337 + rng.randf_range(-9, 9))),
+				"school": vmap.bible_to_local(Vector2(285, 42)),
+			}
+			out["res_%s_%d" % [hid, i]] = {"name": "%s · nhà %s" % [RES_ROLE[role], hid], "model": model, "h": mdl[0] * (.92 if role == "elder" else 1.0),
+				"reward": .9 if role == "kid" else 1.3, "nr": 2.7, "alert": 1.3 if role == "kid" else (.85 if role == "elder" else 1.1),
+				"swat": 1.1, "reach": 1.6 if role == "kid" else 2.0, "home": tg[_res_act(role, A["clock"])], "amp": 0.0, "sp": 0.0,
+				"r": .26 if role == "kid" else .31, "cy": mdl[1], "walk": mdl[2], "idle": mdl[3], "sit": mdl[4],
+				"res": role, "tg": tg, "zone": "Z01"}
+
+## Việc theo lịch của một vai lúc `hr` (chợ không họp → ở sân).
+func _res_act(role: String, hr: float) -> String:
+	var act := "in"
+	for e in RES_SCHED[role]:
+		if hr >= float(e[0]):
+			act = e[1]
+	if act == "market" and vmap != null and _off_hours({"market": true}):
+		act = "yard"
+	return act
+
+## Đặt ngay mọi người dân vào chỗ theo giờ hiện tại (kiểm thử / ảnh chụp).
+func snap_residents() -> void:
+	for h in hosts:
+		if not h.def.has("res"):
+			continue
+		var act := _res_act(String(h.def["res"]), A["clock"])
+		h.goal = act
+		h.act = act
+		h.pos = h.def["tg"][act]
+		h.wp = []
+		h.hidden_move = false
+		h.away = act == "in" or act == "school"
+		h.sitting = act == "sit"
+		h.y = gy(h.pos.x, h.pos.y) + float(h.def["cy"])
+
+## Một người dân: tới chỗ theo lịch bằng đường làng; "in"/"school" = tới nơi thì khuất. Trả về false khi đang khuất.
+func _resident(h: Host, dt: float) -> bool:
+	var df: Dictionary = h.def
+	var act := _res_act(String(df["res"]), A["clock"])
+	var tgt: Vector2 = df["tg"][act]
+	if act != h.goal:
+		h.goal = act
+		h.wp = vmap.route(h.pos, tgt)
+		h.sitting = false
+		var L := 0.0
+		var q := h.pos
+		for w in h.wp:
+			L += q.distance_to(w)
+			q = w
+		h.fast = maxf(14.0, L / 2.0)
+	h.act = act
+	if h.away and h.pos.distance_to(tgt) < .3 and (act == "in" or act == "school"):
+		return false
+	h.away = false
+	h.y = gy(h.pos.x, h.pos.y) + float(df["cy"])
+	if h.react != "" or h.st == "wind":
+		var dv := Vector2(body.global_position.x - h.pos.x, body.global_position.z - h.pos.y)
+		if dv.length() > .05:
+			h.yaw = lerp_angle(h.yaw, atan2(dv.x, dv.y), 1.0 - exp(-6.0 * dt))
+		h.sitting = false
+		return true
+	if not h.wp.is_empty():
+		var p: Vector2 = h.wp[0]
+		var dd := p - h.pos
+		# gần muỗi thì đi bộ thật; ở xa (ngoài tầm nhìn rõ) đi nhanh để kịp lịch của ngày 75 giây
+		var near := Vector2(body.global_position.x, body.global_position.z).distance_to(h.pos) < 60.0
+		var spd := (1.8 if df["res"] == "kid" else 1.35) if near else h.fast
+		h.hidden_move = not near
+		if dd.length() <= spd * dt:
+			h.pos = p
+			h.wp.pop_front()
+		else:
+			h.pos += dd.normalized() * spd * dt
+			h.yaw = atan2(dd.x, dd.y)
+		h.walk = true
+		return true
+	h.hidden_move = false
+	if act == "in" or act == "school":
+		h.away = true
+		return false
+	h.sitting = act == "sit"
+	if act == "sit":
+		h.yaw = atan2(tgt.x - df["tg"]["in"].x, tgt.y - df["tg"]["in"].y)
+	elif act == "field" or act == "market" or act == "pond":
+		h.wt -= dt          # làm việc / dạo quanh chỗ đứng
+		if h.wt <= 0.0:
+			h.wt = rnd(4.0, 9.0)
+			h.wp = [tgt + Vector2(rnd(-2.5, 2.5), rnd(-1.5, 1.5))]
+	return true
 
 func _home_local(h, off: Vector2 = Vector2.ZERO) -> Vector2:
 	if h is String and h == "market":
@@ -1627,11 +1764,15 @@ func update(dt: float) -> void:
 	var stealth: float = bf["stealth"] * maxf(.5, 1.0 - .05 * Game.tv("det"))
 	for h in hosts:
 		var df: Dictionary = h.def
-		if not h.human:
+		if not h.human and not df.has("res"):
 			h.away = false
 		if h.human:
 			update_human(h, dt)
 			if h.away:
+				h.alert = 0.0; h.st = "idle"
+				continue
+		elif df.has("res"):
+			if not _resident(h, dt):
 				h.alert = 0.0; h.st = "idle"
 				continue
 		elif _off_hours(df):
@@ -1955,7 +2096,7 @@ func _animate(dt: float) -> void:
 	# vật chủ
 	for h in hosts:
 		var nd: Node3D = h.node
-		nd.visible = not h.away
+		nd.visible = not h.away and not h.hidden_move
 		if h.ring != null:
 			h.ring.visible = h.st == "wind" and not h.away
 		if h.away:
@@ -1967,6 +2108,8 @@ func _animate(dt: float) -> void:
 			nd.rotation.y = h.yaw
 			var moving: bool = h.walk
 			var an: String = h.def["walk"] if moving else (h.def.get("eat", h.def["idle"]) if (h.resting and h.rest_anim == 1) else h.def["idle"])
+			if h.sitting and not moving and h.def.has("sit"):
+				an = h.def["sit"]
 			Assets.play(nd, an, 1.0)
 			h.walk = false
 			if h.k == "bird":
@@ -2262,6 +2405,8 @@ func draw_hud(hud: Node) -> void:
 			hud.text("ĐẬP!", s + Vector2(0, -44), 34, Color(1, .24, .24), 1)
 		if L["sex"] == "F" and d < 7.0:
 			var at: String = (" · " + String(ACTTXT.get("alert" if h.hunt > 0.0 else h.act, ""))) if h.human else ""
+			if h.def.has("res"):
+				at = " · " + String(RES_TXT.get(h.act, ""))
 			hud.text(h.def["name"] + at, s + Vector2(0, 8), 15, Color(1, .6, .6) if h.hunt > 0.0 else Color.WHITE, 1)
 	# chỉ hướng mục tiêu trong tầm cảm nhận
 	var sr := sense_r()

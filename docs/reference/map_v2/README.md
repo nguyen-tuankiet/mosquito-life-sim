@@ -29,7 +29,7 @@ Bố cục 2D: [`../layout/01_house.png`](../layout/01_house.png)
 ## Chưa làm (để giữ phạm vi nhỏ)
 
 - ~~Chợ nhỏ ở ngã ba~~ → **v2.1 đã làm** (xem dưới). Còn: cổng làng, giếng/ghế đá quanh ao.
-- Người dân sống theo lịch cả làng (ra đồng, đi chợ, nghỉ trưa) — hiện mới có gia đình H01 theo lịch, người ngoài đường chỉ đi qua lại ban ngày.
+- ~~Người dân sống theo lịch~~ → **v2.2 đã làm** (xem dưới).
 
 ## v2.1 — Chợ làng
 
@@ -41,3 +41,15 @@ Ngã ba R1 × ngõ M1, sân 34 × 22 m giữa làng chính và xóm ao: 6 sạp 
 | | |
 |---|---|
 | ![](market.webp) chợ sáng ở tầm muỗi | ![](market_top.webp) chợ nhìn từ trên |
+
+## v2.2 — Người dân sống theo lịch
+
+1–2 người mỗi nhà H02–H18 (29 người, vai: nông dân · người buôn bán · cụ già · em bé), lịch trong `adult.gd → RES_SCHED`,
+ghi trong MAP_BIBLE §13 `residents`. Đi theo mạng đường làng (A* trên mọi đường/ngõ/lối nhỏ — `VillageMap.build_paths/route`);
+ở xa muỗi (> 60 m) thì đi nhanh và ẩn để kịp lịch của ngày 75 giây, lại gần thì thấy đi bộ thật.
+`test_village` kiểm: 8h ra đồng/chợ/ao/đi học, 12h30 nghỉ trưa trong nhà, 19h hóng mát, 22h vào nhà; ≈ 1,5 ms/khung cho cả làng.
+
+| | |
+|---|---|
+| ![](res_field.webp) 8h — nông dân trên bờ ruộng | ![](res_evening.webp) 19h20 — hóng mát trước nhà |
+| ![](res_market.webp) chợ sáng có thêm người làng đi chợ | |
