@@ -175,6 +175,21 @@ func _ell_t(rp: Callable, c: Vector2, rx: float, ry: float, ang: float, k: float
 		pts.append(rp.call(c + Vector2(q.x * cos(ang) - q.y * sin(ang), q.x * sin(ang) + q.y * cos(ang))))
 	return pts
 
+# ───────── màn hình chờ khi dựng thế giới ─────────
+func draw_loading(hud: CanvasLayer, t: float, resume: bool = false) -> void:
+	var bg := _t("res://assets/ui/title_bg.jpg")
+	hud.rect(Vector2.ZERO, Vector2(W, H), Color(.05, .04, .03))
+	if bg != null:
+		hud.image(bg, Rect2(0, 0, W, H), Rect2(0, 0, bg.get_width(), bg.get_height()), Color(.55, .5, .45, 1))
+	hud.rect(Vector2.ZERO, Vector2(W, H), Color(.04, .02, .01, .45))
+	var dots := ".".repeat(1 + int(t * 2.5) % 3)
+	if resume:
+		hud.text("DÒNG HỌ ĐANG THỨC DẬY" + dots, Vector2(W / 2, H / 2 - 6), 34, GOLD, 1, true)
+		hud.text("Hành trình còn dang dở đang chờ bạn quay lại", Vector2(W / 2, H / 2 + 38), 17, Color(1, .95, .85, .8), 1)
+	else:
+		hud.text("MỘT SINH MỆNH ĐANG HÌNH THÀNH" + dots, Vector2(W / 2, H / 2 - 6), 34, GOLD, 1, true)
+		hud.text("Mặt nước lặng, nắng chiều trải dài — hành trình của dòng họ muỗi sắp bắt đầu", Vector2(W / 2, H / 2 + 38), 17, Color(1, .95, .85, .8), 1)
+
 # ───────── menu tạm dừng ─────────
 const PAUSE_ITEMS := [["resume", "TIẾP TỤC"], ["menu", "LƯU & VỀ MENU CHÍNH"], ["quit", "LƯU & THOÁT GAME"]]
 

@@ -428,7 +428,7 @@ func _make_pond_content(nsib: int) -> void:
 	preds.clear(); food.clear(); sibs.clear()
 	for k in pc["preds"]:
 		preds.append(_make_pred(k))
-	var target := 8 + int(site["food"] * 34)
+	var target := 16 + int(site["food"] * 56)   # nhiều thức ăn hơn (trước: 8 + 34·food)
 	for i in target:
 		_spawn_food()
 	for i in nsib:
@@ -948,7 +948,7 @@ func _update_food(dt: float) -> void:
 	food_t -= dt
 	if food.size() < target and food_t <= 0.0:
 		_spawn_food()
-		food_t = .35
+		food_t = .15
 	for f in food:
 		var p: Vector3 = f["pos"]
 		var ph: float = f["ph"]

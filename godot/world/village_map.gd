@@ -118,6 +118,26 @@ func _fix_materials(n: Node) -> void:
 				m2.vertex_color_use_as_albedo = true
 				m2.albedo_color = Color.WHITE
 				mi.set_surface_override_material(i, m2)
+	# chum / xô: asset có sẵn mặt nước (vật liệu "container_water*") nhưng import ra màu nâu như gỗ → gán vật liệu nước
+	if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+		var cmi := n as MeshInstance3D
+		for i in cmi.mesh.get_surface_count():
+			var sm0 := cmi.mesh.surface_get_material(i)
+			if sm0 != null and sm0.resource_name.begins_with("container_water"):
+				cmi.set_surface_override_material(i, _container_water_mat())
+				if cmi.name.begins_with("water_jar"):
+					# trong chum có "đáy" men sứ nằm ngay trên mặt nước của asset (y≈0,78 > 0,774) nên che mất nước:
+					# thêm một mặt nước phía trên đáy đó, dưới miệng chum (y 0,9)
+					var disc := MeshInstance3D.new()
+					var cm := CylinderMesh.new()
+					cm.top_radius = .21
+					cm.bottom_radius = .21
+					cm.height = .004
+					cm.radial_segments = 32
+					disc.mesh = cm
+					disc.material_override = _container_water_mat()
+					disc.position = Vector3(0, .83, 0)
+					cmi.add_child(disc)
 	if n is MeshInstance3D and n.name.begins_with("Water_"):
 		var key := "Water_puddle" if n.name.begins_with("Water_puddle") else String(n.name)
 		if WATER_LOOK.has(key):
@@ -131,6 +151,19 @@ func _fix_materials(n: Node) -> void:
 			puddles.append(n as Node3D)
 	for c in n.get_children():
 		_fix_materials(c)
+
+
+static var _cw_mat: StandardMaterial3D
+
+static func _container_water_mat() -> StandardMaterial3D:
+	if _cw_mat == null:
+		_cw_mat = StandardMaterial3D.new()
+		_cw_mat.albedo_color = Color(.2, .38, .42, .88)
+		_cw_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_cw_mat.roughness = .04
+		_cw_mat.metallic = .35
+		_cw_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	return _cw_mat
 
 
 func _wind_trees(n: Node, loader, cache: Dictionary) -> void:

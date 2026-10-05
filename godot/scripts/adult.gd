@@ -1058,7 +1058,7 @@ func enter(resp: bool) -> void:
 	body.global_position = Vector3(sp.x, Game.site_wy(Game.L["site"]), sp.y)
 	v = Vector3.ZERO
 	_emerge_setup()
-	pl = {"energy": 70.0 if Game.L["sex"] == "F" else 85.0, "age": 0.0, "blood": 0.0, "protein": 0.0, "mated": false, "landed": null, "sucking": false,
+	pl = {"energy": 70.0 if Game.L["sex"] == "F" else 85.0, "age": 0.0, "blood": 0.0, "protein": 0.0, "mated": false, "sated_t": 0.0, "sated_k": 1.0, "landed": null, "sucking": false,
 		"mate": 0.0, "lay": 0.0, "inv": 0.0, "hidden": false, "exposure": 0.0, "flap": 0.0,
 		"mode": "free", "sel": null, "aim": null, "tgt_off": Vector3.ZERO, "tgt_nrm": Vector3.UP, "tgt_h": null, "tgt_i": 0, "spot_o": Vector3.ZERO, "spots": [], "appr_t": 0.0, "retreat_t": 0.0, "retreat_to": Vector3.ZERO, "retreat_spd": 1.8, "retreat_urgent": false, "full_t": 0.0, "nrm": Vector3.UP, "perch": null, "unperch_t": 0.0}
 	view_yaw = 0.0
@@ -1070,27 +1070,42 @@ func enter(resp: bool) -> void:
 	for n in npcs:
 		pass
 	npcs.clear()
-	var cnt := 1 if Game.L["sex"] == "M" else 2
+	# map làng: bạn tình tụ thành các đàn (mỗi đàn 2 con) rải ở nhiều chỗ quanh nơi vũ hóa (25–85 m); thế giới nén cũ: vài con lẻ
+	var female: bool = Game.L["sex"] == "F"
+	var nsw := (3 if female else 2) if vmap != null else 0
+	var per := 2
+	var cnt := nsw * per if vmap != null else (3 if female else 2)
+	var centers: Array = []
 	for i in cnt:
 		var x := 0.0
 		var z := 0.0
-		while true:
-			if vmap != null:
-				# bạn tình lượn gần nơi vũ hóa (12–24 m), ngoài nhà, trong vùng bay
-				var a := rnd(0, TAU)
-				x = body.global_position.x + cos(a) * rnd(12, 24); z = body.global_position.z + sin(a) * rnd(12, 24)
-				if bounds.has_point(Vector2(x, z)) and not in_house(x, z, 1.0):
+		var home_c := Vector2.ZERO
+		if vmap != null:
+			var si := i / per
+			if centers.size() <= si:
+				var c := Vector2.ZERO
+				for attempt in 80:
+					var a := rnd(0, TAU)
+					var rr := rnd(25, 85)
+					c = Vector2(body.global_position.x + cos(a) * rr, body.global_position.z + sin(a) * rr)
+					# trên đất khô (map y ≥ 0,15: loại ao/ruộng/kênh), ngoài nhà, trong vùng bay
+					if bounds.has_point(c) and not in_house(c.x, c.y, 2.0) and vmap.height_at(c.x, c.y) + vmap.origin.y >= .15:
+						break
+				centers.append(c)
+			home_c = centers[si]
+			x = home_c.x + rnd(-3, 3); z = home_c.y + rnd(-3, 3)
+		else:
+			while true:
+				x = rnd(-22, 28); z = rnd(-14, 16)
+				if Vector2(x - body.global_position.x, z - body.global_position.z).length() > 12.0:
 					break
-				continue
-			x = rnd(-22, 28); z = rnd(-14, 16)
-			if Vector2(x - body.global_position.x, z - body.global_position.z).length() > 12.0:
-				break
+			home_c = Vector2(x, z)
 		var nn := Npc.new()
 		nn.node = make_mosq("F" if Game.L["sex"] == "M" else "M")
 		nn.node.scale = Vector3.ONE * .85
 		dyn.add_child(nn.node)
 		nn.pos = Vector3(x, gy(x, z) + rnd(.8, 2.0), z)
-		nn.home = Vector2(x, z)
+		nn.home = home_c
 		nn.target = nn.pos
 		nn.ph = rnd(0, 6)
 		npcs.append(nn)
@@ -1621,7 +1636,10 @@ func update(dt: float) -> void:
 		return
 
 	# bay tự do / tự bay tới chỗ hút máu / rút lui
-	var fw := fwd3()
+	# nhìn gần ngang (±17°) thì bay ngang; cúi/ngẩng nhiều hơn mới bay xuống/lên (Space/Shift vẫn lên/xuống) —
+	# trước đây mặc định hơi cúi nên giữ W là muỗi tụt xuống nước/đất và phải đè Space mới bay được
+	var pe := signf(view_pitch) * maxf(0.0, absf(view_pitch) - .3)
+	var fw := Vector3(-sin(view_yaw) * cos(pe), sin(pe), -cos(view_yaw) * cos(pe))
 	var rt := right3()
 	var want := Vector3.ZERO
 	if Input.is_action_pressed("fwd"): want += fw
@@ -1661,7 +1679,7 @@ func update(dt: float) -> void:
 		v = body.velocity
 	var p2 := body.global_position
 	p2.x = clampf(p2.x, bounds.position.x, bounds.end.x); p2.z = clampf(p2.z, bounds.position.y, bounds.end.y)
-	p2.y = clampf(p2.y, gy(p2.x, p2.z) + .05, max_y)
+	p2.y = clampf(p2.y, maxf(gy(p2.x, p2.z) + .05, _water_floor(p2)), max_y)
 	body.global_position = p2
 	Game.G["dist"] += v.length() * dt * .3
 	ppos = body.global_position
@@ -1682,7 +1700,13 @@ func update(dt: float) -> void:
 
 	# năng lượng & tuổi
 	pl["age"] += dt
-	pl["energy"] -= (.6 if Game.L["sex"] == "F" else 1.3) * (1.0 + .35 * pl["blood"]) * bf["drain"] * (.5 if pl["landed"] != null else 1.0) * dt
+	var sat_k := 1.0   # vừa hút máu xong thì lâu đói hơn (máu người: lâu hơn máu thú)
+	if float(pl["sated_t"]) > 0.0:
+		pl["sated_t"] = maxf(0.0, float(pl["sated_t"]) - dt)
+		sat_k = float(pl["sated_k"])
+	pl["energy"] -= (.6 if Game.L["sex"] == "F" else 1.3) * (1.0 + .35 * pl["blood"]) * bf["drain"] * sat_k * (.5 if pl["landed"] != null else 1.0) * dt
+	if Game.L["sex"] == "F" and Game.q_is_active("blood"):
+		Game.q_set("blood", pl["protein"] * 100.0)   # máu đã hút trước đó (khi đang làm nhiệm vụ khác) vẫn được tính
 	if not pl["sucking"]:
 		pl["blood"] = maxf(0.0, pl["blood"] - .012 * dt)
 	if pl["energy"] <= 0.0:
@@ -2145,6 +2169,16 @@ func _update_zone(p: Vector3) -> void:
 			hud_ref.banner("HÀNH TRÌNH %d/8 · %s" % [Game.JOURNEY.find(z) + 1, String(Game.ZONES[z]["name"]).to_upper()], String(Game.ZONES[z]["fact"]))
 		"new":
 			hud_ref.banner("KHU VỰC MỚI · %s" % String(Game.ZONES[z]["name"]).to_upper(), String(Game.ZONES[z]["fact"]))
+
+## Độ cao tối thiểu khi bay trên mặt nước một nguồn nước (không chìm xuống đáy ao/ruộng/kênh); −1e9 nếu không ở trên nước.
+func _water_floor(p: Vector3) -> float:
+	for i in Game.SITES.size():
+		if Game.site_dry(i):
+			continue
+		var s: Vector3 = Game.site_pos(i)
+		if Vector2(p.x - s.x, p.z - s.y).length() < s.z + .3 and p.y > Game.site_wy(i) - .6:
+			return Game.site_wy(i) + .06
+	return -1e9
 
 func _site_over() -> int:
 	var p := body.global_position
@@ -2616,6 +2650,7 @@ func draw_hud(hud: Node) -> void:
 			var r := Vector2.from_angle(ang)
 			var n2 := Vector2(-r.y, r.x)
 			hud.poly(PackedVector2Array([e + r * 18, e - r * 10 + n2 * 11, e - r * 10 - n2 * 11]), col)
+	_draw_mate_hint(hud, pp, sr)
 	for d in dragons:
 		if d.st == "chase":
 			var dp: Vector3 = d.pos
@@ -2637,7 +2672,7 @@ func draw_hud(hud: Node) -> void:
 	# chấm tâm: tầm bay của muỗi; chuyển đỏ khi ngắm trúng cơ thể người/thú
 	if L["sex"] == "F":
 		var cen := Vector2(W / 2, H / 2)
-		var aimed: bool = pl["aim"] != null and pl["mode"] == "free" and pl["mated"]
+		var aimed: bool = pl["aim"] != null and pl["mode"] == "free"
 		if aimed:
 			hud.circle(cen, 16.0, Color(1, .15, .15, .16))
 			hud.circle(cen, 5.5, Color(1, .15, .15, .98))
@@ -2768,6 +2803,10 @@ func _draw_legacy_map(hud: Node) -> void:
 	for h in hosts:
 		if not h.away:
 			hud.circle(mp.call(h.pos.x, h.pos.y), 2.8, Color(1, .69, .29))
+	if _mate_hint_target() != null:
+		for n in npcs:
+			if n.alive and Vector2(n.pos.x - pp.x, n.pos.z - pp.z).length() < 30.0:
+				hud.circle(mp.call(n.pos.x, n.pos.z), 3.2, Color(1, .5, .69))
 	for d in dragons:
 		if Vector2(d.pos.x - pp.x, d.pos.z - pp.z).length() < 14.0:
 			hud.circle(mp.call(d.pos.x, d.pos.z), 3.5, Color(1, .3, .3))
@@ -2845,6 +2884,20 @@ func _draw_village_map(hud: Node) -> void:
 	for h in hosts:
 		if not h.away:
 			hud.circle(ml.call(h.pos.x, h.pos.y), 2.2, Color(1, .69, .29))
+	if _mate_hint_target() != null:
+		var pk := 5.0 + 2.0 * sin(Time.get_ticks_msec() / 260.0)
+		var seen: Array = []
+		for n in npcs:
+			if n.alive:
+				var sp3: Vector2 = ml.call(n.home.x, n.home.y)   # đánh dấu cả đàn (vùng tụ), không chỉ từng con
+				var dup := false
+				for q in seen:
+					if (q as Vector2).distance_to(sp3) < 6.0: dup = true
+				if not dup:
+					seen.append(sp3)
+					hud.circle(sp3, pk + 3.0, Color(1, .5, .69, .35))
+					hud.circle(sp3, 3.0, Color(1, .5, .69))
+					hud.text("♂" if Game.L["sex"] == "F" else "♀", sp3 + Vector2(0, -10), 12, Color(1, .8, .9), 1)
 	for d in dragons:
 		if Vector2(d.pos.x - pp.x, d.pos.z - pp.z).length() < 30.0:
 			hud.circle(ml.call(d.pos.x, d.pos.z), 3.0, Color(1, .3, .3))
@@ -3117,9 +3170,7 @@ func _feed_logic(dt: float, wants: bool) -> bool:
 		pl["spots"] = []
 		if hit:
 			var aim: Variant = pl["aim"]
-			if not pl["mated"]:
-				prompt = "Muỗi cái phải giao phối trước rồi mới đi tìm máu — làm theo nhiệm vụ hiện tại"
-			elif aim != null:
+			if aim != null:
 				var ah: Host = aim["h"]
 				pl["tgt_h"] = ah
 				pl["tgt_off"] = (aim["pos"] as Vector3) - Vector3(ah.pos.x, 0, ah.pos.y)
@@ -3131,8 +3182,9 @@ func _feed_logic(dt: float, wants: bool) -> bool:
 				Sfx.beep(420, .06, "sine", .04, 200)
 			else:
 				prompt = "Chưa ngắm trúng ai — đưa chấm tâm vào cơ thể người/thú (chấm chuyển đỏ)"
-		elif pl["aim"] != null and pl["mated"]:
-			prompt = "Giữ CHUỘT PHẢI: bay tới đậu & hút máu  ·  thả ra để tự rút lui"
+		elif pl["aim"] != null:
+			var ah2: Host = pl["aim"]["h"]
+			prompt = "Giữ CHUỘT PHẢI: bay tới đậu & hút máu (%s)  ·  thả ra để rút lui" % ("máu người: no nhanh, lâu đói" if ah2.human else "máu thú: chậm no, mau đói")
 		return false
 	var h: Host = pl["tgt_h"]
 	if h == null or h.away:
@@ -3182,10 +3234,13 @@ func _feed_logic(dt: float, wants: bool) -> bool:
 				return true
 			prompt = "Đang hút máu %s — THẢ CHUỘT PHẢI nếu thấy nguy hiểm" % String(h.def["name"]).to_lower()
 			pl["sucking"] = true
-			var gain: float = .22 * (1.0 + .08 * Game.tv("fee")) * dt
+			# máu người: no nhanh hơn, hồi nhiều năng lượng và lâu đói hơn; máu thú: chậm no, hồi ít, mau đói lại
+			var gain: float = (.32 if h.human else .17) * (1.0 + .08 * Game.tv("fee")) * dt
 			pl["blood"] = minf(1.0, pl["blood"] + gain)
 			pl["protein"] += gain * h.def["reward"]
-			pl["energy"] = minf(100.0, pl["energy"] + gain * 90.0)
+			pl["energy"] = minf(100.0, pl["energy"] + gain * (150.0 if h.human else 60.0))
+			pl["sated_t"] = maxf(float(pl["sated_t"]), 50.0 if h.human else 18.0)
+			pl["sated_k"] = .4 if h.human else .75
 			Game.q_set("blood", pl["protein"] * 100.0)
 			return true
 		"retreat":
@@ -3207,6 +3262,62 @@ func _feed_logic(dt: float, wants: bool) -> bool:
 				v *= .25
 			return true
 	return false
+
+## Gợi ý tìm bạn tình: hướng la bàn + khoảng cách + khu vực gần nhất, mũi tên ở mép màn hình khi bạn tình ngoài tầm cảm nhận.
+func _mate_hint_target() -> Npc:
+	if pl["mated"] or not ending.is_empty():
+		return null
+	var qa := Game.q_active()
+	if not qa.is_empty() and not (String(qa["id"]) in ["mate", "swarm"]):
+		return null
+	var best: Npc = null
+	var bd := 1e9
+	for n in npcs:
+		if n.alive:
+			var d := body.global_position.distance_to(n.pos)
+			if d < bd:
+				bd = d; best = n
+	return best
+
+func _draw_mate_hint(hud: Node, pp: Vector3, sr: float) -> void:
+	var W := 1280.0
+	var H := 720.0
+	var n := _mate_hint_target()
+	if n == null:
+		return
+	var dx := n.pos.x - pp.x
+	var dz := n.pos.z - pp.z
+	var dist := Vector2(dx, dz).length()
+	var who := "muỗi cái (♀)" if Game.L["sex"] == "M" else "muỗi đực (♂)"
+	var line := ""
+	if dist < 6.0:
+		line = "%s ở rất gần — bay lại sát và giữ E" % who.capitalize()
+	else:
+		var names := ["Bắc", "Đông Bắc", "Đông", "Đông Nam", "Nam", "Tây Nam", "Tây", "Tây Bắc"]
+		var ang := atan2(dx, -dz)   # 0 = Bắc (−z), +90° = Đông (+x)
+		var dir: String = names[(int(round(ang / (PI / 4.0))) % 8 + 8) % 8]
+		line = "Gợi ý: %s đang tụ đàn về hướng %s, cách khoảng %d m" % [who, dir, int(round(dist / 5.0) * 5.0)]
+		if vmap != null:
+			var zid: String = vmap.zone_at(n.pos.x, n.pos.z)
+			if Game.ZONES.has(zid):
+				line += " — gần «%s»" % Game.ZONES[zid]["name"]
+	var tw := float(line.length()) * 8.2 + 30.0
+	hud.panel(Vector2(W / 2 - tw / 2.0, 98), Vector2(tw, 30), Color(.2, .05, .12, .6))
+	hud.text(line, Vector2(W / 2, 113), 16, Color(1, .8, .9), 1)
+	if dist > sr:
+		# mũi tên hồng ở mép màn hình chỉ về phía đàn gần nhất
+		var bp := n.pos
+		var behind := cam.is_position_behind(bp)
+		var s2 := cam.unproject_position(bp)
+		var dv := s2 - Vector2(W / 2, H / 2)
+		if behind: dv = -dv
+		var a2 := dv.angle()
+		var e := Vector2(clampf(W / 2 + cos(a2) * 440, 40, W - 40), clampf(H / 2 + sin(a2) * 290, 40, H - 40))
+		var r := Vector2.from_angle(a2)
+		var n2 := Vector2(-r.y, r.x)
+		var pulse := .55 + .35 * sin(Time.get_ticks_msec() / 220.0)
+		hud.poly(PackedVector2Array([e + r * 20, e - r * 11 + n2 * 12, e - r * 11 - n2 * 12]), Color(1, .5, .69, pulse))
+		hud.text("%dm" % int(round(dist)), e - r * 26, 13, Color(1, .75, .85, pulse), 1)
 
 func _threat_point() -> Vector3:
 	return body.global_position

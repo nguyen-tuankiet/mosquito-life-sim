@@ -276,7 +276,7 @@ const QDEF := {
 		{"id": "emerge", "day": 9, "title": "Chui ra khỏi vỏ", "desc": "Nổi lên mặt nước và giữ E 2 giây để vỏ nứt", "fact": "Muỗi chui ra qua vết nứt ở lưng nhộng và đứng trên mặt nước — lúc rất dễ bị ăn.", "goal": 2.0, "unit": "giây"},
 	],
 	"adultF": [
-		{"id": "dry", "day": 10, "title": "Hong khô cánh", "desc": "Đứng yên trên mặt nước cho cánh khô và cứng", "fact": "Muỗi mới nở không bay được ngay: cánh còn mềm và ướt.", "goal": 6.0, "unit": "giây"},
+		{"id": "dry", "day": 10, "title": "Hong khô cánh", "desc": "Đứng yên trên mặt nước cho cánh khô và cứng", "fact": "Muỗi mới nở không bay được ngay: cánh còn mềm và ướt.", "goal": 3.0, "unit": "giây"},
 		{"id": "mate", "day": 10, "title": "Tìm bạn tình", "desc": "Bay theo tiếng vỗ cánh của muỗi đực rồi giữ E để giao phối", "fact": "Muỗi cái thường chỉ giao phối một lần, trong vòng 1–2 ngày sau khi vũ hóa.", "goal": 1.0, "unit": ""},
 		{"id": "host", "day": 11, "title": "Định vị vật chủ", "desc": "Lại gần một người hoặc con vật (mũi tên đỏ chỉ hướng)", "fact": "Muỗi cái phát hiện CO₂, nhiệt và mùi cơ thể từ xa.", "goal": 1.0, "unit": ""},
 		{"id": "blood", "day": 11, "title": "Hút máu", "desc": "Ngắm chấm đỏ vào cơ thể, giữ chuột phải để đậu và hút (cần 40%)", "fact": "Chỉ muỗi cái hút máu, thường sau 2–3 ngày; protein trong máu giúp trứng phát triển.", "goal": 40.0, "unit": "%"},
@@ -284,7 +284,7 @@ const QDEF := {
 		{"id": "lay", "day": 13, "title": "Đẻ trứng", "desc": "Bay tới nguồn nước tù phù hợp và giữ E để đẻ", "fact": "Muỗi cái đẻ 100–200 trứng mỗi lần (mỗi 3–4 ngày) ở nước tù ít kẻ săn mồi — nơi thế hệ sau sống.", "goal": 1.0, "unit": ""},
 	],
 	"adultM": [
-		{"id": "dry", "day": 10, "title": "Hong khô cánh", "desc": "Đứng yên trên mặt nước cho cánh khô và cứng", "fact": "Muỗi mới nở không bay được ngay: cánh còn mềm và ướt.", "goal": 6.0, "unit": "giây"},
+		{"id": "dry", "day": 10, "title": "Hong khô cánh", "desc": "Đứng yên trên mặt nước cho cánh khô và cứng", "fact": "Muỗi mới nở không bay được ngay: cánh còn mềm và ướt.", "goal": 3.0, "unit": "giây"},
 		{"id": "nectar", "day": 10, "title": "Uống mật hoa", "desc": "Giữ E khi ở sát một bông hoa", "fact": "Muỗi đực sống bằng mật hoa và nước đường từ thực vật.", "goal": 25.0, "unit": ""},
 		{"id": "swarm", "day": 11, "title": "Tìm đàn", "desc": "Lắng nghe tiếng vỗ cánh, bay tới gần muỗi cái (8 m)", "fact": "Muỗi đực tụ thành đàn ở nơi sáng và nghe tiếng vỗ cánh đặc trưng của muỗi cái.", "goal": 1.0, "unit": ""},
 		{"id": "mate", "day": 11, "title": "Giao phối", "desc": "Giữ E khi ở sát muỗi cái", "fact": "Giao phối xong, muỗi đực hoàn thành vai trò truyền gen.", "goal": 1.0, "unit": ""},

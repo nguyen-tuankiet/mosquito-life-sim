@@ -18,6 +18,8 @@ var title_cam: Camera3D
 var menu := StartMenu.new()
 var menu_t := 0.0
 var pause_t := 0.0
+var load_frames := 0
+var _after_load := "intro"   # sau màn hình chờ: "intro" (game mới) | "continue" (nạp bản lưu)
 var _cap := false          # chuột đã bị bắt (đang điều khiển) ở khung hình trước — để khôi phục sau tạm dừng
 var _loading := false      # đang nạp bản lưu: không tự lưu đè lên
 const STAGES := ["egg", "larva", "pupa", "adult"]
@@ -397,21 +399,36 @@ func _process(dt: float) -> void:
 					elif menu.page == "about" and Input.is_key_pressed(KEY_ESCAPE):
 						menu.page = "home"
 				_menu_click = false
-				if cont and not load_game():
+				if cont and not SaveGame.exists():
 					cont = false
 					menu.has_save = false
-				if cont:
+				if cont or go:
 					Sfx.beep(480, .08, "sine", .03, 60)
-					hud.flash(Color(0, 0, 0), .6)
 					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 					menu.reset()
-				if go:
-					Sfx.beep(480, .08, "sine", .03, 60)
-					hud.flash(Color(0, 0, 0), .6)
-					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-					menu.reset()
-					mode = "intro"
-					intro_t = 0.0
+					# dựng cả làng (map + cây cỏ) ngay bây giờ, sau màn hình chờ, để lúc nhộng nở thành muỗi không bị giật
+					_after_load = "continue" if cont else "intro"
+					load_frames = 0
+					mode = "loading"
+			"loading":
+				load_frames += 1
+				if load_frames == 3:
+					adult.build()
+					adult.visible = true      # hiện 1 lát (dưới màn hình chờ) để GPU biên dịch shader / nạp mesh trước
+					adult.cam.make_current()
+				elif load_frames >= 8:
+					adult.visible = false
+					title_cam.make_current()
+					if _after_load == "continue":
+						if not load_game():
+							menu.has_save = false
+							menu.reset()
+							mode = "menu"
+							menu_t = 0.0
+					else:
+						hud.flash(Color(0, 0, 0), .6)
+						mode = "intro"
+						intro_t = 0.0
 			"intro":
 				_update_intro(dt, confirm)
 			"title":
@@ -509,6 +526,7 @@ func _clicked() -> bool:
 func _draw_mode() -> void:
 	match mode:
 		"menu": menu.draw(hud, menu_t, get_viewport().get_mouse_position())
+		"loading": menu.draw_loading(hud, t, _after_load == "continue")
 		"intro": _draw_intro()
 		"title": _draw_title()
 		"summary": _draw_summary()
