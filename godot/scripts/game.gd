@@ -16,22 +16,39 @@ var day_scale := 1.0               # --dayscale=0.1 để kiểm thử nhanh
 var gate_days := true              # nhiệm vụ chỉ mở khi tới ngày của nó
 
 # Địa điểm nước. pos = vị trí trong thế giới trưởng thành (x, z, bán kính); pond = cấu hình hồ khi còn là ấu trùng.
+# M4: khi có map làng (godot/world/generated/), adult.gd đặt các site đúng điểm đẻ trứng chuẩn MAP_BIBLE §6
+# (khoá "egg") qua site_map — pos ở đây chỉ còn dùng cho thế giới nén cũ (không có map).
+# "wtype" = loại nước MAP_BIBLE §6 → kẻ săn mồi dưới nước theo loại nước ("preds" trong "pond").
 const SITES := [
-	{"id": "puddle", "name": "Vũng nước mưa", "water": .45, "temp": .8, "food": .5, "pred": .3, "light": .9, "human": .1, "human_ev": 0.0, "wy": .07, "ly": 1.2,
+	{"id": "puddle", "egg": "W01_puddle_rain", "wtype": "temporary", "name": "Vũng nước mưa", "water": .45, "temp": .8, "food": .5, "pred": .3, "light": .9, "human": .1, "human_ev": 0.0, "wy": .07, "ly": 1.2,
 		"pos": Vector3(-15, 13, 1.7), "pond": {"w": 18.0, "d": 14.0, "depth": 4.0, "preds": ["beetle", "strider"], "tint": Color(0.40, 0.50, 0.38), "dark": 0.0}},
-	{"id": "bucket", "name": "Xô nước", "water": .7, "temp": .55, "food": .25, "pred": .05, "light": .45, "human": .85, "human_ev": .3, "wy": .37, "ly": 1.0,
+	{"id": "bucket", "egg": "W02_bucket", "wtype": "container", "name": "Xô nước", "water": .7, "temp": .55, "food": .25, "pred": .05, "light": .45, "human": .85, "human_ev": .3, "wy": .37, "ly": 1.0,
 		"pos": Vector3(-9.2, 2.5, 0.3), "pond": {"w": 9.0, "d": 9.0, "depth": 9.0, "preds": [], "tint": Color(0.33, 0.55, 0.68), "dark": 0.0}},
-	{"id": "jar", "name": "Chum nước", "water": .75, "temp": .5, "food": .35, "pred": .05, "light": .5, "human": .6, "human_ev": .2, "wy": .6, "ly": 1.5,
+	{"id": "jar", "egg": "W03_jar_chum", "wtype": "container", "name": "Chum nước", "water": .75, "temp": .5, "food": .35, "pred": .05, "light": .5, "human": .6, "human_ev": .2, "wy": .6, "ly": 1.5,
 		"pos": Vector3(10.5, 6.5, 0.45), "pond": {"w": 8.0, "d": 8.0, "depth": 8.0, "preds": ["strider"], "tint": Color(0.38, 0.55, 0.45), "dark": 0.0}},
-	{"id": "pond", "name": "Ao làng", "water": .85, "temp": .45, "food": .95, "pred": .9, "light": .5, "human": .1, "human_ev": 0.0, "wy": .07, "ly": 1.8,
+	{"id": "pond", "egg": "W05_pond", "wtype": "clean_still", "name": "Ao làng", "water": .85, "temp": .45, "food": .95, "pred": .9, "light": .5, "human": .1, "human_ev": 0.0, "wy": .07, "ly": 1.8,
 		"pos": Vector3(21, -4, 4.5), "pond": {"w": 30.0, "d": 24.0, "depth": 9.0, "preds": ["fish", "beetle", "nymph", "strider"], "tint": Color(0.18, 0.46, 0.52), "dark": 0.0}},
-	{"id": "canal", "name": "Kênh mương", "water": .5, "temp": .4, "food": .75, "pred": .55, "light": .6, "human": .15, "human_ev": .06, "wy": .13, "ly": 1.2,
+	{"id": "canal", "egg": "W06_canal", "wtype": "stagnant_slow", "name": "Kênh mương", "water": .5, "temp": .4, "food": .75, "pred": .55, "light": .6, "human": .15, "human_ev": .06, "wy": .13, "ly": 1.2,
 		"pos": Vector3(9, 19.2, 1.5), "pond": {"w": 26.0, "d": 9.0, "depth": 6.0, "preds": ["fish", "strider"], "tint": Color(0.26, 0.42, 0.34), "dark": 0.1}},
-	{"id": "paddy", "name": "Ruộng lúa", "water": .75, "temp": .7, "food": .85, "pred": .45, "light": .8, "human": .2, "human_ev": .08, "wy": .15, "ly": 1.3,
+	{"id": "paddy", "egg": "W07_paddy", "wtype": "shallow_nutrient", "name": "Ruộng lúa", "water": .75, "temp": .7, "food": .85, "pred": .45, "light": .8, "human": .2, "human_ev": .08, "wy": .15, "ly": 1.3,
 		"pos": Vector3(-22, -17, 3.2), "pond": {"w": 26.0, "d": 20.0, "depth": 3.6, "preds": ["beetle", "nymph", "strider"], "tint": Color(0.42, 0.50, 0.30), "dark": 0.0}},
 ]
 
+# M4 — 8 khu vực của làng theo hành trình người chơi (MAP_BIBLE §1, §11 journey_order, §13)
+const JOURNEY := ["Z01", "Z02", "Z03", "Z04", "Z05", "Z06", "Z07", "Z08"]
+const ZONES := {
+	"Z01": {"name": "Nhà dân", "fact": "Chum, xô, chậu, lốp xe đọng nước quanh nhà là nơi muỗi vằn đẻ trứng nhiều nhất — và người ở ngay đó."},
+	"Z02": {"name": "Vườn cây / Chuồng trại", "fact": "Hốc cây, bẹ chuối đọng nước và vật nuôi trong chuồng: chỗ đẻ trứng và nguồn máu ngay sau nhà."},
+	"Z03": {"name": "Ao / Hồ", "fact": "Ao nước sạch nhiều cá, bọ nước, ấu trùng chuồn chuồn: nhiều thức ăn nhưng lăng quăng dễ bị ăn thịt."},
+	"Z04": {"name": "Ruộng lúa", "fact": "Ruộng nước nông, ấm, giàu dinh dưỡng — muỗi Anopheles và Culex sinh sôi; trâu là nguồn máu lớn."},
+	"Z05": {"name": "Kênh mương", "fact": "Mương nước tù chảy chậm, nhiều rác và mùn — muỗi Culex rất thích đẻ ở đây."},
+	"Z06": {"name": "Rừng tre / Bụi rậm", "fact": "Bụi tre râm mát, ẩm, vắng người — chỗ trú nghỉ an toàn nhất ban ngày (bay thấp trong bụi để ẩn)."},
+	"Z07": {"name": "Đồng cỏ", "fact": "Vũng nước sau mưa trên đồng cỏ chỉ còn vài ngày — vừa đủ cho một lứa lăng quăng lớn nhanh."},
+	"Z08": {"name": "Đường làng", "fact": "Người và vật nuôi qua lại ban ngày: nhiều máu nhưng nguy hiểm nhất làng."},
+}
+
 var L: Dictionary = {}      # dòng họ
+var site_map: Dictionary = {}   # i → {"pos": Vector3(x, z, r), "wy": mặt nước} — adult.gd điền khi nạp map làng
 var quests: Array = []
 var quest_stage := ""
 var toasts: Array = []
@@ -80,11 +97,11 @@ func _register_inputs() -> void:
 # ───────── dòng họ ─────────
 func new_lineage() -> void:
 	L = {"gen": 1, "tr": {"vit": 1.0, "mob": 1.0, "det": 1.0, "oxy": 1.0, "fee": 1.0, "rep": 1.0}, "reserve": 0, "sibs": 4, "site": 2,
-		"sex": "M" if randf() < .5 else "F", "weather": "normal", "ach": {}, "house_lays": 0}
+		"sex": "M" if randf() < .5 else "F", "weather": "normal", "ach": {}, "house_lays": 0, "zones": {}}
 
 func new_generation_stats() -> void:
 	G = {"food": 0, "nectar": 0.0, "hits": 0, "dist": 0.0, "noticed": 0, "low_o2": 0.0, "hidden": 0.0, "life_t": 0.0, "eggs": 0,
-		"build": "survivor", "survived_spray": false, "weather0": L["weather"], "mated": false, "quests_done": 0}
+		"build": "survivor", "survived_spray": false, "weather0": L["weather"], "mated": false, "quests_done": 0, "zones": {}}
 
 func tv(k: String) -> float:
 	return float(L["tr"][k]) - 1.0
@@ -132,6 +149,42 @@ func choose_build() -> void:
 			b = k
 	G["build"] = b
 
+# ───────── vị trí nguồn nước (map làng hoặc thế giới nén cũ) ─────────
+func site_pos(i: int) -> Vector3:
+	return site_map[i]["pos"] if site_map.has(i) else SITES[i]["pos"]
+
+func site_wy(i: int) -> float:
+	return float(site_map[i]["wy"]) if site_map.has(i) else float(SITES[i]["wy"])
+
+# ───────── hành trình qua 8 khu vực (M4) ─────────
+## Khu vực kế tiếp của hành trình mà dòng họ chưa khám phá ("" nếu đã đủ 8).
+func journey_next() -> String:
+	for z in JOURNEY:
+		if not L.get("zones", {}).has(z):
+			return z
+	return ""
+
+func journey_count() -> int:
+	return L.get("zones", {}).size()
+
+## Bay vào một khu vực. Trả về "" nếu đã biết, "new" nếu mới với dòng họ, "journey" nếu đúng chặng hành trình kế tiếp
+## (thưởng: tính như hoàn thành 1 nhiệm vụ → tăng số trứng qua q_bonus).
+func zone_enter(z: String) -> String:
+	if z == "" or not ZONES.has(z):
+		return ""
+	G["zones"][z] = 1
+	if L["zones"].has(z):
+		return ""
+	var in_order := z == journey_next()
+	L["zones"][z] = 1
+	if in_order:
+		G["quests_done"] = int(G.get("quests_done", 0)) + 1
+		toasts.append({"text": "Hành trình %d/8: %s" % [JOURNEY.find(z) + 1, ZONES[z]["name"]], "t": 0.0})
+		Sfx.beep(740, .14, "sine", .06, 200)
+	else:
+		toasts.append({"text": "Khu vực mới: %s" % ZONES[z]["name"], "t": 0.0})
+	return "journey" if in_order else "new"
+
 # ───────── thuộc tính nguồn nước ─────────
 func attrs(i: int) -> Dictionary:
 	var s: Dictionary = SITES[i]
@@ -178,6 +231,7 @@ func finish_generation(eggs: int, site_idx: int) -> Dictionary:
 	if L["gen"] >= 100: ach.call("g100", "Duy trì quần thể 100 thế hệ")
 	if G["weather0"] == "drought": ach.call("drought", "Vượt qua hạn hán")
 	if G["survived_spray"]: ach.call("spray", "Sống sót sau khi bị phun thuốc")
+	if L["zones"].size() >= 8: ach.call("explore", "Thông thạo cả 8 khu vực của làng")
 	if SITES[site_idx]["human"] >= .5:
 		L["house_lays"] += 1
 		if L["house_lays"] >= 3: ach.call("house", "Lập quần thể trong nhà người")

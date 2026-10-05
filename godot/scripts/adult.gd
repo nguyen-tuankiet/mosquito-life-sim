@@ -38,6 +38,21 @@ const ANIMALS := {
 	"cow": {"name": "Trâu", "model": "cow", "h": 1.4, "reward": 1.1, "nr": 1.5, "alert": .5, "swat": .95, "reach": 2.0, "home": Vector2(27, 4.5), "amp": 1.5, "sp": .4, "r": .9, "cy": .9, "walk": "Walk", "idle": "Idle"},
 }
 
+# ── M4: thế giới trưởng thành nằm trong map làng thật (godot/world/village_map.gd) ──
+# Toạ độ local: gốc = nhà chính H01 (HousePoint_01) → nhà có nội thất ở trên giữ nguyên toạ độ.
+# Chỗ ở của thú cũ khi có map (local x, z); "L10b" = lấy theo LandmarkPoint trong map_layout.json.
+const VILLAGE_HOMES := {"mouse": Vector2(-16, 1), "dog": Vector2(-12, 8), "cat": Vector2(3, 2.6), "bird": Vector2(33, 8), "cow": "L10b"}
+# Người & vật nuôi theo zone (MAP_BIBLE §13). home: landmark hoặc Bible (x, z); path: đường đi lại (Bible), sp: m/s;
+# day: chỉ xuất hiện ban ngày.
+const VILLAGE_HOSTS := {
+	"hen": {"name": "Gà mái", "model": "chicken", "h": .5, "reward": .7, "nr": 1.6, "alert": 1.2, "swat": 1.0, "reach": .8, "home": "L04", "amp": 1.6, "sp": .5, "r": .18, "cy": .25, "walk": "Walk", "idle": "Idle", "eat": "Bite_Front", "zone": "Z01"},
+	"pig": {"name": "Lợn", "model": "pig", "h": .75, "reward": 1.0, "nr": 1.5, "alert": .6, "swat": .8, "reach": 1.0, "home": "L07", "amp": 0.0, "sp": 0.0, "r": .4, "cy": .38, "walk": "Idle", "idle": "Idle", "zone": "Z02"},
+	"farmer": {"name": "Bác nông dân", "model": "man", "h": 1.72, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[300, 300], [400, 300], [488, 300]], "sp": 1.0, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z04"},
+	"villager": {"name": "Người qua đường", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "path": [[287, 45], [287, 185], [287, 335], [287, 465]], "sp": 1.25, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "day": true, "zone": "Z08"},
+}
+# chuồn chuồn (kẻ săn muỗi trưởng thành) theo zone: nhiều ở ao, ruộng, kênh, đồng cỏ (Bible x, z)
+const VILLAGE_DRAGONS := [[170, 337], [195, 320], [400, 250], [100, 200], [400, 460], [270, 120]]
+
 class Host extends RefCounted:
 	var k := ""
 	var def: Dictionary
@@ -82,6 +97,9 @@ class Host extends RefCounted:
 	var rest_t := 0.0
 	var resting := false
 	var rest_anim := 0
+	var path: Array = []      # M4: đường đi lại (local) cho người qua đường / nông dân
+	var seg := 0
+	var dir := 1
 
 class Dragon extends RefCounted:
 	var node: Node3D
@@ -162,6 +180,12 @@ var near_host_d := 9.0
 var _sy := 0.0
 var _sp := 0.0
 var _ps := Vector3.ZERO
+var vmap: VillageMap = null          # M4: map làng thật; null → thế giới nén cũ quanh nhà
+var bounds := Rect2(-38, -24, 76, 48)  # vùng bay (x, z) local
+var max_y := 16.0
+var zone := ""                       # khu vực hiện tại (Z01…Z08)
+var _zone_t := 0.0
+var use_village := true              # main.gd tắt bằng --legacy-world
 
 # ═════════════ dựng thế giới tĩnh ═════════════
 func _ready() -> void:
@@ -177,13 +201,53 @@ func build() -> void:
 	add_child(dyn)
 	fxl = FxLayer.new()
 	add_child(fxl)
+	if use_village and VillageMap.available():
+		_load_village()
 	_build_environment()
-	_build_ground()
+	if vmap == null:
+		_build_ground()
 	_build_house()
-	_build_yard()
+	if vmap == null:
+		_build_yard()
+	else:
+		_build_village_yard()
 	_build_player()
 
+## M4: nạp map làng (GLB + cây cỏ + ngày–đêm + va chạm địa hình), đặt gốc toạ độ ở nhà H01 và
+## chuyển các nguồn nước sang đúng điểm đẻ trứng chuẩn (MAP_BIBLE §6).
+func _load_village() -> void:
+	var t0 := Time.get_ticks_msec()
+	var vm := VillageMap.new()
+	vm.name = "Village"
+	static_root.add_child(vm)
+	if not vm.load_map(true, true, true):
+		push_warning("Không nạp được map làng — dùng thế giới cũ: " + vm.error)
+		vm.queue_free()
+		return
+	vmap = vm
+	var h01: Dictionary = vm.layout.get("HousePoint_01", {})
+	var o: Array = h01.get("pos", [0, 0, 0])
+	vm.set_origin(Vector3(o[0], o[1], o[2]))
+	vm.hide_node("HousePoint_01")       # nhà có nội thất của game thay chỗ nhà H01 trong map
+	bounds = vm.playable_rect()
+	max_y = float(vm.spec.get("camera", {}).get("adult_max_y", 25.0)) - vm.origin.y
+	Game.site_map.clear()
+	for i in Game.SITES.size():
+		var es := vm.egg_site(String(Game.SITES[i]["id"]))
+		if not es.is_empty():
+			Game.site_map[i] = es
+	print("[village] map nạp trong %d ms · %d cây cỏ · %d nguồn nước chuẩn" % [Time.get_ticks_msec() - t0, vm.foliage_count, Game.site_map.size()])
+
+## Độ cao mặt đất (local). Trong nhà / không có map = 0.
+func gy(x: float, z: float) -> float:
+	if vmap == null or in_house(x, z, .3):
+		return 0.0
+	return vmap.height_at(x, z)
+
 func _build_environment() -> void:
+	if vmap != null:
+		_build_village_environment()
+		return
 	var we := WorldEnvironment.new()
 	env = Environment.new()
 	var sky := Sky.new()
@@ -243,6 +307,21 @@ func _build_environment() -> void:
 		cg.position = Vector3(randf_range(-150, 150), randf_range(40, 70), randf_range(-150, 60))
 		static_root.add_child(cg)
 		clouds.append(cg)
+	_build_rain()
+
+## M4: trời, nắng, trăng, sương, đèn cửa lấy từ day_night.gd (thông số docs/art_look.json — cùng ảnh duyệt M3).
+func _build_village_environment() -> void:
+	env = vmap.env
+	sun = vmap.day_night.sun
+	cam = Camera3D.new()
+	cam.fov = 72
+	cam.near = 0.02
+	cam.far = 2500
+	static_root.add_child(cam)
+	cloud_mat = StandardMaterial3D.new()    # mây vẽ trong shader trời → không cần mây cầu
+	_build_rain()
+
+func _build_rain() -> void:
 	rain = CPUParticles3D.new()
 	rain.amount = 900
 	rain.lifetime = 0.9
@@ -468,7 +547,7 @@ func _water_box(size: Vector2, c: Vector2, y: float, col: Color, yaw: float = 0.
 	return mi
 
 func _scatter(name: String, h: float, p: Vector2, yaw: float = -1.0, fit: String = "y", piece: String = "") -> Node3D:
-	return _put(name, h, Vector3(p.x, 0, p.y), rnd(0, 360) if yaw < 0.0 else yaw, fit, false, piece)
+	return _put(name, h, Vector3(p.x, gy(p.x, p.y), p.y), rnd(0, 360) if yaw < 0.0 else yaw, fit, false, piece)
 
 func _tint(n: Node, col: Color) -> void:
 	var m := Assets.color_material(col, .8)
@@ -792,6 +871,94 @@ func _build_yard() -> void:
 	spray_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	static_root.add_child(spray_mesh)
 
+## M4: sân nhà H01 + hoa (nguồn mật), chỗ ẩn nấp và nhãn nguồn nước trong map làng.
+## Nhà, cây, ruộng, ao, kênh, đường… đã có trong map (Blender) nên không dựng lại.
+func _build_village_yard() -> void:
+	# hiên nhà (mái ngói che phía trước) — như thế giới cũ
+	var rf := Assets.tex_material("rooftile", Vector3(.3, .3, .3), Color(1, .85, .75))
+	var porch := Assets.box_mesh(Vector3(15.0, .14, 2.7), rf)
+	porch.position = Vector3(0, HWALL - .1, HZ1 + 1.2)
+	porch.rotation_degrees.x = 10.0
+	static_root.add_child(porch)
+	for px in [-6.8, -3.0, 2.6, 6.8]:
+		var post := Assets.cyl_mesh(.06, .06, HWALL - .1 + .3, Assets.tex_material("plank", Vector3(.4, .4, .4), Color(.7, .55, .4)), 8)
+		post.position = Vector3(px, (HWALL - .1 - .3) / 2.0, HZ1 + 2.35)
+		static_root.add_child(post)
+	# sân trước nhà: gà, giếng, bàn ghế, rổ rá (mặt sân thấp hơn nền nhà 0,3 m)
+	for ck in [[Vector2(2.2, 7.0), 30.0, "Idle"], [Vector2(0.4, 8.6), 200.0, "Bite_Front"], [Vector2(-1.6, 6.8), 100.0, "Bite_Front"], [Vector2(8.5, 9.4), 260.0, "Idle"]]:
+		var cn := _scatter("chicken", .5, ck[0], ck[1])
+		Assets.play(cn, String(ck[2]), randf_range(.8, 1.2))
+	_scatter("well", 1.6, Vector2(1.5, 9.8), 0.0)
+	_scatter("wicker_basket_01", .5, Vector2(-6.4, 6.2))
+	_scatter("planter_pot_clay", .25, Vector2(-7.0, 5.4))
+	_scatter("planter_pot_clay", .25, Vector2(-6.5, 5.1))
+	_scatter("wooden_picnic_table", .8, Vector2(-2.5, 8.2), 90.0, "y")
+	_scatter("folding_wooden_stool", .4, Vector2(-1.2, 8.4))
+	_put("trees", 5.5, Vector3(33, gy(33, 8), 8), 0, "y", false, "NormalTree_2")  # cây có chim đậu
+	# hoa dại (nguồn mật): quanh sân, cạnh từng nguồn nước, vườn, đồng cỏ, ven đường
+	var pieces := ["Flower_5_Clump", "Flower_4_Clump", "Flower_3_Clump", "Flower_2_Clump", "Flower_1_Clump"]
+	var spots: Array = []
+	for i in 14:
+		var a := rnd(-PI * .9, PI * .9)
+		spots.append(Vector2(sin(a) * rnd(9, 22), absf(cos(a)) * rnd(7, 20) + 5.0))
+	for i in Game.SITES.size():
+		var sp := Game.site_pos(i)
+		for k in 4:
+			var a := rnd(0, TAU)
+			var rr := sp.z + rnd(1.2, 4.0)
+			spots.append(Vector2(sp.x + cos(a) * rr, sp.y + sin(a) * rr))
+	for zc in [[Vector2(120, 190), 40.0, 12], [Vector2(400, 460), 40.0, 12], [Vector2(170, 240), 30.0, 8], [Vector2(300, 140), 25.0, 6]]:
+		var c: Vector2 = vmap.bible_to_local(zc[0])
+		for k in int(zc[2]):
+			spots.append(c + Vector2(rnd(-zc[1], zc[1]), rnd(-zc[1], zc[1])))
+	var placed := 0
+	for p in spots:
+		var x: float = p.x
+		var z: float = p.y
+		var g := vmap.height_at(x, z)
+		# chỉ trên đất khô (map y ≥ 0,15: loại ruộng, ao, kênh), ngoài nhà, ngoài vùng bay
+		if g + vmap.origin.y < .15 or in_house(x, z, 1.0) or not bounds.has_point(Vector2(x, z)):
+			continue
+		var hgt := rnd(.35, .75)
+		var m := Assets.model("flowers", hgt, pieces[placed % pieces.size()])
+		m.position = Vector3(x, g, z)
+		m.rotation_degrees.y = rnd(0, 360)
+		static_root.add_child(m)
+		var f := Flower.new()
+		f.pos = Vector3(x, g + hgt * .9, z)
+		flowers.append(f)
+		placed += 1
+	# chỗ ẩn nấp / đậu nghỉ: chuối, dừa, cây vườn trong map (rừng tre Z06 = ẩn khi bay thấp, xem update())
+	for prefix in ["BananaPoint_", "CoconutPoint_", "TreePoint_"]:
+		for key in vmap.nodes_with_prefix(prefix):
+			var lp := vmap.node_local(key)
+			bushes.append(Vector3(lp.x, gy(lp.x, lp.z) + .9, lp.z))
+	for k in ["LandmarkPoint_L05", "LandmarkPoint_L05b", "LandmarkPoint_L06", "LandmarkPoint_L06b", "LandmarkPoint_L07"]:
+		var lp := vmap.node_local(k)
+		if lp != Vector3.INF:
+			bushes.append(Vector3(lp.x, gy(lp.x, lp.z) + .9, lp.z))
+	# nhãn nguồn nước
+	for i in Game.SITES.size():
+		var lab := Label3D.new()
+		lab.text = Game.SITES[i]["name"]
+		lab.font_size = 48
+		lab.pixel_size = .004
+		lab.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		lab.no_depth_test = true
+		lab.modulate = Color(1, 1, 1, .95)
+		lab.outline_size = 12
+		var sp := Game.site_pos(i)
+		lab.position = Vector3(sp.x, Game.site_wy(i) + 1.1, sp.y)
+		lab.visible = false
+		static_root.add_child(lab)
+		site_labels.append(lab)
+	# sương độc
+	spray_mesh = Assets.sphere_mesh(1.0, Assets.color_material(Color(.75, 1.0, .35, .22), 1.0))
+	spray_mesh.visible = false
+	spray_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	static_root.add_child(spray_mesh)
+	print("[village] %d hoa · %d chỗ ẩn nấp" % [placed, bushes.size()])
+
 func rnd(a: float, b: float) -> float:
 	return randf_range(a, b)
 
@@ -848,8 +1015,8 @@ func enter(resp: bool) -> void:
 			d.st = "patrol"; d.t = 0.0
 		if A.get("spray") != null:
 			A["spray"] = null; A["warned"] = false; A["spray_at"] = -1.0; spray_mesh.visible = false
-	var sp: Vector3 = Game.SITES[Game.L["site"]]["pos"]
-	body.global_position = Vector3(sp.x, float(Game.SITES[Game.L["site"]]["wy"]), sp.y)
+	var sp: Vector3 = Game.site_pos(Game.L["site"])
+	body.global_position = Vector3(sp.x, Game.site_wy(Game.L["site"]), sp.y)
 	v = Vector3.ZERO
 	_emerge_setup()
 	pl = {"energy": 70.0 if Game.L["sex"] == "F" else 85.0, "age": 0.0, "blood": 0.0, "protein": 0.0, "mated": false, "landed": null, "sucking": false,
@@ -869,6 +1036,13 @@ func enter(resp: bool) -> void:
 		var x := 0.0
 		var z := 0.0
 		while true:
+			if vmap != null:
+				# bạn tình lượn gần nơi vũ hóa (12–24 m), ngoài nhà, trong vùng bay
+				var a := rnd(0, TAU)
+				x = body.global_position.x + cos(a) * rnd(12, 24); z = body.global_position.z + sin(a) * rnd(12, 24)
+				if bounds.has_point(Vector2(x, z)) and not in_house(x, z, 1.0):
+					break
+				continue
 			x = rnd(-22, 28); z = rnd(-14, 16)
 			if Vector2(x - body.global_position.x, z - body.global_position.z).length() > 12.0:
 				break
@@ -876,7 +1050,7 @@ func enter(resp: bool) -> void:
 		nn.node = make_mosq("F" if Game.L["sex"] == "M" else "M")
 		nn.node.scale = Vector3.ONE * .85
 		dyn.add_child(nn.node)
-		nn.pos = Vector3(x, rnd(.8, 2.0), z)
+		nn.pos = Vector3(x, gy(x, z) + rnd(.8, 2.0), z)
 		nn.home = Vector2(x, z)
 		nn.target = nn.pos
 		nn.ph = rnd(0, 6)
@@ -886,8 +1060,8 @@ func enter(resp: bool) -> void:
 ## Vừa vũ hóa: vỏ nhộng nổi trên mặt nước nơi lăng quăng đã lớn lên, muỗi đứng trên mặt nước, cánh còn nhăn.
 func _emerge_setup() -> void:
 	var si: int = Game.L["site"]
-	var sp: Vector3 = Game.SITES[si]["pos"]
-	var sy := float(Game.SITES[si]["wy"]) - .04
+	var sp: Vector3 = Game.site_pos(si)
+	var sy := Game.site_wy(si) - .04
 	fxl.clear_all()
 	fxl.surf_y = sy
 	emerge_t = 0.0
@@ -912,6 +1086,9 @@ func leave() -> void:
 func _apply_weather() -> void:
 	var w: String = A["weather"]
 	rain.emitting = w == "rain"
+	if vmap != null:
+		vmap.set_puddles(w != "drought")    # vũng nước đồng cỏ khô cạn khi hạn hán (site_dry)
+		return                               # sương/nắng theo thời tiết chỉnh trong _animate (day_night ghi đè mỗi khung)
 	puddle_dry.visible = w == "drought"
 	puddle_wet.visible = w != "drought"
 	env.fog_density = .012 if w == "rain" else (.008 if w == "drought" else .004)
@@ -924,13 +1101,18 @@ func _make_world(weather: String) -> void:
 	A = {"t": 0.0, "clock": 18.0 + rnd(0, 3), "weather": weather, "door_open": false, "spray": null, "spray_at": -1.0, "warned": false}
 	for f in flowers:
 		f.nec = 100.0
-	for k in ANIMALS:
-		var d: Dictionary = ANIMALS[k]
+	var animals := ANIMALS if vmap == null else _village_hosts()
+	for k in animals:
+		var d: Dictionary = animals[k]
 		var h := Host.new()
 		h.k = k; h.def = d; h.human = false
-		h.pos = d["home"]; h.y = d["cy"]; h.ph = rnd(0, 6)
+		h.pos = d["home"]; h.y = gy(h.pos.x, h.pos.y) + float(d["cy"]); h.ph = rnd(0, 6)
+		if d.has("path"):
+			h.path = d["path"]
+			h.seg = randi() % maxi(1, h.path.size() - 1)
+			h.pos = (h.path[h.seg] as Vector2).lerp(h.path[h.seg + 1], randf())
 		h.node = Assets.model(d["model"], d["h"])
-		Assets.upgrade_skinned(h.node, d["model"], "animal")
+		Assets.upgrade_skinned(h.node, d["model"], "human" if d["model"] in ["man", "woman", "hoodie"] else "animal")
 		dyn.add_child(h.node)
 		Assets.play(h.node, d["idle"])
 		hosts.append(h)
@@ -963,16 +1145,48 @@ func _make_world(weather: String) -> void:
 		dyn.add_child(ring)
 		h.ring = ring
 	var nd := 2 + (1 if Game.L["gen"] > 5 else 0)
+	if vmap != null:
+		nd = VILLAGE_DRAGONS.size() - (0 if Game.L["gen"] > 5 else 1)
 	for i in nd:
 		var d := Dragon.new()
 		d.node = _make_dragon(d)
 		dyn.add_child(d.node)
-		d.c = Vector2(rnd(12, 26) if i % 2 == 1 else rnd(-26, -12), rnd(-14, 14))
-		d.rad = rnd(5, 9); d.a = rnd(0, 6); d.by = rnd(1.5, 3.5); d.ph = rnd(0, 6)
+		if vmap != null:
+			var b: Array = VILLAGE_DRAGONS[i]
+			d.c = vmap.bible_to_local(Vector2(b[0], b[1])) + Vector2(rnd(-4, 4), rnd(-4, 4))
+		else:
+			d.c = Vector2(rnd(12, 26) if i % 2 == 1 else rnd(-26, -12), rnd(-14, 14))
+		d.rad = rnd(5, 9); d.a = rnd(0, 6); d.by = gy(d.c.x, d.c.y) + rnd(1.5, 3.5); d.ph = rnd(0, 6)
 		d.pos = Vector3(d.c.x, d.by, d.c.y)
 		dragons.append(d)
 	if Game.L["gen"] >= 4 and randf() < .6:
 		A["spray_at"] = rnd(40, 75)
+
+## M4: thú cũ (chỗ ở dời theo map) + người & vật nuôi theo zone (MAP_BIBLE §13), toạ độ local.
+func _village_hosts() -> Dictionary:
+	var out := {}
+	for k in ANIMALS:
+		var d: Dictionary = ANIMALS[k].duplicate()
+		d["home"] = _home_local(VILLAGE_HOMES.get(k, d["home"]))
+		out[k] = d
+	for k in VILLAGE_HOSTS:
+		var d: Dictionary = VILLAGE_HOSTS[k].duplicate()
+		if d.has("path"):
+			var pts: Array = []
+			for b in d["path"]:
+				pts.append(vmap.bible_to_local(Vector2(b[0], b[1])))
+			d["path"] = pts
+			d["home"] = pts[0]
+		else:
+			d["home"] = _home_local(d["home"])
+		out[k] = d
+	return out
+
+func _home_local(h) -> Vector2:
+	if h is String:
+		var lp := vmap.node_local("LandmarkPoint_" + String(h))
+		return Vector2(lp.x, lp.z) if lp != Vector3.INF else Vector2(10, 10)
+	return h
 
 func _make_dragon(d: Dragon) -> Node3D:
 	var g := Node3D.new()
@@ -1133,7 +1347,8 @@ func host_body(h: Host) -> Dictionary:
 			return {"a": Vector3(h.pos.x - .85 * s, lie_y[h.k] + .13 * s, h.pos.y), "b": Vector3(h.pos.x + .9 * s, lie_y[h.k] + .13 * s, h.pos.y), "r": .21 * s}
 		if h.sitting:
 			return {"a": Vector3(h.pos.x, .5, h.pos.y), "b": Vector3(h.pos.x, 1.3 * s, h.pos.y), "r": .27 * s}
-		return {"a": Vector3(h.pos.x, .12, h.pos.y), "b": Vector3(h.pos.x, 1.55 * s, h.pos.y), "r": .26 * s}
+		var g := gy(h.pos.x, h.pos.y)
+		return {"a": Vector3(h.pos.x, g + .12, h.pos.y), "b": Vector3(h.pos.x, g + 1.55 * s, h.pos.y), "r": .26 * s}
 	var p := Vector3(h.pos.x, h.y, h.pos.y)
 	return {"a": p, "b": p, "r": h.def["r"]}
 
@@ -1263,6 +1478,9 @@ func update(dt: float) -> void:
 	if not auto:
 		var slow := clampf(near_host_d / 1.2, .6, 1.0)
 		var max_sp: float = 2.5 * slow * (1.0 + .08 * Game.tv("mob")) * bf["speed"] * (1.0 - .55 * pl["blood"]) * (.75 if pl["energy"] < 20.0 else 1.0)
+		if vmap != null and not in_house(ppos.x, ppos.z, 1.5):
+			# M4: làng rộng 500 m — bay cao (trên ngọn cỏ, theo gió) thì nhanh hơn, tối đa ×2,6 ở độ cao ≥ 7,5 m
+			max_sp *= 1.0 + 1.6 * clampf((ppos.y - gy(ppos.x, ppos.z) - 1.5) / 6.0, 0.0, 1.0)
 		var target := want.normalized() * max_sp if wants else Vector3.ZERO
 		if pl["blood"] > .5:
 			target.y *= .7   # bụng no máu: bay lên khó hơn
@@ -1271,7 +1489,8 @@ func update(dt: float) -> void:
 		body.move_and_slide()
 		v = body.velocity
 	var p2 := body.global_position
-	p2.x = clampf(p2.x, -38, 38); p2.z = clampf(p2.z, -24, 24); p2.y = clampf(p2.y, .05, 16)
+	p2.x = clampf(p2.x, bounds.position.x, bounds.end.x); p2.z = clampf(p2.z, bounds.position.y, bounds.end.y)
+	p2.y = clampf(p2.y, gy(p2.x, p2.z) + .05, max_y)
 	body.global_position = p2
 	Game.G["dist"] += v.length() * dt * .3
 	ppos = body.global_position
@@ -1281,6 +1500,14 @@ func update(dt: float) -> void:
 		for b in bushes:
 			if ppos.distance_to(b) < 1.1:
 				pl["hidden"] = true
+	if vmap != null:
+		_zone_t -= dt
+		if _zone_t <= 0.0:
+			_zone_t = .25
+			_update_zone(ppos)
+		# rừng tre / bụi rậm: bay thấp trong bụi là ẩn (MAP_BIBLE §13 Z06 resting_outdoor)
+		if zone == "Z06" and pl["landed"] == null and ppos.y < gy(ppos.x, ppos.z) + 4.0:
+			pl["hidden"] = true
 
 	# năng lượng & tuổi
 	pl["age"] += dt
@@ -1388,6 +1615,13 @@ func update(dt: float) -> void:
 			if h.away:
 				h.alert = 0.0; h.st = "idle"
 				continue
+		elif df.get("day", false) and night_amt(A["clock"]) > .5:
+			h.away = true     # người ngoài đồng / đường chỉ ra ngoài ban ngày
+			h.alert = 0.0; h.st = "idle"
+			continue
+		elif not h.path.is_empty():
+			h.away = false
+			_walk_path(h, dt)
 		elif df["amp"] > 0.0:
 			var home: Vector2 = df["home"]
 			h.rest_t -= dt
@@ -1398,6 +1632,8 @@ func update(dt: float) -> void:
 			if not h.resting:
 				h.wt += dt
 			var np := Vector2(home.x + sin(h.wt * df["sp"] + h.ph) * df["amp"], home.y + cos(h.wt * df["sp"] * .8 + h.ph) * df["amp"] * .7)
+			if vmap != null:
+				h.y = gy(np.x, np.y) + float(df["cy"])
 			if not h.resting and (np - h.pos).length() > .002:
 				h.yaw = atan2(np.x - h.pos.x, np.y - h.pos.y)
 				h.walk = true
@@ -1507,12 +1743,14 @@ func update(dt: float) -> void:
 				elif m == r: d.pos.x = HX1 + 1.2
 				elif m == t: d.pos.z = HZ0 - 1.2
 				else: d.pos.z = HZ1 + 1.2
-			d.pos.y = clampf(d.pos.y, .3, 8.0)
+			var dg := gy(d.pos.x, d.pos.z)
+			d.pos.y = clampf(d.pos.y, dg + .3, dg + 8.0)
 			if ppos.distance_to(d.pos) < .38:
 				kill("Bị chuồn chuồn bắt")
 				return
 			if pl["hidden"] or d.t <= 0.0 or in_house(ppos.x, ppos.z, 0.0):
-				d.st = "rest"; d.t = 2.0; d.by = clampf(d.pos.y, 1.2, 4.0); d.c = Vector2(d.pos.x, d.pos.z)
+				var rg := gy(d.pos.x, d.pos.z)
+				d.st = "rest"; d.t = 2.0; d.by = clampf(d.pos.y, rg + 1.2, rg + 4.0); d.c = Vector2(d.pos.x, d.pos.z)
 		else:
 			d.t -= dt
 			if d.t <= 0.0: d.st = "patrol"
@@ -1523,7 +1761,9 @@ func update(dt: float) -> void:
 		n.t -= dt
 		if n.t <= 0.0:
 			n.t = rnd(1.5, 3.5)
-			n.target = Vector3(clampf(n.home.x + rnd(-4, 4), -34, 34), rnd(.6, 2.2), clampf(n.home.y + rnd(-4, 4), -22, 22))
+			var tx := clampf(n.home.x + rnd(-4, 4), bounds.position.x + 4, bounds.end.x - 4)
+			var tz := clampf(n.home.y + rnd(-4, 4), bounds.position.y + 2, bounds.end.y - 2)
+			n.target = Vector3(tx, gy(tx, tz) + rnd(.6, 2.2), tz)
 		var dv2: Vector3 = n.target - n.pos
 		var calm := 1.0
 		if ppos.distance_to(n.pos) < 3.0:
@@ -1552,13 +1792,13 @@ func update(dt: float) -> void:
 	if A["spray_at"] >= 0.0 and A["spray"] == null and stage_t > A["spray_at"] - 5.0 and not A["warned"]:
 		A["warned"] = true
 		var sx := rnd(-12, -9) if ppos.x > 0 else rnd(9, 12)
-		A["spray"] = {"cx": sx if in_house(ppos.x, ppos.z, 2.0) else clampf(ppos.x + rnd(-3, 3), -30, 30), "cz": clampf(ppos.z + rnd(-3, 3), -18, 18), "t": -5.0, "r": 0.0}
+		A["spray"] = {"cx": sx if in_house(ppos.x, ppos.z, 2.0) else clampf(ppos.x + rnd(-3, 3), bounds.position.x + 8, bounds.end.x - 8), "cz": clampf(ppos.z + rnd(-3, 3), bounds.position.y + 6, bounds.end.y - 6), "t": -5.0, "r": 0.0}
 		hud_ref.banner("CON NGƯỜI SẮP PHUN THUỐC DIỆT MUỖI!", "Hãy bay ra xa khỏi vùng sương xanh đang lan ra!")
 	if A["spray"] != null:
 		var sp: Dictionary = A["spray"]
 		sp["t"] += dt
 		sp["r"] = minf(9.0, sp["t"] * .7) if sp["t"] > 0 else 0.0
-		if sp["t"] > 0 and sp["t"] < 18 and Vector2(ppos.x - sp["cx"], ppos.z - sp["cz"]).length() < sp["r"] and ppos.y < 6.0:
+		if sp["t"] > 0 and sp["t"] < 18 and Vector2(ppos.x - sp["cx"], ppos.z - sp["cz"]).length() < sp["r"] and ppos.y < gy(sp["cx"], sp["cz"]) + 6.0:
 			pl["exposure"] += dt
 			if pl["exposure"] > 2.0:
 				kill("Chết vì thuốc diệt muỗi")
@@ -1571,11 +1811,46 @@ func update(dt: float) -> void:
 			spray_mesh.visible = false
 	_animate(dt)
 
+## M4: đi qua lại trên đường (người qua đường R1, nông dân trên bờ ruộng R4); dừng lại nhìn khi nghi có muỗi.
+func _walk_path(h: Host, dt: float) -> void:
+	h.y = gy(h.pos.x, h.pos.y) + float(h.def["cy"])
+	if h.react != "" or h.st == "wind":
+		var dv := Vector2(body.global_position.x - h.pos.x, body.global_position.z - h.pos.y)
+		if dv.length() > .05:
+			h.yaw = lerp_angle(h.yaw, atan2(dv.x, dv.y), 1.0 - exp(-6.0 * dt))
+		return
+	var tgt: Vector2 = h.path[h.seg + 1] if h.dir > 0 else h.path[h.seg]
+	var dd := tgt - h.pos
+	var st := float(h.def["sp"]) * dt
+	if dd.length() <= st:
+		h.pos = tgt
+		if h.dir > 0:
+			if h.seg + 1 >= h.path.size() - 1: h.dir = -1
+			else: h.seg += 1
+		else:
+			if h.seg <= 0: h.dir = 1
+			else: h.seg -= 1
+		return
+	h.pos += dd.normalized() * st
+	h.yaw = atan2(dd.x, dd.y)
+	h.walk = true
+
+## M4: khu vực hiện tại + hành trình 1 → 8 (Game.zone_enter thưởng khi tới đúng chặng kế tiếp).
+func _update_zone(p: Vector3) -> void:
+	var z := "Z01" if in_house(p.x, p.z, 0.0) else vmap.zone_at(p.x, p.z)
+	zone = z
+	match Game.zone_enter(z):
+		"journey":
+			hud_ref.banner("HÀNH TRÌNH %d/8 · %s" % [Game.JOURNEY.find(z) + 1, String(Game.ZONES[z]["name"]).to_upper()], String(Game.ZONES[z]["fact"]))
+		"new":
+			hud_ref.banner("KHU VỰC MỚI · %s" % String(Game.ZONES[z]["name"]).to_upper(), String(Game.ZONES[z]["fact"]))
+
 func _site_over() -> int:
 	var p := body.global_position
 	for i in Game.SITES.size():
-		var s: Vector3 = Game.SITES[i]["pos"]
-		if Vector2(p.x - s.x, p.z - s.y).length() < s.z + .35 and p.y < .9:
+		var s: Vector3 = Game.site_pos(i)
+		var top := .9 if vmap == null else Game.site_wy(i) + .9
+		if Vector2(p.x - s.x, p.z - s.y).length() < s.z + .35 and p.y < top:
 			return i
 	return -1
 
@@ -1597,7 +1872,7 @@ func _complete_mate(n: Npc) -> void:
 		var bd := 1e9
 		for i in Game.SITES.size():
 			if Game.site_dry(i): continue
-			var s: Vector3 = Game.SITES[i]["pos"]
+			var s: Vector3 = Game.site_pos(i)
 			var d := Vector2(s.x - p.x, s.y - p.z).length()
 			if d < bd:
 				bd = d; bi = i
@@ -1616,17 +1891,10 @@ func _animate(dt: float) -> void:
 	var nt := night_amt(A["clock"])
 	var w: String = A["weather"]
 	# ánh sáng & trời
-	env.background_energy_multiplier = lerpf(1.2, .2, nt) * (.9 if w == "rain" else 1.0)
-	env.ambient_light_energy = lerpf(1.4, .4, nt) * (.85 if w == "rain" else 1.0)
-	var elev := sin((A["clock"] - 6.0) / 12.0 * PI)
-	if elev > 0.0:
-		sun.rotation_degrees = Vector3(-lerpf(8.0, 62.0, elev), -30 + (A["clock"] - 12.0) * 8.0, 0)
-		sun.light_energy = (1.9 if w != "rain" else .9) * clampf(elev * 2.0, 0.0, 1.0)
-		sun.light_color = Color(.99, .86, .66).lerp(Color(.95, .55, .28), 1.0 - clampf(elev * 2.0, 0.0, 1.0))
+	if vmap != null:
+		_village_light(w)
 	else:
-		sun.rotation_degrees = Vector3(-50, 60, 0)
-		sun.light_energy = .6
-		sun.light_color = Color(.42, .58, .75)
+		_legacy_light(nt, w)
 	var lit := [0.0, 0.0, 0.0, 0.0]
 	for h in hosts:
 		if h.human and not h.away and not h.sleeping:
@@ -1643,7 +1911,7 @@ func _animate(dt: float) -> void:
 			(cg as Node3D).position.x = -170.0
 	door_pivot.rotation.y = lerpf(door_pivot.rotation.y, -1.5 if A["door_open"] else 0.0, minf(1.0, dt * 6.0))
 	var pp := body.global_position
-	rain.global_position = Vector3(pp.x, 9.0, pp.z)
+	rain.global_position = Vector3(pp.x, gy(pp.x, pp.z) + 9.0, pp.z)
 	# hoa
 	for f in flowers:
 		pass
@@ -1658,14 +1926,14 @@ func _animate(dt: float) -> void:
 		if h.human:
 			_animate_human(h, dt)
 		else:
-			nd.position = Vector3(h.pos.x, 0, h.pos.y)
+			nd.position = Vector3(h.pos.x, gy(h.pos.x, h.pos.y), h.pos.y)
 			nd.rotation.y = h.yaw
 			var moving: bool = h.walk
 			var an: String = h.def["walk"] if moving else (h.def.get("eat", h.def["idle"]) if (h.resting and h.rest_anim == 1) else h.def["idle"])
 			Assets.play(nd, an, 1.0)
 			h.walk = false
 			if h.k == "bird":
-				nd.position.y = 3.45 - .12
+				nd.position.y = gy(h.pos.x, h.pos.y) + 3.45 - .12
 				nd.rotation.y = PI * .5
 		if h.ring != null and h.ring.visible:
 			var hr := (.55 if (h.k == "dad" or h.k == "mom") else .45) * (1.0 + .08 * sin(A["t"] * 24.0))
@@ -1693,11 +1961,11 @@ func _animate(dt: float) -> void:
 		spray_mesh.visible = true
 		var r: float = .5 if sp["t"] < 0 else sp["r"]
 		spray_mesh.scale = Vector3(r, minf(r, 6.0), r)
-		spray_mesh.position = Vector3(sp["cx"], minf(r, 6.0) * .5, sp["cz"])
+		spray_mesh.position = Vector3(sp["cx"], gy(sp["cx"], sp["cz"]) + minf(r, 6.0) * .5, sp["cz"])
 	# nhãn địa điểm
 	for i in Game.SITES.size():
-		var s: Vector3 = Game.SITES[i]["pos"]
-		(site_labels[i] as Label3D).visible = Vector2(pp.x - s.x, pp.z - s.y).length() < 10.0
+		var s: Vector3 = Game.site_pos(i)
+		(site_labels[i] as Label3D).visible = Vector2(pp.x - s.x, pp.z - s.y).length() < 10.0 + s.z
 	# muỗi người chơi
 	if v.length() > .3:
 		var tyaw := atan2(v.x, v.z)
@@ -1734,13 +2002,42 @@ func _animate(dt: float) -> void:
 	mosq.visible = true
 	_cam_update(dt, false)
 
+func _legacy_light(nt: float, w: String) -> void:
+	env.background_energy_multiplier = lerpf(1.2, .2, nt) * (.9 if w == "rain" else 1.0)
+	env.ambient_light_energy = lerpf(1.4, .4, nt) * (.85 if w == "rain" else 1.0)
+	var elev := sin((A["clock"] - 6.0) / 12.0 * PI)
+	if elev > 0.0:
+		sun.rotation_degrees = Vector3(-lerpf(8.0, 62.0, elev), -30 + (A["clock"] - 12.0) * 8.0, 0)
+		sun.light_energy = (1.9 if w != "rain" else .9) * clampf(elev * 2.0, 0.0, 1.0)
+		sun.light_color = Color(.99, .86, .66).lerp(Color(.95, .55, .28), 1.0 - clampf(elev * 2.0, 0.0, 1.0))
+	else:
+		sun.rotation_degrees = Vector3(-50, 60, 0)
+		sun.light_energy = .6
+		sun.light_color = Color(.42, .58, .75)
+
+## M4: chu kỳ ngày–đêm của map (art_look.json) theo đồng hồ game; mưa/hạn chỉnh thêm sau khi day_night áp.
+func _village_light(w: String) -> void:
+	var dn = vmap.day_night
+	if absf(float(dn.hour) - A["clock"]) > .01 or A.get("_w", "") != w:
+		dn.hour = A["clock"]
+		dn.apply(A["clock"])
+		A["_w"] = w
+		if w == "rain":
+			sun.light_energy *= .45
+			env.fog_density *= 3.0
+			env.fog_light_color = env.fog_light_color.lerp(Color(.62, .67, .72), .6)
+			env.ambient_light_energy *= .85
+		elif w == "drought":
+			env.fog_density *= 1.6
+			env.fog_light_color = env.fog_light_color.lerp(Color(.92, .75, .5), .5)
+
 func _animate_human(h: Host, dt: float) -> void:
 	var nd := h.node
 	var s: float = h.def["h"] / 1.78
 	var model_k: String = "Man" if h.def["model"] == "man" else ("Female" if h.def["model"] == "woman" else "")
 	var want := ""
 	var spd_scale := 1.0
-	var pos := Vector3(h.pos.x, 0, h.pos.y)
+	var pos := Vector3(h.pos.x, gy(h.pos.x, h.pos.y), h.pos.y)
 	var rot := h.yaw
 	if h.sleeping:
 		want = (model_k + "_Death") if model_k != "" else "Death"
@@ -1872,7 +2169,7 @@ func _cam_update(dt: float, snap: bool) -> void:
 		c.z = clampf(c.z, HZ0 + .15, HZ1 - .15)
 		c.y = clampf(c.y, .06, HWALL - .1)
 	else:
-		c.y = maxf(c.y, .06)
+		c.y = maxf(c.y, gy(c.x, c.z) + .06)
 	if shake > 0.0:
 		c += Vector3(randf_range(-.008, .008), randf_range(-.008, .008), 0)
 	cam.global_position = c
@@ -1903,70 +2200,15 @@ func draw_hud(hud: Node) -> void:
 	hud.text("Mục tiêu: sống sót %d/10 thế hệ" % L["gen"], Vector2(W - 20, 48), 16, Color(.8, .95, .82), 2)
 	hud.text("Kỷ lục: %d thế hệ  ·  M: âm thanh  ·  P: tạm dừng" % Game.best, Vector2(W - 20, 70), 14, Color(.62, .86, .8), 2)
 	# bản đồ làng nhìn từ trên xuống
-	var sc := 3.0
-	var mw := 76.0 * sc
-	var mh := 48.0 * sc
-	var mx := 14.0
-	var my := H - mh - 16.0
-	var mp := func(x: float, z: float) -> Vector2: return Vector2(mx + (x + 38.0) * sc, my + (z + 24.0) * sc)
-	hud.panel(Vector2(mx - 6, my - 6), Vector2(mw + 12, mh + 12), Color(.05, .09, .11, .82))
-	hud.rect(Vector2(mx, my), Vector2(mw, mh), Color(.33, .52, .27))
-	for rc in [Rect2(-35, -24, 26, 13), Rect2(-6.5, -24, 9.5, 12)]:
-		hud.rect(mp.call(rc.position.x, rc.position.y), rc.size * sc, Color(.64, .74, .32))
-		hud.rect(mp.call(rc.position.x + .5, rc.position.y + .5), (rc.size - Vector2(1, 1)) * sc, Color(.5, .66, .3))
-	hud.rect(mp.call(14, 1.5), Vector2(23, 8.5) * sc, Color(.52, .7, .3))
-	hud.rect(mp.call(3, -24), Vector2(34, 11) * sc, Color(.16, .36, .2))
-	for k in 18:
-		hud.circle(mp.call(5.0 + float((k * 37) % 32), -23.0 + float((k * 53) % 9)), 4.0, Color(.12, .3, .16))
-	hud.rect(mp.call(-37.5, -4.5), Vector2(20, 12.5) * sc, Color(.55, .5, .3, .75))
-	hud.rect(mp.call(-15, 4.5), Vector2(30, 6.4) * sc, Color(.72, .6, .42))
-	hud.rect(mp.call(-38, 11.5), Vector2(76, 3.4) * sc, Color(.82, .72, .52))
-	var prev := Vector2.ZERO
-	for i in 39:
-		var cx2 := -38.0 + i * 2.0
-		var q: Vector2 = mp.call(cx2, _canal_z(cx2))
-		if i > 0:
-			hud.line(prev, q, Color(.28, .58, .82), 6.5)
-		prev = q
-	hud.circle(mp.call(21, -4), 4.7 * sc, Color(.2, .46, .66))
-	hud.circle(mp.call(21, -4), 4.0 * sc, Color(.27, .58, .8))
-	hud.rect(mp.call(HX0, HZ0), Vector2(14, 9) * sc, Color(.7, .3, .22))
-	hud.rect(mp.call(HX0 + 1, HZ0 + 1), Vector2(12, 7) * sc, Color(.82, .42, .3))
-	for hp in [Vector2(-31, 15.5)]:
-		hud.rect(mp.call(hp.x - 2.5, hp.y - 2.5), Vector2(5, 5) * sc, Color(.72, .32, .24))
-	for i in Game.SITES.size():
-		var s2: Vector3 = Game.SITES[i]["pos"]
-		hud.circle(mp.call(s2.x, s2.y), 3.2, Color(.75, .95, 1.0))
-	var zones := [[1, 0.0, 0.0, "Nhà dân"], [2, -28.0, 1.5, "Vườn cây / Chuồng trại"], [3, 21.0, -4.0, "Ao / Hồ"], [4, -22.0, -17.0, "Ruộng lúa"],
-		[5, 26.0, _canal_z(26.0), "Kênh mương"], [6, 20.0, -19.5, "Rừng tre / Bụi rậm"], [7, 26.0, 5.5, "Đồng cỏ"], [8, -27.0, 12.5, "Đường làng"]]
-	var zone_name := ""
-	var zd := 14.0
-	for z in zones:
-		var zp: Vector2 = mp.call(z[1], z[2])
-		hud.circle(zp, 8.5, Color(0, 0, 0, .65))
-		hud.circle(zp, 7.0, Color(1, .88, .45))
-		hud.text(str(z[0]), zp + Vector2(0, 0), 12, Color(.15, .1, .05), 1)
-		var dz := Vector2(body.global_position.x - float(z[1]), body.global_position.z - float(z[2])).length()
-		if dz < zd:
-			zd = dz
-			zone_name = String(z[3])
-	hud.text("Khu vực: %s" % (zone_name if zone_name != "" else "Làng quê"), Vector2(mx + 2, my - 16), 15, Color(1, .92, .65))
-	hud.text("N", Vector2(mx + mw - 10, my + 11), 13, Color(1, 1, 1, .9))
+	if vmap != null:
+		_draw_village_map(hud)
+	else:
+		_draw_legacy_map(hud)
 	var pp := body.global_position
-	for h in hosts:
-		if not h.away:
-			hud.circle(mp.call(h.pos.x, h.pos.y), 2.8, Color(1, .69, .29))
-	for d in dragons:
-		if Vector2(d.pos.x - pp.x, d.pos.z - pp.z).length() < 14.0:
-			hud.circle(mp.call(d.pos.x, d.pos.z), 3.5, Color(1, .3, .3))
-	var pc: Vector2 = mp.call(pp.x, pp.z)
-	var fdir := Vector2(-sin(view_yaw), -cos(view_yaw))
-	var side := Vector2(-fdir.y, fdir.x)
-	hud.poly(PackedVector2Array([pc + fdir * 8.0, pc - fdir * 4.0 + side * 5.0, pc - fdir * 4.0 - side * 5.0]), Color.WHITE)
 	# nhãn & thanh cảnh giác trên đầu vật chủ
 	for h in hosts:
 		if h.away: continue
-		var top: float = (1.2 if h.sleeping else float(h.def["h"]) + .25) if h.human else float(h.def["cy"]) + float(h.def["r"]) + .25
+		var top: float = (1.2 if h.sleeping else float(h.def["h"]) + .25 + gy(h.pos.x, h.pos.y)) if h.human else h.y + float(h.def["r"]) + .25
 		var wp := Vector3(h.pos.x, top, h.pos.y)
 		var d := pp.distance_to(wp)
 		if d > 12.0 or cam.is_position_behind(wp): continue
@@ -1996,7 +2238,7 @@ func draw_hud(hud: Node) -> void:
 	if L["sex"] == "F" and pl["blood"] < .95:
 		for h in hosts:
 			if not h.away:
-				var hp := Vector3(h.pos.x, 1.0 if h.human else h.def["cy"], h.pos.y)
+				var hp := Vector3(h.pos.x, 1.0 + gy(h.pos.x, h.pos.y) if h.human else h.y, h.pos.y)
 				var dd2 := pp.distance_to(hp)
 				if dd2 < bd: bd = dd2; best_t = {"p": hp, "c": Color(1, .35, .24), "t": h.def["name"]}
 	if not best_t.is_empty() and bd < sr and bd > 1.0:
@@ -2067,14 +2309,14 @@ func draw_hud(hud: Node) -> void:
 	if prompt != "" and ending.is_empty():
 		hud.text(prompt, Vector2(W / 2, H - 70), 24, Color.WHITE, 1)
 	elif ending.is_empty():
-		hud.text("Chuột: nhìn · WASD: bay · Space/Shift: lên/xuống", Vector2(W / 2 + 100, H - 48), 17, Color(1, 1, 1, .85), 1)
+		hud.text("Chuột: nhìn · WASD: bay · Space/Shift: lên/xuống" + (" · bay cao = bay nhanh" if vmap != null else ""), Vector2(W / 2 + 100, H - 48), 17, Color(1, 1, 1, .85), 1)
 		hud.text("CHUỘT PHẢI (chấm đỏ): hút máu · E: mật hoa / giao phối / đẻ trứng", Vector2(W / 2 + 100, H - 24), 17, Color(1, 1, 1, .85), 1)
 	# bảng đánh giá nguồn nước
 	if L["sex"] == "F":
 		var si := -1
 		var sd := 1e9
 		for i in Game.SITES.size():
-			var s: Vector3 = Game.SITES[i]["pos"]
+			var s: Vector3 = Game.site_pos(i)
 			var dd3 := Vector2(pp.x - s.x, pp.z - s.y).length() - s.z
 			if dd3 < 6.0 and dd3 < sd:
 				sd = dd3; si = i
@@ -2100,6 +2342,147 @@ func draw_hud(hud: Node) -> void:
 		hud.text(ending["sub"], Vector2(W / 2, H / 2 + 24), 20, Color(1, .91, .66), 1)
 
 # ═════════════ HÚT MÁU: chọn dấu X → giữ chuột phải bay tới & hút → thả ra tự rút lui ═════════════
+func _draw_legacy_map(hud: Node) -> void:
+	var H := 720.0
+	var sc := 3.0
+	var mw := 76.0 * sc
+	var mh := 48.0 * sc
+	var mx := 14.0
+	var my := H - mh - 16.0
+	var mp := func(x: float, z: float) -> Vector2: return Vector2(mx + (x + 38.0) * sc, my + (z + 24.0) * sc)
+	hud.panel(Vector2(mx - 6, my - 6), Vector2(mw + 12, mh + 12), Color(.05, .09, .11, .82))
+	hud.rect(Vector2(mx, my), Vector2(mw, mh), Color(.33, .52, .27))
+	for rc in [Rect2(-35, -24, 26, 13), Rect2(-6.5, -24, 9.5, 12)]:
+		hud.rect(mp.call(rc.position.x, rc.position.y), rc.size * sc, Color(.64, .74, .32))
+		hud.rect(mp.call(rc.position.x + .5, rc.position.y + .5), (rc.size - Vector2(1, 1)) * sc, Color(.5, .66, .3))
+	hud.rect(mp.call(14, 1.5), Vector2(23, 8.5) * sc, Color(.52, .7, .3))
+	hud.rect(mp.call(3, -24), Vector2(34, 11) * sc, Color(.16, .36, .2))
+	for k in 18:
+		hud.circle(mp.call(5.0 + float((k * 37) % 32), -23.0 + float((k * 53) % 9)), 4.0, Color(.12, .3, .16))
+	hud.rect(mp.call(-37.5, -4.5), Vector2(20, 12.5) * sc, Color(.55, .5, .3, .75))
+	hud.rect(mp.call(-15, 4.5), Vector2(30, 6.4) * sc, Color(.72, .6, .42))
+	hud.rect(mp.call(-38, 11.5), Vector2(76, 3.4) * sc, Color(.82, .72, .52))
+	var prev := Vector2.ZERO
+	for i in 39:
+		var cx2 := -38.0 + i * 2.0
+		var q: Vector2 = mp.call(cx2, _canal_z(cx2))
+		if i > 0:
+			hud.line(prev, q, Color(.28, .58, .82), 6.5)
+		prev = q
+	hud.circle(mp.call(21, -4), 4.7 * sc, Color(.2, .46, .66))
+	hud.circle(mp.call(21, -4), 4.0 * sc, Color(.27, .58, .8))
+	hud.rect(mp.call(HX0, HZ0), Vector2(14, 9) * sc, Color(.7, .3, .22))
+	hud.rect(mp.call(HX0 + 1, HZ0 + 1), Vector2(12, 7) * sc, Color(.82, .42, .3))
+	for hp in [Vector2(-31, 15.5)]:
+		hud.rect(mp.call(hp.x - 2.5, hp.y - 2.5), Vector2(5, 5) * sc, Color(.72, .32, .24))
+	for i in Game.SITES.size():
+		var s2: Vector3 = Game.SITES[i]["pos"]
+		hud.circle(mp.call(s2.x, s2.y), 3.2, Color(.75, .95, 1.0))
+	var zones := [[1, 0.0, 0.0, "Nhà dân"], [2, -28.0, 1.5, "Vườn cây / Chuồng trại"], [3, 21.0, -4.0, "Ao / Hồ"], [4, -22.0, -17.0, "Ruộng lúa"],
+		[5, 26.0, _canal_z(26.0), "Kênh mương"], [6, 20.0, -19.5, "Rừng tre / Bụi rậm"], [7, 26.0, 5.5, "Đồng cỏ"], [8, -27.0, 12.5, "Đường làng"]]
+	var zone_name := ""
+	var zd := 14.0
+	for z in zones:
+		var zp: Vector2 = mp.call(z[1], z[2])
+		hud.circle(zp, 8.5, Color(0, 0, 0, .65))
+		hud.circle(zp, 7.0, Color(1, .88, .45))
+		hud.text(str(z[0]), zp + Vector2(0, 0), 12, Color(.15, .1, .05), 1)
+		var dz := Vector2(body.global_position.x - float(z[1]), body.global_position.z - float(z[2])).length()
+		if dz < zd:
+			zd = dz
+			zone_name = String(z[3])
+	hud.text("Khu vực: %s" % (zone_name if zone_name != "" else "Làng quê"), Vector2(mx + 2, my - 16), 15, Color(1, .92, .65))
+	hud.text("N", Vector2(mx + mw - 10, my + 11), 13, Color(1, 1, 1, .9))
+	var pp := body.global_position
+	for h in hosts:
+		if not h.away:
+			hud.circle(mp.call(h.pos.x, h.pos.y), 2.8, Color(1, .69, .29))
+	for d in dragons:
+		if Vector2(d.pos.x - pp.x, d.pos.z - pp.z).length() < 14.0:
+			hud.circle(mp.call(d.pos.x, d.pos.z), 3.5, Color(1, .3, .3))
+	var pc: Vector2 = mp.call(pp.x, pp.z)
+	var fdir := Vector2(-sin(view_yaw), -cos(view_yaw))
+	var side := Vector2(-fdir.y, fdir.x)
+	hud.poly(PackedVector2Array([pc + fdir * 8.0, pc - fdir * 4.0 + side * 5.0, pc - fdir * 4.0 - side * 5.0]), Color.WHITE)
+
+## M4: bản đồ cả làng (MAP_BIBLE, Bible x, z): zone, đường, kênh, ao, ruộng, nhà, nguồn nước, chặng hành trình kế tiếp.
+func _draw_village_map(hud: Node) -> void:
+	var H := 720.0
+	var sc := .36
+	var mw := VillageMap.MAP_SIZE.x * sc
+	var mh := VillageMap.MAP_SIZE.y * sc
+	var mx := 14.0
+	var my := H - mh - 16.0
+	var mb := func(b: Vector2) -> Vector2: return Vector2(mx + b.x * sc, my + b.y * sc)
+	var ml := func(x: float, z: float) -> Vector2: return Vector2(mx, my) + vmap.local_to_bible(x, z) * sc
+	var spec: Dictionary = vmap.spec
+	hud.panel(Vector2(mx - 6, my - 6), Vector2(mw + 12, mh + 12), Color(.05, .09, .11, .82))
+	var fc: Array = spec.get("filler", {}).get("color", [.5, .62, .32])
+	hud.rect(Vector2(mx, my), Vector2(mw, mh), Color(fc[0], fc[1], fc[2]))
+	var zones: Dictionary = spec.get("zones", {})
+	for zid in zones:
+		var zc: Array = zones[zid].get("color", [.5, .5, .5])
+		for rc in zones[zid].get("rects", []):
+			hud.rect(mb.call(Vector2(rc[0], rc[1])), Vector2(rc[2] - rc[0], rc[3] - rc[1]) * sc, Color(zc[0], zc[1], zc[2]))
+	var water: Dictionary = spec.get("water", {})
+	var paddy: Dictionary = water.get("paddy_main", {})
+	if not paddy.is_empty():
+		var r: Array = paddy["rect"]
+		hud.rect(mb.call(Vector2(r[0], r[1])), Vector2(r[2] - r[0], r[3] - r[1]) * sc, Color(.42, .58, .3))
+	for k in ["canal_main", "canal_branch"]:
+		var w: Dictionary = water.get(k, {})
+		var pts: Array = w.get("centerline", [])
+		for i in range(pts.size() - 1):
+			hud.line(mb.call(Vector2(pts[i][0], pts[i][1])), mb.call(Vector2(pts[i + 1][0], pts[i + 1][1])), Color(.27, .56, .8), maxf(2.0, float(w["w"]) * sc))
+	var pond: Dictionary = water.get("pond_main", {})
+	if not pond.is_empty():
+		var poly := PackedVector2Array()
+		for i in 24:
+			var a := TAU * i / 24.0
+			poly.append(mb.call(Vector2(pond["center"][0] + cos(a) * pond["radii"][0], pond["center"][1] + sin(a) * pond["radii"][1])))
+		hud.poly(poly, Color(.27, .58, .8))
+	for k in spec.get("roads", {}):
+		var rd: Dictionary = spec["roads"][k]
+		var pts: Array = rd["points"]
+		for i in range(pts.size() - 1):
+			hud.line(mb.call(Vector2(pts[i][0], pts[i][1])), mb.call(Vector2(pts[i + 1][0], pts[i + 1][1])), Color(.86, .74, .55), maxf(1.5, float(rd["w"]) * sc))
+	for key in vmap.nodes_with_prefix("HousePoint_"):
+		var lp := vmap.node_local(key)
+		var c: Vector2 = ml.call(lp.x, lp.z)
+		hud.rect(c - Vector2(3, 3), Vector2(6, 6), Color(.82, .36, .26) if key == "HousePoint_01" else Color(.72, .32, .24))
+	for i in Game.SITES.size():
+		var s2: Vector3 = Game.site_pos(i)
+		hud.circle(ml.call(s2.x, s2.y), 3.0, Color(.75, .95, 1.0) if not Game.site_dry(i) else Color(.6, .5, .4))
+	# số khu vực theo hành trình; chặng kế tiếp nhấp nháy
+	var nxt := Game.journey_next()
+	for zi in Game.JOURNEY.size():
+		var zid: String = Game.JOURNEY[zi]
+		var zp: Vector2 = mb.call(vmap.zone_focus(zid))
+		var known: bool = Game.L.get("zones", {}).has(zid)
+		if zid == nxt:
+			hud.circle(zp, 10.0 + 2.0 * sin(Time.get_ticks_msec() / 180.0), Color(1, .85, .3, .45))
+		hud.circle(zp, 7.5, Color(0, 0, 0, .65))
+		hud.circle(zp, 6.2, Color(1, .88, .45) if known else Color(.75, .75, .72))
+		hud.text(str(zi + 1), zp, 11, Color(.15, .1, .05), 1)
+	var pp := body.global_position
+	for h in hosts:
+		if not h.away:
+			hud.circle(ml.call(h.pos.x, h.pos.y), 2.2, Color(1, .69, .29))
+	for d in dragons:
+		if Vector2(d.pos.x - pp.x, d.pos.z - pp.z).length() < 30.0:
+			hud.circle(ml.call(d.pos.x, d.pos.z), 3.0, Color(1, .3, .3))
+	var pc: Vector2 = ml.call(pp.x, pp.z)
+	var fdir := Vector2(-sin(view_yaw), -cos(view_yaw))
+	var side := Vector2(-fdir.y, fdir.x)
+	hud.poly(PackedVector2Array([pc + fdir * 8.0, pc - fdir * 4.0 + side * 5.0, pc - fdir * 4.0 - side * 5.0]), Color.WHITE)
+	hud.text("N", Vector2(mx + mw - 10, my + 11), 13, Color(1, 1, 1, .9))
+	var zn := String(Game.ZONES.get(zone, {}).get("name", "Làng quê"))
+	hud.text("Khu vực: %s" % zn, Vector2(mx + 2, my - 34), 15, Color(1, .92, .65))
+	var jt := "Hành trình %d/8" % Game.journey_count()
+	if nxt != "":
+		jt += " · tiếp: %d. %s" % [Game.JOURNEY.find(nxt) + 1, String(Game.ZONES[nxt]["name"])]
+	hud.text(jt, Vector2(mx + 2, my - 16), 13, Color(.8, .95, .82))
+
 func bite_spots(h: Host, o: Vector3) -> Array:
 	## Các điểm có thể đốt trên cơ thể vật chủ, ở phía đang hướng về muỗi (o = hướng ngang từ vật chủ ra phía muỗi).
 	var out: Array = []
@@ -2240,7 +2623,7 @@ func debug_land(h: Host, i: int) -> void:
 ## Tìm bề mặt (tường, trần, sàn, bụi cây) trong tầm 0,5 m để đậu nghỉ.
 func _perch_surface(p: Vector3) -> Dictionary:
 	for b in bushes:
-		if p.distance_to(b) < 1.1 and p.y < 1.8:
+		if p.distance_to(b) < 1.1 and p.y < (1.8 if vmap == null else b.y + .9):
 			return {"pos": p, "nrm": Vector3.UP}
 	var space := get_world_3d().direct_space_state
 	var best := {}
@@ -2254,8 +2637,11 @@ func _perch_surface(p: Vector3) -> Dictionary:
 			if d < bd:
 				bd = d
 				best = {"pos": (hit["position"] as Vector3) + (hit["normal"] as Vector3) * .02, "nrm": hit["normal"]}
-	if best.is_empty() and p.y < .12:
-		best = {"pos": Vector3(p.x, .03, p.z), "nrm": Vector3.UP}
+	var g := gy(p.x, p.z)
+	if best.is_empty() and p.y < g + .12:
+		best = {"pos": Vector3(p.x, g + .03, p.z), "nrm": Vector3.UP}
+	if best.is_empty() and zone == "Z06" and p.y < g + 3.0:
+		best = {"pos": p, "nrm": Vector3.UP}    # đậu trên thân tre trong rừng tre
 	return best
 
 func _perch_logic(dt: float, wants: bool) -> bool:
@@ -2322,7 +2708,7 @@ func _begin_retreat() -> void:
 func _safe_spot(h: Host, from: Vector3) -> Vector3:
 	var reach: float = h.def["reach"]
 	var indoor := in_house(from.x, from.z, .2)
-	var y := minf(reach + .55, 2.5) if indoor else reach + .6
+	var y := minf(reach + .55, 2.5) if indoor else gy(from.x, from.z) + reach + .6
 	var away := Vector3(from.x - h.pos.x, 0, from.z - h.pos.y)
 	if away.length() < .05:
 		away = Vector3(-sin(h.yaw), 0, -cos(h.yaw))

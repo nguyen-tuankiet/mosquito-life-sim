@@ -232,7 +232,7 @@ def _world(bpy, s, look=None):
     return w
 
 
-def _haze_box(bpy, scene, s):
+def _haze_box(bpy, scene, s, fog_scale=0.15):
     """Sương xa = khối hộp volume bao map (không dùng world volume: vô hạn → nuốt hết nắng và trời)."""
     me = bpy.data.meshes.new("M3_Haze")
     hx, hy, h = 1000.0, 1000.0, 250.0
@@ -247,7 +247,7 @@ def _haze_box(bpy, scene, s):
     N.remove(N["Principled BSDF"])
     vol = N.new("ShaderNodeVolumePrincipled")
     vol.inputs["Color"].default_value = (*srgb_to_lin(s["fog_color"]), 1)
-    vol.inputs["Density"].default_value = s["fog_density"] * 0.15
+    vol.inputs["Density"].default_value = s["fog_density"] * fog_scale
     vol.inputs["Anisotropy"].default_value = 0.45          # tán xạ về phía trước: quầng sáng ngược nắng
     L.new(vol.outputs["Volume"], N["Material Output"].inputs["Volume"])
     me.materials.append(m)
@@ -264,7 +264,7 @@ def apply(scene, hour, look=None, haze=True):
     for ob in [o for o in scene.objects if o.get("m3_light")]:
         bpy.data.objects.remove(ob)
     if haze and s["fog_density"] > 0:
-        _haze_box(bpy, scene, s)
+        _haze_box(bpy, scene, s, float(look.get("fog_scale", 0.15)))
 
     elev, az = sun_angles(look, hour)
     if s["sun_energy"] > 0 and elev > -2:

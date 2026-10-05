@@ -3,6 +3,7 @@
     "M3 — thông số ánh sáng / mood dùng chung cho Blender (blender/scripts/lighting.py) và Godot (godot/world/day_night.gd).",
     "Nguồn: docs/ART_DIRECTION.md §2 (giờ vàng, đêm trăng) và §3 (bảng màu). Sửa ở đây → cả ảnh duyệt lẫn game đổi theo.",
     "cycle: khoá theo giờ (0–24), nội suy tuyến tính. sun_energy: đơn vị Godot (Blender nhân sun_energy_to_blender).",
+    "fog_density × fog_scale = mật độ thật (1/m) — Godot fog_density và mật độ khối volume Blender đều dùng giá trị đã nhân.",
     "Mặt trời mọc 6h ở hướng Đông, lặn 18h30 ở hướng Tây-Tây Nam; trăng ngược phía mặt trời."
   ],
   "game_day_seconds": 75,
@@ -20,6 +21,7 @@
     "azimuth": 120
   },
   "sun_energy_to_blender": 4.5,
+  "fog_scale": 0.15,
   "cycle": [
     {
       "hour": 0.0,

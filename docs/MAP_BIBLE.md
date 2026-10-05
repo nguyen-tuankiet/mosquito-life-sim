@@ -503,6 +503,10 @@ journey_order:        # thứ tự trong ảnh "CÁC KHU VỰC TRONG MAP (theo h
 | canal | (9, 19.2) | (100, 162) |
 | paddy | (−22, −17) | (385, 282) |
 
+> **Đã migrate (M4, 2026-10-05):** khi có map (`godot/world/generated/`), `adult.gd` đặt gốc toạ độ thế giới
+> trưởng thành tại `HousePoint_01` (Godot (60, 0.6, −205) = nền nhà H01) và lấy site từ `EggSite_*` theo `game_site`
+> (`Game.site_pos()` / `Game.site_wy()`); cột "pos cũ" chỉ còn dùng khi không có map.
+
 ---
 
 ## 12. Camera bounds
@@ -593,6 +597,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-05 | **M4** — game dùng map này cho giai đoạn trưởng thành (§11.1 đã migrate). Không đổi số liệu bố cục; `map_spec.json` được copy sang `godot/world/generated/` để game tra zone/đường/kênh/vùng bay. |
 | 2026-10-03 | Mật độ rừng tre 0.35 → ~0.15 khóm/m² (`min_dist` 1.7 → 2.6 m) khi thay bằng model tre thật (khóm lớn ~15 cây, tán 6 m): rừng vẫn kín, giảm ~55% số khóm cho Godot. Không đổi vị trí zone. |
 | 2026-10-03 | **Duyệt M1** (`check_greybox.py`) — sửa lỗi hình học: cầu R2 dời về đúng tâm kênh (114 → 111) và dài 16 → 24 m để phủ hết hai bờ; W07 dời (406,297) → (385,282) vì cũ nằm trên giao điểm bờ ruộng (khô); bờ thửa ruộng căn theo R4 (z = 300) thay vì chia đều 6 hàng (trước đó có 2 bờ cách nhau 2.5 m); R4 nối tới R1 qua cống L11; kênh nhánh hạ mặt nước 0.0 → −0.25 m để hợp lưu êm với kênh chính. |
 | 2026-10-03 | Tổ chức lại: spec → `docs/map_spec.json`, script → `blender/scripts/`, manifest → `assets/`; thêm M0 blockout + 3 loại reference (§15). Không đổi số liệu bố cục. |

@@ -14,3 +14,6 @@ docs/reference/**/*.png -filter -diff -merge binary
 
 # Model đã dọn cho map (assets/, mỗi file nhỏ) lưu thẳng trong git, không qua LFS
 assets/**/*.glb -filter -diff -merge binary
+
+# Map đã sinh cho game (godot/world/generated/, M4) lưu thẳng trong git, không qua LFS
+godot/world/generated/**/*.glb -filter -diff -merge binary
