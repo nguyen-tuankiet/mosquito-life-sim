@@ -1185,15 +1185,20 @@ func _make_world(weather: String) -> void:
 		ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		dyn.add_child(ring)
 		h.ring = ring
-	var nd := 2 + (1 if Game.L["gen"] > 5 else 0)
+	var nd := 1 + (1 if Game.L["gen"] > 5 else 0)
+	var vd: Array = []   # chuồn chuồn trong làng: ít hơn, và không đặt gần chỗ muỗi nở (≥ 60 m)
 	if vmap != null:
-		nd = VILLAGE_DRAGONS.size() - (0 if Game.L["gen"] > 5 else 1)
+		var spawn := Vector2(Game.site_pos(Game.L["site"]).x, Game.site_pos(Game.L["site"]).y)
+		for b in VILLAGE_DRAGONS:
+			if vmap.bible_to_local(Vector2(b[0], b[1])).distance_to(spawn) >= 60.0:
+				vd.append(b)
+		nd = mini(vd.size(), 2 + (1 if Game.L["gen"] > 5 else 0))
 	for i in nd:
 		var d := Dragon.new()
 		d.node = _make_dragon(d)
 		dyn.add_child(d.node)
 		if vmap != null:
-			var b: Array = VILLAGE_DRAGONS[i]
+			var b: Array = vd[i]
 			d.c = vmap.bible_to_local(Vector2(b[0], b[1])) + Vector2(rnd(-4, 4), rnd(-4, 4))
 		else:
 			d.c = Vector2(rnd(12, 26) if i % 2 == 1 else rnd(-26, -12), rnd(-14, 14))
@@ -1906,7 +1911,7 @@ func update(dt: float) -> void:
 			d.yaw = atan2(nx - d.pos.x, nz - d.pos.z)
 			d.pos = Vector3(nx, d.by + sin(A["t"] * 1.2 + d.ph) * .6, nz)
 			var dd := ppos.distance_to(d.pos)
-			if not pl["hidden"] and dd < dsense and (spd > 1.2 or dd < 2.5):
+			if not pl["hidden"] and emerge_t > 25.0 and dd < dsense and (spd > 1.2 or dd < 2.5):   # 25 giây đầu sau khi nở: chuồn chuồn chưa để ý
 				d.st = "chase"; d.t = 3.4
 				Game.G["noticed"] += 1
 				Sfx.beep(1000, .15, "saw", .05)

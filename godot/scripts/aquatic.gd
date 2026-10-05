@@ -894,14 +894,14 @@ func _update_player(dt: float) -> void:
 		var f: Dictionary = food[i]
 		var fd: Dictionary = FOOD[f["t"]]
 		if p_pos.distance_to(f["pos"]) < sz + float(fd["r"]) + .1:
-			pl["growth"] += float(fd["val"]) * .7 * fee_f
+			pl["growth"] += float(fd["val"]) * 1.5 * fee_f
 			Game.G["food"] += 1
 			Game.q_add("eat", 1.0)
 			pl["act"] = minf(1.0, pl["act"] + .35)
 			(f["node"] as Node3D).queue_free()
 			food.remove_at(i)
 			Sfx.beep(700 + randf() * 150, .05, "sine", .03)
-	pl["growth"] += .35 * fee_f * dt
+	pl["growth"] += 1.0 * fee_f * dt   # lăng quăng lớn nhanh: ~100 giây là đủ tới Instar IV nếu ăn đều
 	# mỗi nhiệm vụ hoàn thành đẩy thanh lớn lên tới một mốc (không phải chờ đủ thức ăn)
 	var gfl := 0.0
 	for qd in Game.quests:
@@ -1280,6 +1280,13 @@ func draw_hud(hud: Node) -> void:
 	var Wd := 1280.0
 	var Ht := 720.0
 	var L := Game.L
+	# chấm hướng bơi (giống chấm tâm của muỗi): điểm phía trước theo hướng nhìn/di chuyển
+	if (stage == "larva" or stage == "pupa") and cam != null:
+		var tp := p_pos + fwd3() * 4.0
+		if not cam.is_position_behind(tp):
+			var dot := cam.unproject_position(tp)
+			hud.circle(dot, 13.0, Color(1, 1, 1, .16))
+			hud.circle(dot, 5.0, Color(1, 1, 1, .95))
 	hud.text("THẾ HỆ %02d  ·  NGÀY %d  ·  %s" % [L["gen"], Game.day_no(), Game.STAGE_NAMES[stage]], Vector2(20, 24), 19)
 	var y := 50.0
 	if stage == "egg":

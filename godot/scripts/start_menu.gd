@@ -6,14 +6,13 @@ extends RefCounted
 const W := 1280.0
 const H := 720.0
 const GOLD := Color(1, .86, .5)
-const BTN_START := Rect2(W / 2 - 190, 470, 380, 66)
-const BTN_ABOUT := Rect2(W / 2 - 190, 552, 380, 66)
 ## Trang giới thiệu: ảnh 1168x784 vừa chiều cao màn hình; các nút nằm sẵn trong ảnh (toạ độ ảnh gốc).
 const ABOUT_SIZE := Vector2(1168, 784)
 const ABOUT_GO := Rect2(340, 645, 320, 72)
 const ABOUT_BACK := Rect2(680, 645, 255, 72)
 
 var page := "home"   # "home" | "about"
+var has_save := false   # có file lưu → hiện nút TIẾP TỤC
 var _tex: Dictionary = {}
 var _prev := Vector2(-1, -1)
 var _vel := Vector2.ZERO
@@ -25,16 +24,24 @@ func _t(path: String) -> Texture2D:
 		_tex[path] = load(path) if ResourceLoader.exists(path) else null
 	return _tex[path]
 
+## Vị trí các nút trang chủ: 2 nút (mới/giới thiệu) hoặc 3 nút khi có bản lưu.
+func _rects() -> Dictionary:
+	if has_save:
+		return {"continue": Rect2(W / 2 - 190, 440, 380, 56), "start": Rect2(W / 2 - 190, 506, 380, 56), "about": Rect2(W / 2 - 190, 572, 380, 56)}
+	return {"start": Rect2(W / 2 - 190, 470, 380, 66), "about": Rect2(W / 2 - 190, 552, 380, 66)}
+
 func reset() -> void:
 	page = "home"
 	_prev = Vector2(-1, -1)
 
 # ───────── điều khiển ─────────
-## Trả về "start" khi người chơi chọn bắt đầu game, còn lại "".
+## Trả về "start" (game mới), "continue" (chơi tiếp bản lưu) hoặc "".
 func click(mouse: Vector2) -> String:
 	if page == "home":
-		if BTN_START.has_point(mouse): return "start"
-		if BTN_ABOUT.has_point(mouse):
+		var rc := _rects()
+		if rc.has("continue") and (rc["continue"] as Rect2).has_point(mouse): return "continue"
+		if (rc["start"] as Rect2).has_point(mouse): return "start"
+		if (rc["about"] as Rect2).has_point(mouse):
 			page = "about"
 	else:
 		if _about_rect(ABOUT_GO).has_point(mouse): return "start"
@@ -78,8 +85,11 @@ func _home(hud: CanvasLayer, t: float, a: float, mouse: Vector2) -> void:
 		for o in [Vector2(3, 4), Vector2(-2, 3), Vector2(2, -2), Vector2(0, 6)]:
 			hud.image(logo, Rect2(lp + o, Vector2(lw, lh)), src, Color(.12, .05, .0, .55 * a))
 		hud.image(logo, Rect2(lp, Vector2(lw, lh)), src, Color(1, 1, 1, a))
-	_button(hud, BTN_START, "BẮT ĐẦU GAME", a, mouse, true)
-	_button(hud, BTN_ABOUT, "GIỚI THIỆU", a, mouse, false)
+	var rc := _rects()
+	if rc.has("continue"):
+		_button(hud, rc["continue"], "TIẾP TỤC HÀNH TRÌNH", a, mouse, true)
+	_button(hud, rc["start"], "BẮT ĐẦU GAME MỚI" if has_save else "BẮT ĐẦU GAME", a, mouse, not has_save)
+	_button(hud, rc["about"], "GIỚI THIỆU", a, mouse, false)
 	hud.text("Bạn không chơi một con muỗi... Bạn chơi cả một dòng họ.", Vector2(W / 2, 664), 19, Color(1, .95, .85, .95 * a), 1)
 	hud.text("Kỷ lục: %d thế hệ" % Game.best, Vector2(W - 24, H - 18), 15, Color(1, .95, .85, .8 * a), 2)
 
@@ -90,7 +100,7 @@ func _button(hud: CanvasLayer, r: Rect2, label: String, a: float, mouse: Vector2
 	hud.panel(r.position, r.size, Color(.2, .1, .04, .92 * a) if not over else Color(.36, .2, .08, .95 * a))
 	hud.panel(r.position + Vector2(3, 3), r.size - Vector2(6, 6), Color(.12, .06, .02, .55 * a), 10.0)
 	var tc := Color(1, .93, .72, a) if over else Color(.98, .84, .5, a)
-	hud.text(label, r.get_center() + Vector2(0, 1), 28, tc, 1, true)
+	hud.text(label, r.get_center() + Vector2(0, 1), 28 if r.size.y > 60 else 24, tc, 1, true)
 
 func _about(hud: CanvasLayer, mouse: Vector2) -> void:
 	var img := _t("res://assets/ui/about.jpg")
@@ -164,3 +174,25 @@ func _ell_t(rp: Callable, c: Vector2, rx: float, ry: float, ang: float, k: float
 		var q := Vector2(cos(u) * rx * k, sin(u) * ry * k)
 		pts.append(rp.call(c + Vector2(q.x * cos(ang) - q.y * sin(ang), q.x * sin(ang) + q.y * cos(ang))))
 	return pts
+
+# ───────── menu tạm dừng ─────────
+const PAUSE_ITEMS := [["resume", "TIẾP TỤC"], ["menu", "LƯU & VỀ MENU CHÍNH"], ["quit", "LƯU & THOÁT GAME"]]
+
+func _pause_rect(i: int) -> Rect2:
+	return Rect2(W / 2 - 190, 262 + i * 70.0, 380, 58)
+
+func pause_click(mouse: Vector2) -> String:
+	for i in PAUSE_ITEMS.size():
+		if _pause_rect(i).has_point(mouse):
+			return PAUSE_ITEMS[i][0]
+	return ""
+
+func draw_pause(hud: CanvasLayer, t: float, mouse: Vector2) -> void:
+	hud.rect(Vector2.ZERO, Vector2(W, H), Color(.02, .015, .01, .62))
+	hud.panel(Vector2(W / 2 - 240, 170), Vector2(480, 370), Color(.1, .06, .03, .94))
+	hud.panel(Vector2(W / 2 - 236, 174), Vector2(472, 362), Color(.16, .09, .04, .5), 14.0)
+	hud.text("TẠM DỪNG", Vector2(W / 2, 214), 38, GOLD, 1, true)
+	for i in PAUSE_ITEMS.size():
+		_button(hud, _pause_rect(i), PAUSE_ITEMS[i][1], 1.0, mouse, i == 0)
+	hud.text("P hoặc Esc: tiếp tục  ·  tiến trình được tự động lưu", Vector2(W / 2, 506), 14, Color(1, .95, .85, .75), 1)
+	_cursor(hud, t, mouse)

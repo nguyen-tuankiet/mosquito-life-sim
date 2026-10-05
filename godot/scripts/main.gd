@@ -17,6 +17,10 @@ var t := 0.0
 var title_cam: Camera3D
 var menu := StartMenu.new()
 var menu_t := 0.0
+var pause_t := 0.0
+var _cap := false          # chuột đã bị bắt (đang điều khiển) ở khung hình trước — để khôi phục sau tạm dừng
+var _loading := false      # đang nạp bản lưu: không tự lưu đè lên
+const STAGES := ["egg", "larva", "pupa", "adult"]
 
 # kiểm thử
 var shot_path := ""
@@ -106,6 +110,10 @@ func _ready() -> void:
 			print("SIZE ", nm, " ", Assets.aabb_of(n).size)
 		get_tree().quit()
 		return
+	if scenario == "test_save":
+		_test_save()
+		get_tree().quit()
+		return
 	if scenario == "test_village":
 		_test_village()
 		get_tree().quit()
@@ -121,6 +129,7 @@ func _ready() -> void:
 		_setup_scenario()
 	elif not start_adult:
 		mode = "menu"
+		menu.has_save = SaveGame.exists()
 	elif start_adult:
 		Game.new_lineage()
 		Game.L["sex"] = "F"
@@ -149,6 +158,8 @@ func enter_stage(st: String, resp: bool) -> void:
 	else:
 		adult.leave()
 		aquatic.enter(st, resp)
+	if not _loading:
+		save_game()
 
 func _on_aquatic_advance(next: String) -> void:
 	if next == "larva":
@@ -165,6 +176,140 @@ func _on_aquatic_advance(next: String) -> void:
 		hud.banner("VŨ HÓA — MUỖI %s (%s)" % ["ĐỰC" if Game.L["sex"] == "M" else "CÁI", String(Game.BUILDS[Game.G["build"]]["name"]).to_upper()],
 			"Vỏ nhộng nứt ở lưng, muỗi chui ra và đứng trên mặt nước tại \"%s\" chờ cánh khô.  ·  %s" % [Game.SITES[Game.L["site"]]["name"], wtxt])
 
+## Kiểm thử lưu/nạp: --scenario=test_save (in "[save] ..." và "[save] OK" nếu đúng hết)
+func _test_save() -> void:
+	var bad := 0
+	var chk := func(name: String, ok: bool) -> void:
+		print("[save] ", name, " ", "ok" if ok else "SAI")
+		if not ok: bad += 1
+	SaveGame.clear()
+	Game.new_lineage()
+	Game.L["sex"] = "F"; Game.L["gen"] = 3
+	Game.new_generation_stats()
+	_loading = true
+	enter_stage("larva", false)
+	aquatic.pl["growth"] = 42.0; aquatic.pl["molts"] = 1; aquatic.p_pos = Vector3(1.5, -2.0, 3.0)
+	Game.quests[0]["prog"] = 2.0
+	Game.G["food"] = 7
+	save_game()
+	chk.call("đã ghi file", SaveGame.exists())
+	Game.new_lineage(); Game.new_generation_stats()
+	enter_stage("egg", false)
+	chk.call("nạp trả true", load_game())
+	chk.call("giai đoạn larva", mode == "larva")
+	chk.call("thế hệ 3", int(Game.L["gen"]) == 3)
+	chk.call("growth 42", is_equal_approx(float(aquatic.pl["growth"]), 42.0))
+	chk.call("molts 1", int(aquatic.pl["molts"]) == 1)
+	chk.call("vị trí", aquatic.p_pos.is_equal_approx(Vector3(1.5, -2.0, 3.0)))
+	chk.call("nhiệm vụ tiến độ", is_equal_approx(float(Game.quests[0]["prog"]), 2.0))
+	chk.call("thống kê food 7", int(Game.G["food"]) == 7)
+	# trưởng thành
+	Game.L["sex"] = "F"
+	enter_stage("adult", false)
+	adult.body.global_position = Vector3(5, 3, 5); adult.pl["energy"] = 33.0; adult.pl["blood"] = .4
+	save_game()
+	Game.new_lineage(); Game.new_generation_stats()
+	chk.call("nạp adult", load_game())
+	chk.call("mode adult", mode == "adult")
+	chk.call("energy 33", is_equal_approx(float(adult.pl["energy"]), 33.0))
+	chk.call("blood .4", is_equal_approx(float(adult.pl["blood"]), .4))
+	chk.call("vị trí adult", adult.body.global_position.is_equal_approx(Vector3(5, 3, 5)))
+	# tổng kết thế hệ
+	summary = {"t": 5.0, "gen": 3}
+	mode = "summary"
+	save_game()
+	chk.call("nạp summary", load_game() and mode == "summary" and int(summary.get("gen", 0)) == 3)
+	SaveGame.clear()
+	print("[save] ", "OK" if bad == 0 else "CÓ %d LỖI" % bad)
+
+# ═════════════ tạm dừng · lưu · nạp ═════════════
+func _set_paused(p: bool) -> void:
+	if p == paused:
+		return
+	paused = p
+	get_tree().paused = false
+	if p:
+		pause_t = 0.0
+		save_game()
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if _cap else Input.MOUSE_MODE_VISIBLE
+
+## Lưu và quay về menu chính (có nút TIẾP TỤC).
+func _to_menu() -> void:
+	save_game()
+	paused = false
+	adult.leave()
+	aquatic.leave()
+	title_cam.make_current()
+	menu.reset()
+	menu.has_save = SaveGame.exists()
+	menu_t = 0.0
+	mode = "menu"
+
+func save_game() -> void:
+	if (scenario != "" and scenario != "test_save") or start_adult:
+		return
+	if mode in STAGES and dead:
+		return
+	var d := {"mode": mode, "L": Game.L, "G": Game.G, "quests": Game.quests, "quest_stage": Game.quest_stage}
+	match mode:
+		"summary":
+			d["summary"] = summary
+		"egg", "larva", "pupa":
+			d["detail"] = {"p_pos": aquatic.p_pos, "yaw": aquatic.view_yaw, "pitch": aquatic.view_pitch,
+				"pl": SaveGame.plain(aquatic.pl), "stage_t": aquatic.stage_t}
+		"adult":
+			d["detail"] = {"pos": adult.body.global_position, "yaw": adult.view_yaw, "pitch": adult.view_pitch,
+				"pl": SaveGame.plain(adult.pl, ["mode", "sucking", "mate", "lay"]),
+				"t": float(adult.A.get("t", 0.0)), "clock": float(adult.A.get("clock", 0.0))}
+		_:
+			return
+	SaveGame.write(d)
+
+## Nạp bản lưu: vào lại đúng giai đoạn, khôi phục chỉ số và vị trí. Trả về false nếu không có / hỏng.
+func load_game() -> bool:
+	var d := SaveGame.read()
+	if d.is_empty():
+		return false
+	Game.L = d["L"]
+	Game.G = d["G"]
+	var m: String = d["mode"]
+	if m == "summary":
+		summary = d.get("summary", {})
+		summary["t"] = 0.0
+		mode = "summary"
+		return true
+	if not (m in STAGES):
+		return false
+	_loading = true
+	enter_stage(m, false)
+	_loading = false
+	Game.quests = d.get("quests", Game.quests)
+	Game.quest_stage = d.get("quest_stage", Game.quest_stage)
+	var det: Dictionary = d.get("detail", {})
+	if not det.is_empty():
+		if m == "adult":
+			adult.body.global_position = det["pos"]
+			adult.v = Vector3.ZERO
+			adult.view_yaw = det["yaw"]
+			adult.view_pitch = det["pitch"]
+			adult.pl.merge(det["pl"], true)
+			adult.A["t"] = det["t"]
+			adult.A["clock"] = det["clock"]
+			adult.emerge_t = 99.0   # bỏ cảnh vừa vũ hóa
+		else:
+			aquatic.p_pos = det["p_pos"]
+			aquatic.view_yaw = det["yaw"]
+			aquatic.view_pitch = det["pitch"]
+			aquatic.pl.merge(det["pl"], true)
+			aquatic.stage_t = det["stage_t"]
+	hud.banner("TIẾP TỤC HÀNH TRÌNH", "Thế hệ %d · %s · ngày %d — bấm chuột để điều khiển tiếp" % [int(Game.L["gen"]), String(Game.STAGE_NAMES[m]).to_lower(), Game.day_no()])
+	return true
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and mode in STAGES:
+		save_game()
+
 func _on_died(c: String) -> void:
 	if dead:
 		return
@@ -175,6 +320,7 @@ func _on_died(c: String) -> void:
 		print("[died] ", c, " · mode=", mode)
 
 func _resolve_death() -> void:
+	SaveGame.clear()
 	mode = "over"
 	adult.leave()
 	aquatic.leave()
@@ -186,6 +332,7 @@ func _on_adult_finished(eggs: int, site: int) -> void:
 	mode = "summary"
 	adult.leave()
 	title_cam.make_current()
+	save_game()
 
 # ═════════════ vòng lặp ═════════════
 func _process(dt: float) -> void:
@@ -193,9 +340,8 @@ func _process(dt: float) -> void:
 	frame_i += 1
 	if Input.is_action_just_pressed("mute"):
 		Sfx.muted = not Sfx.muted
-	if Input.is_action_just_pressed("pause") and mode in ["egg", "larva", "pupa", "adult"]:
-		paused = not paused
-		get_tree().paused = false
+	if (Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("ui_cancel")) and mode in STAGES and not dead:
+		_set_paused(not paused)
 	var confirm := Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("up") or Input.is_action_just_pressed("act") or _clicked()
 	hud.begin()
 	if scenario == "adult_feed" and frame_i == 45:
@@ -239,14 +385,26 @@ func _process(dt: float) -> void:
 				menu_t += dt
 				Input.mouse_mode = Input.MOUSE_MODE_HIDDEN   # con trỏ là con muỗi tự vẽ
 				var go := false
+				var cont := false
 				if menu_t > .4:
 					if _menu_click:
-						go = menu.click(get_viewport().get_mouse_position()) == "start"
+						var act := menu.click(get_viewport().get_mouse_position())
+						go = act == "start"
+						cont = act == "continue"
 					elif menu.page == "home" and (Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("act")):
-						go = true
+						go = not menu.has_save
+						cont = menu.has_save
 					elif menu.page == "about" and Input.is_key_pressed(KEY_ESCAPE):
 						menu.page = "home"
 				_menu_click = false
+				if cont and not load_game():
+					cont = false
+					menu.has_save = false
+				if cont:
+					Sfx.beep(480, .08, "sine", .03, 60)
+					hud.flash(Color(0, 0, 0), .6)
+					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+					menu.reset()
 				if go:
 					Sfx.beep(480, .08, "sine", .03, 60)
 					hud.flash(Color(0, 0, 0), .6)
@@ -286,8 +444,20 @@ func _process(dt: float) -> void:
 	if Sfx.muted:
 		hud.text("TẮT ÂM", Vector2(W - 20, H - 20), 15, Color.WHITE, 2)
 	if paused:
-		hud.rect(Vector2.ZERO, Vector2(W, H), Color(0, 0, 0, .6))
-		hud.text("TẠM DỪNG — nhấn P để tiếp tục", Vector2(W / 2, H / 2), 36, Color.WHITE, 1)
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN   # con trỏ muỗi tự vẽ, game không bắt chuột
+		pause_t += dt
+		var mp := get_viewport().get_mouse_position()
+		menu.draw_pause(hud, pause_t, mp)
+		if _menu_click and pause_t > .15:
+			match menu.pause_click(mp):
+				"resume": _set_paused(false)
+				"menu": _to_menu()
+				"quit":
+					save_game()
+					get_tree().quit()
+	if mode in STAGES and not paused:
+		_cap = Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	_menu_click = false
 	if OS.get_environment("NOHUD") != "":
 		hud.cmds.clear()
 		for lb in (adult.site_labels if adult.cam != null else []):
