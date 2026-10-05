@@ -6,6 +6,8 @@ static var _cache: Dictionary = {}
 static var _mats: Dictionary = {}
 
 static func scene(name: String) -> PackedScene:
+	if name.begins_with("island_tree_") and OS.has_feature("web"):
+		name = "birch"   # bản web: model cây Poly Haven quá nặng (50-100MB/cây), thay bằng cây nhẹ
 	if not _cache.has(name):
 		var path := "res://assets/models/%s.glb" % name
 		if not ResourceLoader.exists(path):
