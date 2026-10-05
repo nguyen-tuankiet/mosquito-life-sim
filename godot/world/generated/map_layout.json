@@ -1,0 +1,7295 @@
+{
+ "map": "vietnamese_rural_village",
+ "coord": "godot",
+ "nodes": {
+  "BambooPoint_v00__ASSET": {
+   "pos": [
+    -0.003,
+    0.0,
+    -0.007
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "source_file": "assets/environment/bamboo/bamboo_clump_01.glb",
+    "swapped_asset": "LIB_bamboo_clump_01"
+   }
+  },
+  "BambooPoint_v01__ASSET": {
+   "pos": [
+    -0.002,
+    0.0,
+    0.003
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "source_file": "assets/environment/bamboo/bamboo_clump_02.glb",
+    "swapped_asset": "LIB_bamboo_clump_02"
+   }
+  },
+  "BananaPoint_0001": {
+   "pos": [
+    113.137,
+    0.3,
+    -223.085
+   ],
+   "rot_y": 1.7996,
+   "scale": [
+    0.862,
+    0.862,
+    0.862
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 12995,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0002": {
+   "pos": [
+    126.97,
+    0.3,
+    -224.058
+   ],
+   "rot_y": 2.2137,
+   "scale": [
+    0.866,
+    0.866,
+    0.866
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 2448,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0003": {
+   "pos": [
+    -6.312,
+    0.3,
+    -183.484
+   ],
+   "rot_y": -2.3708,
+   "scale": [
+    0.811,
+    0.811,
+    0.811
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 29300,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0004": {
+   "pos": [
+    43.152,
+    0.3,
+    -187.083
+   ],
+   "rot_y": -1.3932,
+   "scale": [
+    0.908,
+    0.908,
+    0.908
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 2788,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0005": {
+   "pos": [
+    67.41,
+    0.3,
+    -188.494
+   ],
+   "rot_y": -2.0764,
+   "scale": [
+    0.839,
+    0.839,
+    0.839
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 62555,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0006": {
+   "pos": [
+    68.933,
+    0.3,
+    -179.298
+   ],
+   "rot_y": -0.4615,
+   "scale": [
+    0.814,
+    0.814,
+    0.814
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 59897,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0007": {
+   "pos": [
+    -109.843,
+    0.4,
+    -164.955
+   ],
+   "rot_y": -3.0913,
+   "scale": [
+    1.157,
+    1.157,
+    1.157
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 23727,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0008": {
+   "pos": [
+    0.908,
+    0.3,
+    -161.216
+   ],
+   "rot_y": 2.0203,
+   "scale": [
+    1.083,
+    1.083,
+    1.083
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 28591,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0009": {
+   "pos": [
+    47.084,
+    0.3,
+    -161.505
+   ],
+   "rot_y": 2.5121,
+   "scale": [
+    1.139,
+    1.139,
+    1.139
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 56323,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0010": {
+   "pos": [
+    -69.221,
+    0.4,
+    -148.87
+   ],
+   "rot_y": 3.0354,
+   "scale": [
+    1.096,
+    1.096,
+    1.096
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 38173,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0011": {
+   "pos": [
+    -108.579,
+    0.4,
+    -131.894
+   ],
+   "rot_y": -1.039,
+   "scale": [
+    0.879,
+    0.879,
+    0.879
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 17848,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0012": {
+   "pos": [
+    -190.475,
+    0.4,
+    -118.958
+   ],
+   "rot_y": -2.4714,
+   "scale": [
+    0.901,
+    0.901,
+    0.901
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 30192,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0013": {
+   "pos": [
+    -7.985,
+    0.3,
+    -122.384
+   ],
+   "rot_y": -2.1978,
+   "scale": [
+    1.156,
+    1.156,
+    1.156
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 8663,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0014": {
+   "pos": [
+    -88.511,
+    0.4,
+    -110.935
+   ],
+   "rot_y": 1.229,
+   "scale": [
+    0.817,
+    0.817,
+    0.817
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 62455,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0015": {
+   "pos": [
+    -66.971,
+    0.4,
+    -103.846
+   ],
+   "rot_y": 0.844,
+   "scale": [
+    1.058,
+    1.058,
+    1.058
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 47545,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0016": {
+   "pos": [
+    41.303,
+    0.3,
+    -96.13
+   ],
+   "rot_y": 2.167,
+   "scale": [
+    0.942,
+    0.942,
+    0.942
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 29129,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0017": {
+   "pos": [
+    80.433,
+    0.3,
+    -97.974
+   ],
+   "rot_y": -0.9243,
+   "scale": [
+    0.826,
+    0.826,
+    0.826
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 42498,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0018": {
+   "pos": [
+    121.746,
+    0.3,
+    -98.254
+   ],
+   "rot_y": 1.7392,
+   "scale": [
+    1.135,
+    1.135,
+    1.135
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 17345,
+    "zone": "Z01"
+   }
+  },
+  "BananaPoint_0019": {
+   "pos": [
+    -107.505,
+    0.4,
+    -71.506
+   ],
+   "rot_y": 0.8106,
+   "scale": [
+    0.942,
+    0.942,
+    0.942
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 62692,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0020": {
+   "pos": [
+    -79.005,
+    0.4,
+    -68.241
+   ],
+   "rot_y": -1.3475,
+   "scale": [
+    1.021,
+    1.021,
+    1.021
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 41723,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0021": {
+   "pos": [
+    -64.376,
+    0.4,
+    -67.082
+   ],
+   "rot_y": 0.7266,
+   "scale": [
+    1.085,
+    1.085,
+    1.085
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 13226,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0022": {
+   "pos": [
+    -62.25,
+    0.4,
+    -51.945
+   ],
+   "rot_y": 1.6307,
+   "scale": [
+    1.196,
+    1.196,
+    1.196
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 60000,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0023": {
+   "pos": [
+    -45.845,
+    0.4,
+    -33.271
+   ],
+   "rot_y": -0.5288,
+   "scale": [
+    0.903,
+    0.903,
+    0.903
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 31074,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0024": {
+   "pos": [
+    -46.04,
+    0.4,
+    -18.321
+   ],
+   "rot_y": 0.3622,
+   "scale": [
+    0.979,
+    0.979,
+    0.979
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 14543,
+    "zone": "Z02"
+   }
+  },
+  "BananaPoint_0025": {
+   "pos": [
+    -38.857,
+    0.4,
+    -8.397
+   ],
+   "rot_y": -0.3357,
+   "scale": [
+    0.831,
+    0.831,
+    0.831
+   ],
+   "props": {
+    "point_type": "BananaPoint",
+    "variant": 39443,
+    "zone": "Z02"
+   }
+  },
+  "BasinPoint_01": {
+   "pos": [
+    46.0,
+    0.3,
+    -180.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W04a_basin",
+    "zone": "Z01",
+    "game_site": "",
+    "point_type": "BasinPoint"
+   }
+  },
+  "BridgePoint_B1_R2": {
+   "pos": [
+    -139.0,
+    1.2,
+    -170.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "road": "R2_bridge_lane",
+    "point_type": "BridgePoint"
+   }
+  },
+  "BucketPoint_01": {
+   "pos": [
+    42.0,
+    0.3,
+    -204.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W02_bucket",
+    "zone": "Z01",
+    "game_site": "bucket",
+    "point_type": "BucketPoint"
+   }
+  },
+  "BucketPoint_02": {
+   "pos": [
+    48.0,
+    0.3,
+    -200.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W02b_bucket_red",
+    "zone": "Z01",
+    "game_site": "",
+    "point_type": "BucketPoint"
+   }
+  },
+  "CameraBounds_Hard": {
+   "pos": [
+    0.0,
+    30.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    250.0,
+    30.0,
+    270.0
+   ],
+   "props": {
+    "soft_edge": 10,
+    "adult_min_y": 0.15,
+    "adult_max_y": 25,
+    "sky_ceiling_y": 60,
+    "indoor_ceiling_y": 3.4
+   }
+  },
+  "CameraBounds_Playable": {
+   "pos": [
+    0.0,
+    30.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    240.0,
+    30.0,
+    260.0
+   ],
+   "props": {
+    "soft_edge": 10,
+    "adult_min_y": 0.15,
+    "adult_max_y": 25,
+    "sky_ceiling_y": 60,
+    "indoor_ceiling_y": 3.4
+   }
+  },
+  "CoconutPoint_0001": {
+   "pos": [
+    -5.558,
+    0.3,
+    -213.604
+   ],
+   "rot_y": -3.1117,
+   "scale": [
+    0.917,
+    0.917,
+    0.917
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 23391,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0002": {
+   "pos": [
+    16.429,
+    0.3,
+    -215.74
+   ],
+   "rot_y": 0.3712,
+   "scale": [
+    0.959,
+    0.959,
+    0.959
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 7207,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0003": {
+   "pos": [
+    91.96,
+    0.3,
+    -203.448
+   ],
+   "rot_y": 0.9567,
+   "scale": [
+    1.286,
+    1.286,
+    1.286
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 10285,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0004": {
+   "pos": [
+    81.152,
+    0.3,
+    -166.824
+   ],
+   "rot_y": -2.5112,
+   "scale": [
+    1.23,
+    1.23,
+    1.23
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 13675,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0005": {
+   "pos": [
+    105.944,
+    0.3,
+    -153.292
+   ],
+   "rot_y": 0.2963,
+   "scale": [
+    1.213,
+    1.213,
+    1.213
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 4465,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0006": {
+   "pos": [
+    -16.575,
+    0.3,
+    -147.285
+   ],
+   "rot_y": -1.0335,
+   "scale": [
+    0.963,
+    0.963,
+    0.963
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 13983,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0007": {
+   "pos": [
+    -23.489,
+    0.3,
+    -127.452
+   ],
+   "rot_y": 2.7589,
+   "scale": [
+    1.186,
+    1.186,
+    1.186
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 53864,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0008": {
+   "pos": [
+    20.667,
+    0.3,
+    -119.675
+   ],
+   "rot_y": -0.1026,
+   "scale": [
+    0.956,
+    0.956,
+    0.956
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 26130,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0009": {
+   "pos": [
+    -11.851,
+    0.3,
+    -109.86
+   ],
+   "rot_y": 1.7198,
+   "scale": [
+    0.955,
+    0.955,
+    0.955
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 49780,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0010": {
+   "pos": [
+    46.279,
+    0.3,
+    -92.875
+   ],
+   "rot_y": -3.0158,
+   "scale": [
+    1.187,
+    1.187,
+    1.187
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 5064,
+    "zone": "Z01"
+   }
+  },
+  "CoconutPoint_0011": {
+   "pos": [
+    236.932,
+    0.25,
+    -86.576
+   ],
+   "rot_y": -1.2022,
+   "scale": [
+    1.089,
+    1.089,
+    1.089
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 51230,
+    "zone": "filler"
+   }
+  },
+  "CoconutPoint_0012": {
+   "pos": [
+    68.596,
+    0.229,
+    -64.489
+   ],
+   "rot_y": 2.8585,
+   "scale": [
+    0.98,
+    0.98,
+    0.98
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 54581,
+    "zone": "filler"
+   }
+  },
+  "CoconutPoint_0013": {
+   "pos": [
+    162.191,
+    0.221,
+    140.056
+   ],
+   "rot_y": 1.7474,
+   "scale": [
+    1.145,
+    1.145,
+    1.145
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 26597,
+    "zone": "Z07"
+   }
+  },
+  "CoconutPoint_0014": {
+   "pos": [
+    196.28,
+    0.2,
+    158.254
+   ],
+   "rot_y": 1.9072,
+   "scale": [
+    0.967,
+    0.967,
+    0.967
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 2909,
+    "zone": "Z07"
+   }
+  },
+  "CoconutPoint_0015": {
+   "pos": [
+    203.749,
+    0.2,
+    193.15
+   ],
+   "rot_y": -0.2831,
+   "scale": [
+    1.028,
+    1.028,
+    1.028
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 3102,
+    "zone": "Z07"
+   }
+  },
+  "CoconutPoint_0016": {
+   "pos": [
+    240.386,
+    0.2,
+    202.567
+   ],
+   "rot_y": 0.0731,
+   "scale": [
+    1.144,
+    1.144,
+    1.144
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 40741,
+    "zone": "Z07"
+   }
+  },
+  "CoconutPoint_0017": {
+   "pos": [
+    91.356,
+    0.2,
+    213.156
+   ],
+   "rot_y": 0.9844,
+   "scale": [
+    0.973,
+    0.973,
+    0.973
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 65067,
+    "zone": "Z07"
+   }
+  },
+  "CoconutPoint_0018": {
+   "pos": [
+    227.1,
+    0.2,
+    213.63
+   ],
+   "rot_y": -1.5462,
+   "scale": [
+    0.932,
+    0.932,
+    0.932
+   ],
+   "props": {
+    "point_type": "CoconutPoint",
+    "variant": 19567,
+    "zone": "Z07"
+   }
+  },
+  "EggSite_W01_puddle_rain": {
+   "pos": [
+    80.0,
+    0.05,
+    180.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W01_puddle_rain",
+    "zone": "Z07",
+    "kind": "puddle",
+    "game_site": "puddle",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W02_bucket": {
+   "pos": [
+    42.0,
+    0.6,
+    -204.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W02_bucket",
+    "zone": "Z01",
+    "kind": "bucket",
+    "game_site": "bucket",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W02b_bucket_red": {
+   "pos": [
+    48.0,
+    0.6,
+    -200.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W02b_bucket_red",
+    "zone": "Z01",
+    "kind": "bucket",
+    "game_site": "",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W03_jar_chum": {
+   "pos": [
+    50.0,
+    0.75,
+    -190.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W03_jar_chum",
+    "zone": "Z01",
+    "kind": "jar",
+    "game_site": "jar",
+    "spawn_first_life": true
+   }
+  },
+  "EggSite_W04a_basin": {
+   "pos": [
+    46.0,
+    0.6,
+    -180.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W04a_basin",
+    "zone": "Z01",
+    "kind": "basin",
+    "game_site": "",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W04b_tire": {
+   "pos": [
+    12.0,
+    0.7,
+    -120.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W04b_tire",
+    "zone": "Z01",
+    "kind": "tire",
+    "game_site": "",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W05_pond": {
+   "pos": [
+    -80.0,
+    -0.2,
+    67.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W05_pond",
+    "zone": "Z03",
+    "kind": "water",
+    "game_site": "pond",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W06_canal": {
+   "pos": [
+    -150.0,
+    -0.3,
+    -108.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W06_canal",
+    "zone": "Z05",
+    "kind": "water",
+    "game_site": "canal",
+    "spawn_first_life": false
+   }
+  },
+  "EggSite_W07_paddy": {
+   "pos": [
+    135.0,
+    0.15,
+    12.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W07_paddy",
+    "zone": "Z04",
+    "kind": "water",
+    "game_site": "paddy",
+    "spawn_first_life": false
+   }
+  },
+  "FencePoint_001": {
+   "pos": [
+    39.0,
+    0.3,
+    -225.541
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_002": {
+   "pos": [
+    31.0,
+    0.3,
+    -225.541
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_003": {
+   "pos": [
+    39.0,
+    0.3,
+    -222.582
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_004": {
+   "pos": [
+    31.0,
+    0.3,
+    -222.582
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_005": {
+   "pos": [
+    39.0,
+    0.3,
+    -219.622
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_006": {
+   "pos": [
+    31.0,
+    0.3,
+    -219.622
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_007": {
+   "pos": [
+    39.0,
+    0.3,
+    -216.663
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_008": {
+   "pos": [
+    31.0,
+    0.3,
+    -216.663
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_009": {
+   "pos": [
+    39.0,
+    0.3,
+    -213.704
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_010": {
+   "pos": [
+    31.0,
+    0.3,
+    -213.704
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_011": {
+   "pos": [
+    39.0,
+    0.3,
+    -210.745
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_012": {
+   "pos": [
+    31.0,
+    0.3,
+    -210.745
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_013": {
+   "pos": [
+    39.0,
+    0.3,
+    -207.786
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_014": {
+   "pos": [
+    31.0,
+    0.3,
+    -207.786
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_015": {
+   "pos": [
+    39.0,
+    0.3,
+    -204.827
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_016": {
+   "pos": [
+    31.0,
+    0.3,
+    -204.827
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_017": {
+   "pos": [
+    39.0,
+    0.3,
+    -181.153
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_018": {
+   "pos": [
+    31.0,
+    0.3,
+    -181.153
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_019": {
+   "pos": [
+    39.0,
+    0.3,
+    -166.357
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_020": {
+   "pos": [
+    31.0,
+    0.3,
+    -166.357
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_021": {
+   "pos": [
+    39.0,
+    0.3,
+    -163.398
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_022": {
+   "pos": [
+    31.0,
+    0.3,
+    -163.398
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_023": {
+   "pos": [
+    39.0,
+    0.3,
+    -160.439
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_024": {
+   "pos": [
+    31.0,
+    0.3,
+    -160.439
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_025": {
+   "pos": [
+    39.0,
+    0.3,
+    -157.48
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_026": {
+   "pos": [
+    31.0,
+    0.3,
+    -157.48
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_027": {
+   "pos": [
+    39.0,
+    0.3,
+    -154.52
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_028": {
+   "pos": [
+    31.0,
+    0.3,
+    -154.52
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_029": {
+   "pos": [
+    39.0,
+    0.3,
+    -151.561
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_030": {
+   "pos": [
+    31.0,
+    0.3,
+    -151.561
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_031": {
+   "pos": [
+    39.0,
+    0.3,
+    -148.602
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_032": {
+   "pos": [
+    31.0,
+    0.3,
+    -148.602
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_033": {
+   "pos": [
+    39.0,
+    0.3,
+    -145.643
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_034": {
+   "pos": [
+    31.0,
+    0.3,
+    -145.643
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_035": {
+   "pos": [
+    39.0,
+    0.3,
+    -142.684
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_036": {
+   "pos": [
+    31.0,
+    0.3,
+    -142.684
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_037": {
+   "pos": [
+    39.0,
+    0.3,
+    -139.724
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_038": {
+   "pos": [
+    31.0,
+    0.3,
+    -139.724
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_039": {
+   "pos": [
+    39.0,
+    0.3,
+    -136.765
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_040": {
+   "pos": [
+    31.0,
+    0.3,
+    -136.765
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_041": {
+   "pos": [
+    39.0,
+    0.3,
+    -133.806
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_042": {
+   "pos": [
+    31.0,
+    0.3,
+    -133.806
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_043": {
+   "pos": [
+    39.0,
+    0.3,
+    -130.847
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_044": {
+   "pos": [
+    31.0,
+    0.3,
+    -130.847
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_045": {
+   "pos": [
+    39.0,
+    0.3,
+    -127.888
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_046": {
+   "pos": [
+    31.0,
+    0.3,
+    -127.888
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_047": {
+   "pos": [
+    39.0,
+    0.3,
+    -124.929
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_048": {
+   "pos": [
+    31.0,
+    0.3,
+    -124.929
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_049": {
+   "pos": [
+    39.0,
+    0.3,
+    -101.255
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_050": {
+   "pos": [
+    31.0,
+    0.3,
+    -101.255
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_051": {
+   "pos": [
+    39.0,
+    0.3,
+    -98.296
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_052": {
+   "pos": [
+    31.0,
+    0.3,
+    -98.296
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_053": {
+   "pos": [
+    39.0,
+    0.3,
+    -95.337
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_054": {
+   "pos": [
+    31.0,
+    0.3,
+    -95.337
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_055": {
+   "pos": [
+    39.0,
+    0.3,
+    -92.378
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_056": {
+   "pos": [
+    31.0,
+    0.3,
+    -92.378
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_057": {
+   "pos": [
+    39.0,
+    0.3,
+    -89.418
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_058": {
+   "pos": [
+    31.0,
+    0.3,
+    -89.418
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_059": {
+   "pos": [
+    39.0,
+    0.289,
+    -86.459
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_060": {
+   "pos": [
+    31.0,
+    0.289,
+    -86.459
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_061": {
+   "pos": [
+    39.0,
+    0.268,
+    -83.5
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_062": {
+   "pos": [
+    31.0,
+    0.268,
+    -83.5
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R1_main_spine",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_063": {
+   "pos": [
+    33.5,
+    0.3,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_064": {
+   "pos": [
+    33.5,
+    0.3,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_065": {
+   "pos": [
+    30.583,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_066": {
+   "pos": [
+    30.583,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_067": {
+   "pos": [
+    27.667,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_068": {
+   "pos": [
+    27.667,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_069": {
+   "pos": [
+    24.75,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_070": {
+   "pos": [
+    24.75,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_071": {
+   "pos": [
+    21.833,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_072": {
+   "pos": [
+    21.833,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_073": {
+   "pos": [
+    18.917,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_074": {
+   "pos": [
+    18.917,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_075": {
+   "pos": [
+    16.0,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_076": {
+   "pos": [
+    16.0,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_077": {
+   "pos": [
+    13.083,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_078": {
+   "pos": [
+    13.083,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_079": {
+   "pos": [
+    10.167,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_080": {
+   "pos": [
+    10.167,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_081": {
+   "pos": [
+    7.25,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_082": {
+   "pos": [
+    7.25,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_083": {
+   "pos": [
+    4.333,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_084": {
+   "pos": [
+    4.333,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_085": {
+   "pos": [
+    1.417,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_086": {
+   "pos": [
+    1.417,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_087": {
+   "pos": [
+    -1.5,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_088": {
+   "pos": [
+    -1.5,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_089": {
+   "pos": [
+    -4.417,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_090": {
+   "pos": [
+    -4.417,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_091": {
+   "pos": [
+    -7.333,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_092": {
+   "pos": [
+    -7.333,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_093": {
+   "pos": [
+    -10.25,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_094": {
+   "pos": [
+    -10.25,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_095": {
+   "pos": [
+    -13.167,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_096": {
+   "pos": [
+    -13.167,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_097": {
+   "pos": [
+    -16.083,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_098": {
+   "pos": [
+    -16.083,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_099": {
+   "pos": [
+    -19.0,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_100": {
+   "pos": [
+    -19.0,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_101": {
+   "pos": [
+    -21.917,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_102": {
+   "pos": [
+    -21.917,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_103": {
+   "pos": [
+    -24.833,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_104": {
+   "pos": [
+    -24.833,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_105": {
+   "pos": [
+    -27.75,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_106": {
+   "pos": [
+    -27.75,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_107": {
+   "pos": [
+    -30.667,
+    0.25,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_108": {
+   "pos": [
+    -30.667,
+    0.25,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_109": {
+   "pos": [
+    -33.583,
+    0.232,
+    70.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "FencePoint_110": {
+   "pos": [
+    -33.583,
+    0.232,
+    64.0
+   ],
+   "rot_y": -3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "along": "R3_pond_lane",
+    "point_type": "FencePoint"
+   }
+  },
+  "GrassPoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "source_file": "assets/environment/grasslands/grass_clump_vn.glb",
+    "swapped_asset": "LIB_grass_clump_vn"
+   }
+  },
+  "GrassTallPoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    0.805,
+    0.805,
+    0.805
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/grasslands/grass_tall.glb",
+    "swapped_asset": "LIB_grass_tall"
+   }
+  },
+  "HousePoint_01": {
+   "pos": [
+    60.0,
+    0.6,
+    -205.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H01",
+    "facing": "south",
+    "footprint": [
+     14.4,
+     9.4
+    ],
+    "hero": true,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_02": {
+   "pos": [
+    110.0,
+    0.6,
+    -200.0
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H02",
+    "facing": "west",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_03": {
+   "pos": [
+    145.0,
+    0.6,
+    -175.0
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H03",
+    "facing": "west",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_04": {
+   "pos": [
+    5.0,
+    0.6,
+    -190.0
+   ],
+   "rot_y": 1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H04",
+    "facing": "east",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_05": {
+   "pos": [
+    5.0,
+    0.6,
+    -120.0
+   ],
+   "rot_y": 1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H05",
+    "facing": "east",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_06": {
+   "pos": [
+    80.0,
+    0.6,
+    -115.0
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H06",
+    "facing": "west",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "HousePoint_07": {
+   "pos": [
+    135.0,
+    0.6,
+    -110.0
+   ],
+   "rot_y": -1.5708,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "house_id": "H07",
+    "facing": "west",
+    "footprint": [
+     12,
+     8
+    ],
+    "hero": false,
+    "zone": "Z01",
+    "point_type": "HousePoint"
+   }
+  },
+  "JarPoint_01": {
+   "pos": [
+    50.0,
+    0.3,
+    -190.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W03_jar_chum",
+    "zone": "Z01",
+    "game_site": "jar",
+    "point_type": "JarPoint"
+   }
+  },
+  "LandmarkPoint_L01": {
+   "pos": [
+    50.0,
+    0.3,
+    -190.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L01",
+    "label": "Chum sành lớn (spawn lần đầu)",
+    "kind": "jar_ref",
+    "zone": "Z01",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L02": {
+   "pos": [
+    55.0,
+    0.6,
+    -210.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L02",
+    "label": "Hiên nhà gỗ + lồng chim",
+    "kind": "house_ref",
+    "zone": "Z01",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L03": {
+   "pos": [
+    38.0,
+    0.3,
+    -225.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L03",
+    "label": "Cột điện bê tông",
+    "kind": "power_pole",
+    "zone": "Z08",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L04": {
+   "pos": [
+    42.0,
+    0.3,
+    -185.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L04",
+    "label": "Gà mái ở sân",
+    "kind": "chicken",
+    "zone": "Z01",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L05": {
+   "pos": [
+    -25.0,
+    0.3,
+    -160.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L05",
+    "label": "Đống rơm",
+    "kind": "haystack",
+    "zone": "Z01",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L05b": {
+   "pos": [
+    -60.0,
+    0.4,
+    10.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L05b",
+    "label": "Đống rơm 2",
+    "kind": "haystack",
+    "zone": "Z02",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L06": {
+   "pos": [
+    -80.0,
+    0.4,
+    -120.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L06",
+    "label": "Cây đa/me lớn (hốc cây)",
+    "kind": "big_tree",
+    "zone": "Z02",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L06b": {
+   "pos": [
+    -100.0,
+    0.4,
+    -30.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L06b",
+    "label": "Cây bóng mát lớn 2",
+    "kind": "big_tree",
+    "zone": "Z02",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L07": {
+   "pos": [
+    -65.0,
+    0.4,
+    -55.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L07",
+    "label": "Chòi tre nhỏ",
+    "kind": "hut",
+    "zone": "Z02",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L08": {
+   "pos": [
+    -42.0,
+    0.4,
+    67.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L08",
+    "label": "Cầu ao",
+    "kind": "jetty",
+    "zone": "Z03",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L08b": {
+   "pos": [
+    -60.0,
+    -0.2,
+    82.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L08b",
+    "label": "Thuyền gỗ",
+    "kind": "boat",
+    "zone": "Z03",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L09": {
+   "pos": [
+    -139.0,
+    -2.096,
+    -170.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L09",
+    "label": "Cầu bắc qua sông",
+    "kind": "bridge_ref",
+    "zone": "Z05",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L10": {
+   "pos": [
+    190.0,
+    0.0,
+    60.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L10",
+    "label": "Chòi ruộng",
+    "kind": "hut",
+    "zone": "Z04",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L10b": {
+   "pos": [
+    150.0,
+    0.0,
+    -20.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L10b",
+    "label": "Trâu",
+    "kind": "buffalo",
+    "zone": "Z04",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L11": {
+   "pos": [
+    58.0,
+    0.4,
+    30.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L11",
+    "label": "Cống nhỏ cấp nước ruộng",
+    "kind": "culvert",
+    "zone": "Z05",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L12": {
+   "pos": [
+    -210.0,
+    0.4,
+    -55.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L12",
+    "label": "Đường mòn rừng tre",
+    "kind": "marker",
+    "zone": "Z06",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LandmarkPoint_L13": {
+   "pos": [
+    170.0,
+    0.0,
+    200.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "landmark": "L13",
+    "label": "Đồng cỏ + vũng sau mưa",
+    "kind": "marker",
+    "zone": "Z07",
+    "point_type": "LandmarkPoint"
+   }
+  },
+  "LilyPoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/ponds/lily_pad_vn.glb",
+    "swapped_asset": "LIB_lily_pad_vn"
+   }
+  },
+  "PlayerSpawn_FirstLife": {
+   "pos": [
+    50.0,
+    0.75,
+    -190.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W03_jar_chum",
+    "stage": "egg"
+   }
+  },
+  "ReedPoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    0.847,
+    0.847,
+    0.847
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/ponds/reed_clump.glb",
+    "swapped_asset": "LIB_reed_clump"
+   }
+  },
+  "RicePoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.226,
+    1.226,
+    1.226
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/rice_fields/rice_patch_1m.glb",
+    "swapped_asset": "LIB_rice_patch_1m"
+   }
+  },
+  "ShrubPoint_v00__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    0.904,
+    0.904,
+    0.904
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/bamboo/shrub_tropical_01.glb",
+    "swapped_asset": "LIB_shrub_tropical_01"
+   }
+  },
+  "ShrubPoint_v01__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.149,
+    1.149,
+    1.149
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/bamboo/shrub_tropical_02.glb",
+    "swapped_asset": "LIB_shrub_tropical_02"
+   }
+  },
+  "ShrubPoint_v02__ASSET": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    3.913,
+    3.913,
+    3.913
+   ],
+   "props": {
+    "source_file": "assets/_procedural/environment/bamboo/fern_clump.glb",
+    "swapped_asset": "LIB_fern_clump"
+   }
+  },
+  "TirePoint_01": {
+   "pos": [
+    12.0,
+    0.6,
+    -120.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "egg_site": "W04b_tire",
+    "zone": "Z01",
+    "game_site": "",
+    "point_type": "TirePoint"
+   }
+  },
+  "TreePoint_0001": {
+   "pos": [
+    -55.393,
+    0.4,
+    -165.971
+   ],
+   "rot_y": -3.0915,
+   "scale": [
+    1.059,
+    1.059,
+    1.059
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 56381,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0002": {
+   "pos": [
+    -41.166,
+    0.397,
+    -167.035
+   ],
+   "rot_y": 1.7576,
+   "scale": [
+    0.83,
+    0.83,
+    0.83
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 54087,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0003": {
+   "pos": [
+    -116.049,
+    0.4,
+    -161.245
+   ],
+   "rot_y": 1.9105,
+   "scale": [
+    0.919,
+    0.919,
+    0.919
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46076,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0004": {
+   "pos": [
+    -106.45,
+    0.4,
+    -163.263
+   ],
+   "rot_y": -0.2934,
+   "scale": [
+    1.118,
+    1.118,
+    1.118
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 65443,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0005": {
+   "pos": [
+    -97.196,
+    0.4,
+    -161.201
+   ],
+   "rot_y": -0.6078,
+   "scale": [
+    1.007,
+    1.007,
+    1.007
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 59951,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0006": {
+   "pos": [
+    -89.993,
+    0.4,
+    -158.717
+   ],
+   "rot_y": -3.1019,
+   "scale": [
+    0.951,
+    0.951,
+    0.951
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 14677,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0007": {
+   "pos": [
+    -78.458,
+    0.4,
+    -164.069
+   ],
+   "rot_y": -2.9133,
+   "scale": [
+    1.179,
+    1.179,
+    1.179
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 22427,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0008": {
+   "pos": [
+    -68.783,
+    0.4,
+    -161.589
+   ],
+   "rot_y": -1.5156,
+   "scale": [
+    1.114,
+    1.114,
+    1.114
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37649,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0009": {
+   "pos": [
+    -44.207,
+    0.4,
+    -159.343
+   ],
+   "rot_y": 0.0509,
+   "scale": [
+    1.055,
+    1.055,
+    1.055
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 7027,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0010": {
+   "pos": [
+    -108.39,
+    0.4,
+    -155.733
+   ],
+   "rot_y": -0.4511,
+   "scale": [
+    1.017,
+    1.017,
+    1.017
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 64342,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0011": {
+   "pos": [
+    -98.855,
+    0.4,
+    -154.017
+   ],
+   "rot_y": -2.9673,
+   "scale": [
+    0.866,
+    0.866,
+    0.866
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 45765,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0012": {
+   "pos": [
+    -80.911,
+    0.4,
+    -153.412
+   ],
+   "rot_y": -1.8572,
+   "scale": [
+    1.134,
+    1.134,
+    1.134
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 39473,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0013": {
+   "pos": [
+    -63.383,
+    0.4,
+    -153.325
+   ],
+   "rot_y": -2.5275,
+   "scale": [
+    1.173,
+    1.173,
+    1.173
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 93,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0014": {
+   "pos": [
+    -51.977,
+    0.4,
+    -152.723
+   ],
+   "rot_y": -0.2389,
+   "scale": [
+    0.92,
+    0.92,
+    0.92
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 42870,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0015": {
+   "pos": [
+    -37.115,
+    0.381,
+    -155.893
+   ],
+   "rot_y": 0.3482,
+   "scale": [
+    0.924,
+    0.924,
+    0.924
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 42578,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0016": {
+   "pos": [
+    -119.134,
+    0.354,
+    -146.893
+   ],
+   "rot_y": 1.3188,
+   "scale": [
+    0.903,
+    0.903,
+    0.903
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 28700,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0017": {
+   "pos": [
+    -101.119,
+    0.4,
+    -145.043
+   ],
+   "rot_y": 0.4973,
+   "scale": [
+    1.126,
+    1.126,
+    1.126
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5781,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0018": {
+   "pos": [
+    -94.403,
+    0.4,
+    -148.501
+   ],
+   "rot_y": 1.2922,
+   "scale": [
+    1.053,
+    1.053,
+    1.053
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 4931,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0019": {
+   "pos": [
+    -69.47,
+    0.4,
+    -148.011
+   ],
+   "rot_y": 0.2229,
+   "scale": [
+    0.872,
+    0.872,
+    0.872
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 18107,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0020": {
+   "pos": [
+    -36.133,
+    0.36,
+    -144.962
+   ],
+   "rot_y": 0.0552,
+   "scale": [
+    0.819,
+    0.819,
+    0.819
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 26892,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0021": {
+   "pos": [
+    -119.181,
+    0.353,
+    -139.346
+   ],
+   "rot_y": 2.8643,
+   "scale": [
+    1.022,
+    1.022,
+    1.022
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 56758,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0022": {
+   "pos": [
+    -91.445,
+    0.4,
+    -142.054
+   ],
+   "rot_y": -0.5573,
+   "scale": [
+    1.063,
+    1.063,
+    1.063
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 15782,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0023": {
+   "pos": [
+    -80.149,
+    0.4,
+    -141.911
+   ],
+   "rot_y": 0.0445,
+   "scale": [
+    1.171,
+    1.171,
+    1.171
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 17591,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0024": {
+   "pos": [
+    -73.517,
+    0.4,
+    -138.13
+   ],
+   "rot_y": -0.1811,
+   "scale": [
+    1.166,
+    1.166,
+    1.166
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 53798,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0025": {
+   "pos": [
+    -63.262,
+    0.4,
+    -142.439
+   ],
+   "rot_y": -1.4752,
+   "scale": [
+    0.818,
+    0.818,
+    0.818
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 62266,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0026": {
+   "pos": [
+    -55.644,
+    0.4,
+    -141.297
+   ],
+   "rot_y": -1.0166,
+   "scale": [
+    1.064,
+    1.064,
+    1.064
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 13809,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0027": {
+   "pos": [
+    -47.702,
+    0.4,
+    -142.864
+   ],
+   "rot_y": 2.6551,
+   "scale": [
+    0.916,
+    0.916,
+    0.916
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 11289,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0028": {
+   "pos": [
+    -108.182,
+    0.4,
+    -132.645
+   ],
+   "rot_y": -0.3497,
+   "scale": [
+    1.107,
+    1.107,
+    1.107
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 28792,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0029": {
+   "pos": [
+    -94.372,
+    0.4,
+    -134.487
+   ],
+   "rot_y": 2.5959,
+   "scale": [
+    1.151,
+    1.151,
+    1.151
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 25276,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0030": {
+   "pos": [
+    -86.406,
+    0.4,
+    -133.843
+   ],
+   "rot_y": -1.8684,
+   "scale": [
+    1.077,
+    1.077,
+    1.077
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 49955,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0031": {
+   "pos": [
+    -49.249,
+    0.4,
+    -134.586
+   ],
+   "rot_y": 2.2264,
+   "scale": [
+    1.069,
+    1.069,
+    1.069
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 40587,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0032": {
+   "pos": [
+    -212.176,
+    0.407,
+    -125.238
+   ],
+   "rot_y": -0.1543,
+   "scale": [
+    1.062,
+    1.062,
+    1.062
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 38415,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0033": {
+   "pos": [
+    -197.825,
+    0.42,
+    -127.51
+   ],
+   "rot_y": -1.1744,
+   "scale": [
+    0.893,
+    0.893,
+    0.893
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 21715,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0034": {
+   "pos": [
+    -190.163,
+    0.464,
+    -128.654
+   ],
+   "rot_y": -2.7105,
+   "scale": [
+    1.183,
+    1.183,
+    1.183
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46950,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0035": {
+   "pos": [
+    -174.293,
+    0.4,
+    -126.335
+   ],
+   "rot_y": -1.2956,
+   "scale": [
+    0.971,
+    0.971,
+    0.971
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 23936,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0036": {
+   "pos": [
+    -113.566,
+    0.4,
+    -127.381
+   ],
+   "rot_y": -1.3003,
+   "scale": [
+    1.072,
+    1.072,
+    1.072
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 16216,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0037": {
+   "pos": [
+    -92.846,
+    0.4,
+    -124.645
+   ],
+   "rot_y": 3.0105,
+   "scale": [
+    0.986,
+    0.986,
+    0.986
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 20894,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0038": {
+   "pos": [
+    -85.376,
+    0.4,
+    -125.129
+   ],
+   "rot_y": 0.3173,
+   "scale": [
+    1.033,
+    1.033,
+    1.033
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 64769,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0039": {
+   "pos": [
+    -76.993,
+    0.4,
+    -124.277
+   ],
+   "rot_y": 3.0428,
+   "scale": [
+    0.983,
+    0.983,
+    0.983
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 11608,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0040": {
+   "pos": [
+    -66.463,
+    0.4,
+    -126.272
+   ],
+   "rot_y": -3.0682,
+   "scale": [
+    1.124,
+    1.124,
+    1.124
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34591,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0041": {
+   "pos": [
+    -59.639,
+    0.4,
+    -129.255
+   ],
+   "rot_y": -2.7044,
+   "scale": [
+    0.975,
+    0.975,
+    0.975
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 64541,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0042": {
+   "pos": [
+    -52.512,
+    0.4,
+    -127.991
+   ],
+   "rot_y": -0.3745,
+   "scale": [
+    0.848,
+    0.848,
+    0.848
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 42189,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0043": {
+   "pos": [
+    -36.663,
+    0.371,
+    -128.612
+   ],
+   "rot_y": -1.7649,
+   "scale": [
+    1.193,
+    1.193,
+    1.193
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 53163,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0044": {
+   "pos": [
+    -211.626,
+    0.4,
+    -117.749
+   ],
+   "rot_y": 3.0659,
+   "scale": [
+    1.099,
+    1.099,
+    1.099
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 13404,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0045": {
+   "pos": [
+    -205.069,
+    0.4,
+    -121.542
+   ],
+   "rot_y": 2.1711,
+   "scale": [
+    0.902,
+    0.902,
+    0.902
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 1619,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0046": {
+   "pos": [
+    -196.942,
+    0.4,
+    -119.81
+   ],
+   "rot_y": -0.268,
+   "scale": [
+    0.928,
+    0.928,
+    0.928
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 51352,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0047": {
+   "pos": [
+    -185.437,
+    0.4,
+    -120.493
+   ],
+   "rot_y": 0.1407,
+   "scale": [
+    0.884,
+    0.884,
+    0.884
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46299,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0048": {
+   "pos": [
+    -175.56,
+    0.4,
+    -118.751
+   ],
+   "rot_y": 2.8116,
+   "scale": [
+    1.188,
+    1.188,
+    1.188
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 22873,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0049": {
+   "pos": [
+    -168.124,
+    0.4,
+    -120.505
+   ],
+   "rot_y": -2.2481,
+   "scale": [
+    1.052,
+    1.052,
+    1.052
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 56297,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0050": {
+   "pos": [
+    -117.904,
+    0.381,
+    -119.795
+   ],
+   "rot_y": 1.6336,
+   "scale": [
+    1.194,
+    1.194,
+    1.194
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 47411,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0051": {
+   "pos": [
+    -106.495,
+    0.4,
+    -119.165
+   ],
+   "rot_y": 2.8803,
+   "scale": [
+    0.979,
+    0.979,
+    0.979
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 27485,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0052": {
+   "pos": [
+    -46.252,
+    0.4,
+    -121.747
+   ],
+   "rot_y": -2.8892,
+   "scale": [
+    1.161,
+    1.161,
+    1.161
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 63545,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0053": {
+   "pos": [
+    -36.785,
+    0.374,
+    -119.52
+   ],
+   "rot_y": -0.6348,
+   "scale": [
+    1.027,
+    1.027,
+    1.027
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44642,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0054": {
+   "pos": [
+    -209.482,
+    0.4,
+    -110.23
+   ],
+   "rot_y": -1.1782,
+   "scale": [
+    0.878,
+    0.878,
+    0.878
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 15573,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0055": {
+   "pos": [
+    -198.605,
+    0.4,
+    -112.44
+   ],
+   "rot_y": 2.1226,
+   "scale": [
+    1.109,
+    1.109,
+    1.109
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 791,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0056": {
+   "pos": [
+    -178.686,
+    0.4,
+    -110.36
+   ],
+   "rot_y": -2.0152,
+   "scale": [
+    0.944,
+    0.944,
+    0.944
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 55477,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0057": {
+   "pos": [
+    -115.079,
+    0.4,
+    -112.462
+   ],
+   "rot_y": -1.4193,
+   "scale": [
+    1.187,
+    1.187,
+    1.187
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 62607,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0058": {
+   "pos": [
+    -98.79,
+    0.4,
+    -113.243
+   ],
+   "rot_y": 1.0763,
+   "scale": [
+    0.911,
+    0.911,
+    0.911
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 51177,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0059": {
+   "pos": [
+    -91.047,
+    0.4,
+    -110.947
+   ],
+   "rot_y": -0.1886,
+   "scale": [
+    0.992,
+    0.992,
+    0.992
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37755,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0060": {
+   "pos": [
+    -79.479,
+    0.4,
+    -110.667
+   ],
+   "rot_y": -0.477,
+   "scale": [
+    1.059,
+    1.059,
+    1.059
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 54424,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0061": {
+   "pos": [
+    -71.794,
+    0.4,
+    -109.714
+   ],
+   "rot_y": 0.2234,
+   "scale": [
+    1.035,
+    1.035,
+    1.035
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34095,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0062": {
+   "pos": [
+    -62.546,
+    0.4,
+    -114.303
+   ],
+   "rot_y": -1.702,
+   "scale": [
+    0.899,
+    0.899,
+    0.899
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 20227,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0063": {
+   "pos": [
+    -51.76,
+    0.4,
+    -111.628
+   ],
+   "rot_y": 3.1323,
+   "scale": [
+    0.814,
+    0.814,
+    0.814
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 47594,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0064": {
+   "pos": [
+    -35.067,
+    0.337,
+    -109.846
+   ],
+   "rot_y": 0.7572,
+   "scale": [
+    1.185,
+    1.185,
+    1.185
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44192,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0065": {
+   "pos": [
+    -182.229,
+    0.4,
+    -104.101
+   ],
+   "rot_y": 3.0073,
+   "scale": [
+    1.148,
+    1.148,
+    1.148
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 2969,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0066": {
+   "pos": [
+    -166.922,
+    0.377,
+    -107.27
+   ],
+   "rot_y": 2.338,
+   "scale": [
+    1.114,
+    1.114,
+    1.114
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37843,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0067": {
+   "pos": [
+    -113.712,
+    0.4,
+    -103.791
+   ],
+   "rot_y": -2.4775,
+   "scale": [
+    1.158,
+    1.158,
+    1.158
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 40534,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0068": {
+   "pos": [
+    -64.1,
+    0.4,
+    -105.973
+   ],
+   "rot_y": -2.8391,
+   "scale": [
+    0.918,
+    0.918,
+    0.918
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 14376,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0069": {
+   "pos": [
+    -48.812,
+    0.4,
+    -104.485
+   ],
+   "rot_y": -3.0887,
+   "scale": [
+    1.064,
+    1.064,
+    1.064
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 21056,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0070": {
+   "pos": [
+    -41.225,
+    0.4,
+    -105.424
+   ],
+   "rot_y": -2.2805,
+   "scale": [
+    0.98,
+    0.98,
+    0.98
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 6941,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0071": {
+   "pos": [
+    -211.623,
+    0.4,
+    -97.296
+   ],
+   "rot_y": 2.0004,
+   "scale": [
+    0.872,
+    0.872,
+    0.872
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 22840,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0072": {
+   "pos": [
+    -195.588,
+    0.4,
+    -99.891
+   ],
+   "rot_y": 2.5292,
+   "scale": [
+    1.055,
+    1.055,
+    1.055
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 17800,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0073": {
+   "pos": [
+    -169.262,
+    0.4,
+    -99.634
+   ],
+   "rot_y": -1.7553,
+   "scale": [
+    1.129,
+    1.129,
+    1.129
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 19316,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0074": {
+   "pos": [
+    -115.891,
+    0.4,
+    -96.822
+   ],
+   "rot_y": -2.0892,
+   "scale": [
+    1.146,
+    1.146,
+    1.146
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 2173,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0075": {
+   "pos": [
+    -105.615,
+    0.4,
+    -97.604
+   ],
+   "rot_y": 2.4804,
+   "scale": [
+    0.918,
+    0.918,
+    0.918
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5134,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0076": {
+   "pos": [
+    -97.525,
+    0.4,
+    -96.754
+   ],
+   "rot_y": 1.2502,
+   "scale": [
+    1.084,
+    1.084,
+    1.084
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 41805,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0077": {
+   "pos": [
+    -86.579,
+    0.4,
+    -97.298
+   ],
+   "rot_y": -1.9397,
+   "scale": [
+    0.897,
+    0.897,
+    0.897
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8335,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0078": {
+   "pos": [
+    -77.639,
+    0.4,
+    -98.444
+   ],
+   "rot_y": -0.0576,
+   "scale": [
+    1.195,
+    1.195,
+    1.195
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 14459,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0079": {
+   "pos": [
+    -58.958,
+    0.4,
+    -97.64
+   ],
+   "rot_y": 2.9437,
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 50868,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0080": {
+   "pos": [
+    -42.646,
+    0.4,
+    -97.633
+   ],
+   "rot_y": -1.8793,
+   "scale": [
+    0.862,
+    0.862,
+    0.862
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 18948,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0081": {
+   "pos": [
+    -199.628,
+    0.4,
+    -93.306
+   ],
+   "rot_y": 2.9125,
+   "scale": [
+    0.995,
+    0.995,
+    0.995
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34188,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0082": {
+   "pos": [
+    -178.204,
+    0.4,
+    -90.066
+   ],
+   "rot_y": 1.5315,
+   "scale": [
+    1.119,
+    1.119,
+    1.119
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 57453,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0083": {
+   "pos": [
+    -170.233,
+    0.4,
+    -92.219
+   ],
+   "rot_y": 1.2291,
+   "scale": [
+    0.867,
+    0.867,
+    0.867
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5823,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0084": {
+   "pos": [
+    -109.062,
+    0.4,
+    -90.349
+   ],
+   "rot_y": 1.0767,
+   "scale": [
+    1.158,
+    1.158,
+    1.158
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 65061,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0085": {
+   "pos": [
+    -78.735,
+    0.4,
+    -91.22
+   ],
+   "rot_y": 0.5616,
+   "scale": [
+    0.981,
+    0.981,
+    0.981
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5365,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0086": {
+   "pos": [
+    -69.392,
+    0.4,
+    -93.341
+   ],
+   "rot_y": 2.8914,
+   "scale": [
+    1.02,
+    1.02,
+    1.02
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46099,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0087": {
+   "pos": [
+    -48.205,
+    0.4,
+    -92.865
+   ],
+   "rot_y": -1.1406,
+   "scale": [
+    0.822,
+    0.822,
+    0.822
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 42095,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0088": {
+   "pos": [
+    -211.445,
+    0.4,
+    -86.757
+   ],
+   "rot_y": 2.8889,
+   "scale": [
+    0.858,
+    0.858,
+    0.858
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44458,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0089": {
+   "pos": [
+    -192.574,
+    0.4,
+    -84.811
+   ],
+   "rot_y": 2.2046,
+   "scale": [
+    1.146,
+    1.146,
+    1.146
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 33135,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0090": {
+   "pos": [
+    -184.623,
+    0.4,
+    -84.887
+   ],
+   "rot_y": 1.5283,
+   "scale": [
+    0.95,
+    0.95,
+    0.95
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 41987,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0091": {
+   "pos": [
+    -172.293,
+    0.4,
+    -84.823
+   ],
+   "rot_y": 1.5986,
+   "scale": [
+    1.076,
+    1.076,
+    1.076
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 10352,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0092": {
+   "pos": [
+    -112.946,
+    0.4,
+    -83.15
+   ],
+   "rot_y": 0.1319,
+   "scale": [
+    1.067,
+    1.067,
+    1.067
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 4969,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0093": {
+   "pos": [
+    -105.748,
+    0.4,
+    -83.629
+   ],
+   "rot_y": 0.3125,
+   "scale": [
+    0.949,
+    0.949,
+    0.949
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 43845,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0094": {
+   "pos": [
+    -96.833,
+    0.4,
+    -83.472
+   ],
+   "rot_y": -2.4003,
+   "scale": [
+    0.966,
+    0.966,
+    0.966
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 31064,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0095": {
+   "pos": [
+    -69.252,
+    0.4,
+    -83.882
+   ],
+   "rot_y": 0.8886,
+   "scale": [
+    1.016,
+    1.016,
+    1.016
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 21111,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0096": {
+   "pos": [
+    -41.215,
+    0.4,
+    -86.416
+   ],
+   "rot_y": 2.7427,
+   "scale": [
+    1.128,
+    1.128,
+    1.128
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 13051,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0097": {
+   "pos": [
+    -212.282,
+    0.416,
+    -75.704
+   ],
+   "rot_y": 0.8972,
+   "scale": [
+    0.901,
+    0.901,
+    0.901
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 4686,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0098": {
+   "pos": [
+    -201.845,
+    0.4,
+    -76.585
+   ],
+   "rot_y": -0.1641,
+   "scale": [
+    1.026,
+    1.026,
+    1.026
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 27744,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0099": {
+   "pos": [
+    -178.795,
+    0.4,
+    -75.729
+   ],
+   "rot_y": -1.3759,
+   "scale": [
+    1.064,
+    1.064,
+    1.064
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8339,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0100": {
+   "pos": [
+    -106.441,
+    0.4,
+    -76.333
+   ],
+   "rot_y": 0.8695,
+   "scale": [
+    1.047,
+    1.047,
+    1.047
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 3611,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0101": {
+   "pos": [
+    -94.544,
+    0.4,
+    -75.107
+   ],
+   "rot_y": 2.1106,
+   "scale": [
+    0.958,
+    0.958,
+    0.958
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 62837,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0102": {
+   "pos": [
+    -83.391,
+    0.4,
+    -76.367
+   ],
+   "rot_y": 1.4477,
+   "scale": [
+    1.097,
+    1.097,
+    1.097
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 7336,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0103": {
+   "pos": [
+    -62.131,
+    0.4,
+    -78.655
+   ],
+   "rot_y": 0.1089,
+   "scale": [
+    0.876,
+    0.876,
+    0.876
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34492,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0104": {
+   "pos": [
+    -54.723,
+    0.4,
+    -74.789
+   ],
+   "rot_y": 1.999,
+   "scale": [
+    0.811,
+    0.811,
+    0.811
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46591,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0105": {
+   "pos": [
+    -44.505,
+    0.4,
+    -78.564
+   ],
+   "rot_y": -0.1361,
+   "scale": [
+    1.165,
+    1.165,
+    1.165
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 36202,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0106": {
+   "pos": [
+    -36.861,
+    0.376,
+    -78.236
+   ],
+   "rot_y": 2.6511,
+   "scale": [
+    1.088,
+    1.088,
+    1.088
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 28930,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0107": {
+   "pos": [
+    -190.129,
+    0.4,
+    -71.437
+   ],
+   "rot_y": 1.0488,
+   "scale": [
+    0.815,
+    0.815,
+    0.815
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 59906,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0108": {
+   "pos": [
+    -167.445,
+    0.079,
+    -70.593
+   ],
+   "rot_y": -0.9153,
+   "scale": [
+    0.909,
+    0.909,
+    0.909
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 17840,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0109": {
+   "pos": [
+    -114.846,
+    0.4,
+    -68.875
+   ],
+   "rot_y": 1.4466,
+   "scale": [
+    1.16,
+    1.16,
+    1.16
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 565,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0110": {
+   "pos": [
+    -76.972,
+    0.4,
+    -72.296
+   ],
+   "rot_y": -0.125,
+   "scale": [
+    0.928,
+    0.928,
+    0.928
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34938,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0111": {
+   "pos": [
+    -196.781,
+    0.4,
+    -62.631
+   ],
+   "rot_y": -0.6048,
+   "scale": [
+    0.993,
+    0.993,
+    0.993
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 19595,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0112": {
+   "pos": [
+    -183.32,
+    0.4,
+    -63.183
+   ],
+   "rot_y": 1.2364,
+   "scale": [
+    1.139,
+    1.139,
+    1.139
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 55446,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0113": {
+   "pos": [
+    -176.374,
+    0.4,
+    -64.95
+   ],
+   "rot_y": -1.1159,
+   "scale": [
+    1.031,
+    1.031,
+    1.031
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46167,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0114": {
+   "pos": [
+    -168.9,
+    0.061,
+    -61.592
+   ],
+   "rot_y": -1.4139,
+   "scale": [
+    0.973,
+    0.973,
+    0.973
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8527,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0115": {
+   "pos": [
+    -103.822,
+    0.4,
+    -65.341
+   ],
+   "rot_y": -0.8394,
+   "scale": [
+    0.971,
+    0.971,
+    0.971
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 58410,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0116": {
+   "pos": [
+    -87.917,
+    0.4,
+    -63.115
+   ],
+   "rot_y": 0.3367,
+   "scale": [
+    0.932,
+    0.932,
+    0.932
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37066,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0117": {
+   "pos": [
+    -65.803,
+    0.4,
+    -62.372
+   ],
+   "rot_y": 2.884,
+   "scale": [
+    1.165,
+    1.165,
+    1.165
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 17155,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0118": {
+   "pos": [
+    -57.455,
+    0.4,
+    -65.562
+   ],
+   "rot_y": 2.149,
+   "scale": [
+    1.013,
+    1.013,
+    1.013
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 25819,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0119": {
+   "pos": [
+    -45.497,
+    0.4,
+    -63.657
+   ],
+   "rot_y": 0.839,
+   "scale": [
+    1.15,
+    1.15,
+    1.15
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8092,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0120": {
+   "pos": [
+    -212.732,
+    0.442,
+    -57.425
+   ],
+   "rot_y": 2.5285,
+   "scale": [
+    1.195,
+    1.195,
+    1.195
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 47411,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0121": {
+   "pos": [
+    -118.162,
+    0.375,
+    -54.957
+   ],
+   "rot_y": -0.062,
+   "scale": [
+    0.871,
+    0.871,
+    0.871
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 10988,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0122": {
+   "pos": [
+    -110.989,
+    0.4,
+    -57.967
+   ],
+   "rot_y": 2.0303,
+   "scale": [
+    1.138,
+    1.138,
+    1.138
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 11023,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0123": {
+   "pos": [
+    -98.534,
+    0.4,
+    -57.339
+   ],
+   "rot_y": 2.2894,
+   "scale": [
+    1.089,
+    1.089,
+    1.089
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 54770,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0124": {
+   "pos": [
+    -79.471,
+    0.4,
+    -57.363
+   ],
+   "rot_y": -1.3982,
+   "scale": [
+    0.893,
+    0.893,
+    0.893
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 38478,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0125": {
+   "pos": [
+    -45.399,
+    0.4,
+    -55.791
+   ],
+   "rot_y": -0.6291,
+   "scale": [
+    0.85,
+    0.85,
+    0.85
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 30754,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0126": {
+   "pos": [
+    -36.026,
+    0.358,
+    -56.807
+   ],
+   "rot_y": 2.2326,
+   "scale": [
+    1.076,
+    1.076,
+    1.076
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 38160,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0127": {
+   "pos": [
+    -205.434,
+    0.4,
+    -51.334
+   ],
+   "rot_y": -1.5,
+   "scale": [
+    0.812,
+    0.812,
+    0.812
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 30,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0128": {
+   "pos": [
+    -198.331,
+    0.4,
+    -51.495
+   ],
+   "rot_y": 2.1656,
+   "scale": [
+    1.133,
+    1.133,
+    1.133
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 299,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0129": {
+   "pos": [
+    -176.28,
+    0.4,
+    -52.131
+   ],
+   "rot_y": 1.5687,
+   "scale": [
+    0.947,
+    0.947,
+    0.947
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 24057,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0130": {
+   "pos": [
+    -168.592,
+    -0.116,
+    -51.612
+   ],
+   "rot_y": 1.0767,
+   "scale": [
+    1.145,
+    1.145,
+    1.145
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 27968,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0131": {
+   "pos": [
+    -107.594,
+    0.4,
+    -50.885
+   ],
+   "rot_y": 1.8808,
+   "scale": [
+    1.046,
+    1.046,
+    1.046
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 59209,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0132": {
+   "pos": [
+    -99.987,
+    0.4,
+    -48.622
+   ],
+   "rot_y": 0.697,
+   "scale": [
+    0.941,
+    0.941,
+    0.941
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 6469,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0133": {
+   "pos": [
+    -92.429,
+    0.4,
+    -47.944
+   ],
+   "rot_y": 0.965,
+   "scale": [
+    1.097,
+    1.097,
+    1.097
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 32123,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0134": {
+   "pos": [
+    -85.03,
+    0.4,
+    -51.486
+   ],
+   "rot_y": -0.3658,
+   "scale": [
+    0.835,
+    0.835,
+    0.835
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 45108,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0135": {
+   "pos": [
+    -77.243,
+    0.4,
+    -49.909
+   ],
+   "rot_y": 0.6109,
+   "scale": [
+    1.172,
+    1.172,
+    1.172
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 25518,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0136": {
+   "pos": [
+    -67.288,
+    0.4,
+    -51.034
+   ],
+   "rot_y": -2.0789,
+   "scale": [
+    0.946,
+    0.946,
+    0.946
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 55864,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0137": {
+   "pos": [
+    -53.139,
+    0.4,
+    -50.312
+   ],
+   "rot_y": -2.9677,
+   "scale": [
+    1.194,
+    1.194,
+    1.194
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 56675,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0138": {
+   "pos": [
+    -36.081,
+    0.359,
+    -49.147
+   ],
+   "rot_y": 1.4212,
+   "scale": [
+    0.945,
+    0.945,
+    0.945
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 1516,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0139": {
+   "pos": [
+    -187.996,
+    0.565,
+    -45.022
+   ],
+   "rot_y": 3.0295,
+   "scale": [
+    0.929,
+    0.929,
+    0.929
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 13294,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0140": {
+   "pos": [
+    -113.008,
+    0.4,
+    -42.155
+   ],
+   "rot_y": 1.3744,
+   "scale": [
+    1.067,
+    1.067,
+    1.067
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34881,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0141": {
+   "pos": [
+    -104.469,
+    0.4,
+    -40.547
+   ],
+   "rot_y": 2.0715,
+   "scale": [
+    0.982,
+    0.982,
+    0.982
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 4623,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0142": {
+   "pos": [
+    -85.437,
+    0.4,
+    -44.444
+   ],
+   "rot_y": 2.4916,
+   "scale": [
+    0.806,
+    0.806,
+    0.806
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 28419,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0143": {
+   "pos": [
+    -74.029,
+    0.4,
+    -40.841
+   ],
+   "rot_y": -2.3273,
+   "scale": [
+    0.928,
+    0.928,
+    0.928
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 20728,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0144": {
+   "pos": [
+    -65.848,
+    0.4,
+    -41.602
+   ],
+   "rot_y": 1.8089,
+   "scale": [
+    0.828,
+    0.828,
+    0.828
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 24887,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0145": {
+   "pos": [
+    -46.27,
+    0.4,
+    -45.141
+   ],
+   "rot_y": 0.9808,
+   "scale": [
+    0.813,
+    0.813,
+    0.813
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 31021,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0146": {
+   "pos": [
+    -119.383,
+    0.349,
+    -34.025
+   ],
+   "rot_y": -0.767,
+   "scale": [
+    1.072,
+    1.072,
+    1.072
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 34079,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0147": {
+   "pos": [
+    -101.384,
+    0.4,
+    -33.767
+   ],
+   "rot_y": -2.9874,
+   "scale": [
+    1.065,
+    1.065,
+    1.065
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 38561,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0148": {
+   "pos": [
+    -92.276,
+    0.4,
+    -37.235
+   ],
+   "rot_y": 2.8972,
+   "scale": [
+    1.134,
+    1.134,
+    1.134
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 47570,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0149": {
+   "pos": [
+    -85.072,
+    0.4,
+    -35.671
+   ],
+   "rot_y": 3.0682,
+   "scale": [
+    0.882,
+    0.882,
+    0.882
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 62091,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0150": {
+   "pos": [
+    -52.246,
+    0.4,
+    -32.798
+   ],
+   "rot_y": 0.7594,
+   "scale": [
+    0.85,
+    0.85,
+    0.85
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 57547,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0151": {
+   "pos": [
+    -43.671,
+    0.4,
+    -37.611
+   ],
+   "rot_y": -1.0733,
+   "scale": [
+    1.008,
+    1.008,
+    1.008
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 40685,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0152": {
+   "pos": [
+    -112.48,
+    0.4,
+    -26.284
+   ],
+   "rot_y": -1.6974,
+   "scale": [
+    0.816,
+    0.816,
+    0.816
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 17581,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0153": {
+   "pos": [
+    -93.701,
+    0.4,
+    -28.947
+   ],
+   "rot_y": 0.3251,
+   "scale": [
+    0.889,
+    0.889,
+    0.889
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 45935,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0154": {
+   "pos": [
+    -84.804,
+    0.4,
+    -27.359
+   ],
+   "rot_y": -1.9954,
+   "scale": [
+    1.026,
+    1.026,
+    1.026
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 58274,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0155": {
+   "pos": [
+    -73.409,
+    0.4,
+    -28.746
+   ],
+   "rot_y": 2.5985,
+   "scale": [
+    1.18,
+    1.18,
+    1.18
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 11033,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0156": {
+   "pos": [
+    -56.832,
+    0.4,
+    -26.179
+   ],
+   "rot_y": -1.6939,
+   "scale": [
+    1.168,
+    1.168,
+    1.168
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 50143,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0157": {
+   "pos": [
+    -44.713,
+    0.4,
+    -27.282
+   ],
+   "rot_y": 1.7397,
+   "scale": [
+    0.891,
+    0.891,
+    0.891
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 16186,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0158": {
+   "pos": [
+    -35.929,
+    0.356,
+    -30.324
+   ],
+   "rot_y": 2.0537,
+   "scale": [
+    1.182,
+    1.182,
+    1.182
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44418,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0159": {
+   "pos": [
+    -108.103,
+    0.4,
+    -20.444
+   ],
+   "rot_y": -2.4531,
+   "scale": [
+    1.117,
+    1.117,
+    1.117
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 31379,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0160": {
+   "pos": [
+    -93.682,
+    0.4,
+    -21.628
+   ],
+   "rot_y": -1.9722,
+   "scale": [
+    0.956,
+    0.956,
+    0.956
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 48175,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0161": {
+   "pos": [
+    -66.788,
+    0.4,
+    -23.917
+   ],
+   "rot_y": 2.0329,
+   "scale": [
+    1.029,
+    1.029,
+    1.029
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 28373,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0162": {
+   "pos": [
+    -45.28,
+    0.4,
+    -19.599
+   ],
+   "rot_y": 0.566,
+   "scale": [
+    0.91,
+    0.91,
+    0.91
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8485,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0163": {
+   "pos": [
+    -114.631,
+    0.4,
+    -15.968
+   ],
+   "rot_y": -2.0834,
+   "scale": [
+    1.006,
+    1.006,
+    1.006
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 40186,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0164": {
+   "pos": [
+    -108.062,
+    0.4,
+    -12.516
+   ],
+   "rot_y": -2.8756,
+   "scale": [
+    1.047,
+    1.047,
+    1.047
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5147,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0165": {
+   "pos": [
+    -99.143,
+    0.4,
+    -16.273
+   ],
+   "rot_y": -2.1502,
+   "scale": [
+    1.03,
+    1.03,
+    1.03
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 38401,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0166": {
+   "pos": [
+    -88.218,
+    0.4,
+    -13.705
+   ],
+   "rot_y": 0.3284,
+   "scale": [
+    1.07,
+    1.07,
+    1.07
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8842,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0167": {
+   "pos": [
+    -76.639,
+    0.4,
+    -16.937
+   ],
+   "rot_y": 0.2547,
+   "scale": [
+    0.919,
+    0.919,
+    0.919
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 61061,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0168": {
+   "pos": [
+    -68.986,
+    0.4,
+    -15.471
+   ],
+   "rot_y": 0.0085,
+   "scale": [
+    1.066,
+    1.066,
+    1.066
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 53504,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0169": {
+   "pos": [
+    -57.839,
+    0.4,
+    -16.174
+   ],
+   "rot_y": 2.9528,
+   "scale": [
+    0.835,
+    0.835,
+    0.835
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 22592,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0170": {
+   "pos": [
+    -35.133,
+    0.339,
+    -12.484
+   ],
+   "rot_y": -2.4463,
+   "scale": [
+    0.977,
+    0.977,
+    0.977
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 5830,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0171": {
+   "pos": [
+    -113.235,
+    0.4,
+    -5.408
+   ],
+   "rot_y": 0.1184,
+   "scale": [
+    1.074,
+    1.074,
+    1.074
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37127,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0172": {
+   "pos": [
+    -99.241,
+    0.4,
+    -4.867
+   ],
+   "rot_y": -1.4754,
+   "scale": [
+    0.934,
+    0.934,
+    0.934
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 22194,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0173": {
+   "pos": [
+    -93.271,
+    0.4,
+    -8.855
+   ],
+   "rot_y": -2.6496,
+   "scale": [
+    1.112,
+    1.112,
+    1.112
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 4959,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0174": {
+   "pos": [
+    -76.789,
+    0.4,
+    -7.608
+   ],
+   "rot_y": -1.7825,
+   "scale": [
+    0.807,
+    0.807,
+    0.807
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8513,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0175": {
+   "pos": [
+    -63.794,
+    0.4,
+    -7.541
+   ],
+   "rot_y": 2.7348,
+   "scale": [
+    0.968,
+    0.968,
+    0.968
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44978,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0176": {
+   "pos": [
+    -51.564,
+    0.4,
+    -5.515
+   ],
+   "rot_y": -2.3403,
+   "scale": [
+    1.129,
+    1.129,
+    1.129
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 14768,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0177": {
+   "pos": [
+    -43.598,
+    0.4,
+    -9.329
+   ],
+   "rot_y": 3.0155,
+   "scale": [
+    1.054,
+    1.054,
+    1.054
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 25278,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0178": {
+   "pos": [
+    -115.706,
+    0.4,
+    1.263
+   ],
+   "rot_y": -0.2901,
+   "scale": [
+    1.173,
+    1.173,
+    1.173
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 29585,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0179": {
+   "pos": [
+    -81.242,
+    0.4,
+    -1.359
+   ],
+   "rot_y": -1.6347,
+   "scale": [
+    1.051,
+    1.051,
+    1.051
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 18522,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0180": {
+   "pos": [
+    -72.858,
+    0.4,
+    -0.882
+   ],
+   "rot_y": -0.9873,
+   "scale": [
+    1.138,
+    1.138,
+    1.138
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 65201,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0181": {
+   "pos": [
+    -64.963,
+    0.4,
+    0.317
+   ],
+   "rot_y": -2.4236,
+   "scale": [
+    0.99,
+    0.99,
+    0.99
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 55806,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0182": {
+   "pos": [
+    -38.898,
+    0.4,
+    -0.165
+   ],
+   "rot_y": 1.0205,
+   "scale": [
+    1.139,
+    1.139,
+    1.139
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 52746,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0183": {
+   "pos": [
+    -101.557,
+    0.4,
+    5.039
+   ],
+   "rot_y": 2.105,
+   "scale": [
+    1.093,
+    1.093,
+    1.093
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 56494,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0184": {
+   "pos": [
+    -94.208,
+    0.4,
+    4.517
+   ],
+   "rot_y": -2.2591,
+   "scale": [
+    0.871,
+    0.871,
+    0.871
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 62150,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0185": {
+   "pos": [
+    -87.157,
+    0.4,
+    5.034
+   ],
+   "rot_y": -2.7515,
+   "scale": [
+    1.005,
+    1.005,
+    1.005
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 46438,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0186": {
+   "pos": [
+    -70.926,
+    0.4,
+    7.057
+   ],
+   "rot_y": -0.0636,
+   "scale": [
+    1.005,
+    1.005,
+    1.005
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 33469,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0187": {
+   "pos": [
+    -51.117,
+    0.4,
+    5.765
+   ],
+   "rot_y": -0.078,
+   "scale": [
+    0.988,
+    0.988,
+    0.988
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 21495,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0188": {
+   "pos": [
+    -106.324,
+    0.4,
+    13.221
+   ],
+   "rot_y": 1.8521,
+   "scale": [
+    0.876,
+    0.876,
+    0.876
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 24315,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0189": {
+   "pos": [
+    -98.168,
+    0.4,
+    12.117
+   ],
+   "rot_y": -0.4952,
+   "scale": [
+    0.997,
+    0.997,
+    0.997
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 47461,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0190": {
+   "pos": [
+    -90.861,
+    0.4,
+    14.778
+   ],
+   "rot_y": 1.3037,
+   "scale": [
+    1.047,
+    1.047,
+    1.047
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 2079,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0191": {
+   "pos": [
+    -43.552,
+    0.4,
+    11.707
+   ],
+   "rot_y": 2.6661,
+   "scale": [
+    0.85,
+    0.85,
+    0.85
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 8631,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0192": {
+   "pos": [
+    -76.525,
+    0.371,
+    18.001
+   ],
+   "rot_y": -0.706,
+   "scale": [
+    0.911,
+    0.911,
+    0.911
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 37481,
+    "zone": "Z02"
+   }
+  },
+  "TreePoint_0193": {
+   "pos": [
+    -50.638,
+    0.334,
+    19.327
+   ],
+   "rot_y": 2.5447,
+   "scale": [
+    1.027,
+    1.027,
+    1.027
+   ],
+   "props": {
+    "point_type": "TreePoint",
+    "variant": 44242,
+    "zone": "Z02"
+   }
+  },
+  "Zone_Z01": {
+   "pos": [
+    72.5,
+    15.0,
+    -157.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    102.5,
+    15.0,
+    72.5
+   ],
+   "props": {
+    "zone": "Z01",
+    "zone_name": "Nhà dân",
+    "zone_key": "house"
+   }
+  },
+  "Zone_Z02a": {
+   "pos": [
+    -190.0,
+    15.0,
+    -87.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    25.0,
+    15.0,
+    42.5
+   ],
+   "props": {
+    "zone": "Z02",
+    "zone_name": "Vườn cây / Chuồng trại",
+    "zone_key": "garden"
+   }
+  },
+  "Zone_Z02b": {
+   "pos": [
+    -77.5,
+    15.0,
+    -75.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    42.5,
+    15.0,
+    95.0
+   ],
+   "props": {
+    "zone": "Z02",
+    "zone_name": "Vườn cây / Chuồng trại",
+    "zone_key": "garden"
+   }
+  },
+  "Zone_Z03": {
+   "pos": [
+    -80.0,
+    15.0,
+    67.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    45.0,
+    15.0,
+    47.5
+   ],
+   "props": {
+    "zone": "Z03",
+    "zone_name": "Ao / Hồ",
+    "zone_key": "pond"
+   }
+  },
+  "Zone_Z04": {
+   "pos": [
+    156.0,
+    15.0,
+    27.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    84.0,
+    15.0,
+    107.5
+   ],
+   "props": {
+    "zone": "Z04",
+    "zone_name": "Ruộng lúa",
+    "zone_key": "rice_field"
+   }
+  },
+  "Zone_Z06a": {
+   "pos": [
+    -210.0,
+    15.0,
+    -55.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    40.0,
+    15.0,
+    215.0
+   ],
+   "props": {
+    "zone": "Z06",
+    "zone_name": "Rừng tre / Bụi rậm",
+    "zone_key": "bamboo"
+   }
+  },
+  "Zone_Z06b": {
+   "pos": [
+    -175.0,
+    15.0,
+    215.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    75.0,
+    15.0,
+    55.0
+   ],
+   "props": {
+    "zone": "Z06",
+    "zone_name": "Rừng tre / Bụi rậm",
+    "zone_key": "bamboo"
+   }
+  },
+  "Zone_Z07": {
+   "pos": [
+    155.0,
+    15.0,
+    187.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    95.0,
+    15.0,
+    47.5
+   ],
+   "props": {
+    "zone": "Z07",
+    "zone_name": "Đồng cỏ / Bãi đất trống",
+    "zone_key": "meadow"
+   }
+  }
+ }
+}

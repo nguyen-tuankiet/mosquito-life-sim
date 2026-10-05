@@ -84,9 +84,19 @@ sunlight · fog · water · shadows · vegetation · color grading.
 
 mosquito · larva · pupa · predators · food · egg laying · quests.
 
-- [ ] Nối `SITES` trong `godot/scripts/game.gd` sang toạ độ chuẩn (MAP_BIBLE §11.1, `EggSite_*` trong `map_layout.json`)
-- [ ] Spawn tại `PlayerSpawn_FirstLife` (chum W03), giới hạn bay theo `CameraBounds_*`
-- [ ] Người/vật nuôi theo zone (§13), kẻ thù dưới nước theo loại nước (§6), nhiệm vụ theo hành trình 1 → 8
+- [x] Muỗi trưởng thành bay trong **map làng thật** (`godot/world/village_map.gd` nạp GLB + cây cỏ + ngày–đêm M3 + va chạm địa hình);
+      nhà có nội thất của game đặt đúng chỗ nhà H01 (gốc toạ độ = `HousePoint_01`), không có map thì tự dùng thế giới nén cũ
+- [x] Nối `SITES` trong `godot/scripts/game.gd` sang toạ độ chuẩn (MAP_BIBLE §11.1, `EggSite_*` trong `map_layout.json`) — `Game.site_pos()`
+- [x] Spawn tại `PlayerSpawn_FirstLife` (chum W03), giới hạn bay theo `CameraBounds_*` (playable_rect, trần 25 m, không chui đất)
+- [x] Làng rộng 500 m: bay cao thì nhanh hơn (2,5 → 6,5 m/s ở ≥ 7,5 m trên mặt đất)
+- [x] Người/vật nuôi theo zone (§13): gà Z01, lợn Z02, trâu + nông dân Z04, người qua đường Z08 (ban ngày); chuồn chuồn ở ao/ruộng/kênh/đồng cỏ;
+      rừng tre Z06 = chỗ ẩn/đậu nghỉ
+- [x] Kẻ thù dưới nước theo loại nước (§6): `SITES.wtype` + `pond.preds` (ao: cá, bọ, ấu trùng chuồn chuồn…; xô/chum: hầu như không)
+- [x] Nhiệm vụ theo hành trình 1 → 8: vào đúng chặng kế tiếp = +1 nhiệm vụ (thêm trứng), bảng thông tin từng khu vực,
+      minimap cả làng chỉ chặng kế tiếp; thành tựu "Thông thạo cả 8 khu vực"
+- [x] Kiểm thử trong Godot 4.7 thật: `--scenario=test_village` (đạt), `test_rules`, `auto` (27 thế hệ không lỗi) — xem
+      [`M4_REVIEW.md`](reference/m4/M4_REVIEW.md)
+- [ ] **Xác nhận** (chủ dự án): chơi thử, cân bằng độ khó (khoảng cách tới ao/ruộng, chuồn chuồn), hiệu năng trên máy thật
 
 ## Xác nhận
 

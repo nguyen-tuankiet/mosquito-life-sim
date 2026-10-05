@@ -8,7 +8,7 @@ uniform vec4 water_color : source_color = vec4(0.306, 0.463, 0.502, 0.85);
 uniform vec2 flow = vec2(0.0, 0.0);
 uniform float wave_scale = 0.35;
 uniform float wave_strength = 0.18;
-uniform float roughness = 0.06;
+uniform float roughness = 0.14;   // M4: 0.06 → 0.14 — nhìn sát mặt nước (tầm muỗi) không còn chói trắng như gương
 
 varying vec3 world_pos;
 
@@ -28,9 +28,9 @@ void fragment() {
 	vec3 bend = (VIEW_MATRIX * vec4(-dx, 0.0, -dz, 0.0)).xyz * wave_strength;
 	NORMAL = normalize(NORMAL + bend);
 	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 3.0);
-	ALBEDO = mix(water_color.rgb, vec3(0.75, 0.85, 0.92), fres * 0.5);
+	ALBEDO = mix(water_color.rgb, vec3(0.75, 0.85, 0.92), fres * 0.25);
 	ALPHA = mix(water_color.a, 1.0, fres);
 	ROUGHNESS = roughness;
 	METALLIC = 0.0;
-	SPECULAR = 0.6;
+	SPECULAR = 0.4;
 }

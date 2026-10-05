@@ -6,6 +6,7 @@ blender/master_map.blend
 blender/*.blend1
 blender/exports/*
 !blender/exports/.gitkeep
-godot/world/generated/
+# M4: map đã sinh được commit để game chạy ngay không cần Blender (trừ bản greybox M1 — chỉ để duyệt)
+godot/world/generated/*_greybox.glb
 assets/_procedural/
 assets/_incoming/

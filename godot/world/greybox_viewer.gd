@@ -9,12 +9,10 @@ extends Node3D
 ##             G = bật/tắt cây cỏ · R = mưa (hiện vũng nước tạm thời)
 ##             M3: T = chạy/dừng thời gian (75 s/ngày) · [ ] = lùi/tiến 1 giờ · H = giờ vàng · J = trưa · N = đêm
 
-const GEN_DIR := "res://world/generated/"
-const MAP_NAME := "vietnamese_rural_village"
 const ZONE_KEYS := ["Z01", "Z02", "Z03", "Z04", "Z05", "Z06", "Z07", "Z08"]
 # Tâm nhìn cho zone không có hình chữ nhật (kênh, đường) — toạ độ Bible (x, z), xem MAP_BIBLE §3.
-const LINE_ZONE_FOCUS := {"Z05": Vector2(85, 243), "Z08": Vector2(285, 260)}
-const MAP_SIZE := Vector2(500, 540)
+const LINE_ZONE_FOCUS := VillageMap.LINE_ZONE_FOCUS
+const MAP_SIZE := VillageMap.MAP_SIZE
 
 var cam: Camera3D
 var labels := Node3D.new()
@@ -23,25 +21,11 @@ var yaw := 0.0
 var pitch := -0.6
 var env: Environment
 var info: Label
+var vmap: VillageMap            # nạp GLB, cây cỏ, ngày–đêm (dùng chung với game — godot/world/village_map.gd)
 var foliage: Node3D
-var foliage_loader = null     # foliage_loader.gd (không định kiểu: gọi build/_wind_mesh)
-# M3 — gió cho cây lẻ trong GLB (tên mesh = tên asset): [biên độ ngọn (m), chiều cao (m), tốc độ]
-const TREE_WIND := {
-	"banana_clump_vn": [0.25, 3.5, 1.0], "coconut_palm": [0.45, 13.0, 0.7], "fruit_tree_01": [0.15, 7.0, 0.9],
-	"fruit_tree_02": [0.15, 7.0, 0.9], "banyan_tree": [0.12, 14.0, 0.6],
-}
 var day_night = null          # day_night.gd (không định kiểu để gọi hour/apply/auto của script)
 var base_info := ""
-var puddles: Array[Node3D] = []
-const WATER_SHADER := preload("res://shaders/water_surface.gdshader")
-# mặt nước theo tên mesh (MAP_BIBLE §5 / §6): màu, hướng chảy
-const WATER_LOOK := {
-	"Water_canal_main": [Color(0.30, 0.46, 0.50, 0.85), Vector2(0.0, 0.25)],
-	"Water_canal_branch": [Color(0.36, 0.42, 0.28, 0.9), Vector2(0.0, 0.08)],
-	"Water_pond_main": [Color(0.306, 0.463, 0.502, 0.85), Vector2.ZERO],
-	"Water_paddy_main": [Color(0.42, 0.50, 0.36, 0.55), Vector2.ZERO],
-	"Water_puddle": [Color(0.45, 0.42, 0.34, 0.8), Vector2.ZERO],
-}
+var puddles_on := false
 
 
 func _ready() -> void:
@@ -57,96 +41,25 @@ func _ready() -> void:
 	ui.add_child(info)
 	add_child(ui)
 
-	var stage := "greybox"
-	var path := GEN_DIR + MAP_NAME + "_env.glb"
-	if FileAccess.file_exists(path):
-		stage = "env"
-	else:
-		path = GEN_DIR + MAP_NAME + "_greybox.glb"
-	if not FileAccess.file_exists(path):
-		info.text = "Chưa có %s\nChạy: blender -b -P blender/scripts/generate_map.py -- --stage greybox --godot" % path
+	vmap = VillageMap.new()
+	vmap.name = "Village"
+	add_child(vmap)
+	if not vmap.load_map():
+		info.text = vmap.error
 		return
-	var doc := GLTFDocument.new()
-	var state := GLTFState.new()
-	var err := doc.append_from_file(path, state)
-	if err != OK:
-		info.text = "Lỗi nạp GLB (%d): %s" % [err, path]
-		return
-	var root := doc.generate_scene(state)
-	add_child(root)
-	_fix_materials(root)
+	env = vmap.env
+	day_night = vmap.day_night
+	foliage = vmap.foliage
 	_load_layout()
-	_setup_day_night()
-	var n_fol := 0
-	if stage == "env":
-		var loader = preload("res://world/foliage_loader.gd").new()   # không định kiểu: gọi build() của script
-		loader.name = "Foliage"
-		add_child(loader)
-		n_fol = loader.build(GEN_DIR + "map_points.json", GEN_DIR + "foliage/")
-		foliage = loader
-		foliage_loader = loader
-		_wind_trees(root, {})
 	_fly_overview()
 	base_info = ("%s · %s · %d cây cỏ\nChuột phải: nhìn · WASD/QE: bay · Shift: nhanh · 1–8: zone · 0: toàn cảnh"
 		+ " · Tab: nhãn · F: sương · G: cây cỏ · R: mưa\nT: chạy thời gian · [ ]: ±1 giờ · H: giờ vàng · J: trưa · N: đêm") % [
-			"M3 CINEMATIC" if stage == "env" else "M1 GREYBOX", MAP_NAME, n_fol]
+			"M3 CINEMATIC" if vmap.stage == "env" else "M1 GREYBOX", VillageMap.MAP_NAME, vmap.foliage_count]
 	info.text = base_info
 
 
-func _wind_trees(n: Node, cache: Dictionary) -> void:
-	if n is MeshInstance3D:
-		var mi := n as MeshInstance3D
-		for key in TREE_WIND:
-			if mi.mesh and (String(mi.mesh.resource_name).begins_with(key) or String(mi.name).begins_with(key)):
-				if not cache.has(mi.mesh):
-					cache[mi.mesh] = foliage_loader._wind_mesh(mi.mesh, TREE_WIND[key])
-				mi.mesh = cache[mi.mesh]
-				break
-	for c in n.get_children():
-		_wind_trees(c, cache)
-
-
-func _setup_day_night() -> void:
-	# M3: trời, nắng, trăng, sương, đèn cửa sổ theo docs/art_look.json (generate_map.py --godot copy sang generated/)
-	day_night = preload("res://world/day_night.gd").new()
-	day_night.name = "DayNight"
-	add_child(day_night)
-	day_night.setup(GEN_DIR + "art_look.json", GEN_DIR + "map_layout.json")
-	env = day_night.env
-
-
-func _fix_materials(n: Node) -> void:
-	# Terrain dùng màu đỉnh (COLOR_0) để tô zone; bảo đảm material đọc màu đỉnh.
-	if n is MeshInstance3D and n.name.begins_with("Terrain"):
-		var mi := n as MeshInstance3D
-		for i in mi.mesh.get_surface_count():
-			var m := mi.get_active_material(i)
-			if m is BaseMaterial3D:
-				var m2 := (m as BaseMaterial3D).duplicate() as BaseMaterial3D
-				m2.vertex_color_use_as_albedo = true
-				m2.albedo_color = Color.WHITE
-				mi.set_surface_override_material(i, m2)
-	if n is MeshInstance3D and n.name.begins_with("Water_"):
-		var key := "Water_puddle" if n.name.begins_with("Water_puddle") else String(n.name)
-		if WATER_LOOK.has(key):
-			var sm := ShaderMaterial.new()
-			sm.shader = WATER_SHADER
-			sm.set_shader_parameter("water_color", WATER_LOOK[key][0])
-			sm.set_shader_parameter("flow", WATER_LOOK[key][1])
-			(n as MeshInstance3D).material_override = sm
-		if key == "Water_puddle":
-			(n as Node3D).visible = false   # chỉ có khi mưa (MAP_BIBLE §5 rain_only)
-			puddles.append(n as Node3D)
-	for c in n.get_children():
-		_fix_materials(c)
-
-
 func _load_layout() -> void:
-	var f := FileAccess.open(GEN_DIR + "map_layout.json", FileAccess.READ)
-	if f == null:
-		return
-	var data: Dictionary = JSON.parse_string(f.get_as_text())
-	var nodes: Dictionary = data.get("nodes", {})
+	var nodes: Dictionary = vmap.layout
 	for key in nodes:
 		var name_s := String(key)
 		var n: Dictionary = nodes[key]
@@ -231,8 +144,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		elif k == KEY_G and foliage:
 			foliage.visible = not foliage.visible
 		elif k == KEY_R:
-			for p in puddles:
-				p.visible = not p.visible
+			puddles_on = not puddles_on
+			vmap.set_puddles(puddles_on)
 
 
 func _process(dt: float) -> void:

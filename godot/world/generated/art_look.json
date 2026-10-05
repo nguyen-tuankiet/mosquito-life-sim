@@ -1,0 +1,175 @@
+{
+  "_comment": [
+    "M3 — thông số ánh sáng / mood dùng chung cho Blender (blender/scripts/lighting.py) và Godot (godot/world/day_night.gd).",
+    "Nguồn: docs/ART_DIRECTION.md §2 (giờ vàng, đêm trăng) và §3 (bảng màu). Sửa ở đây → cả ảnh duyệt lẫn game đổi theo.",
+    "cycle: khoá theo giờ (0–24), nội suy tuyến tính. sun_energy: đơn vị Godot (Blender nhân sun_energy_to_blender).",
+    "fog_density × fog_scale = mật độ thật (1/m) — Godot fog_density và mật độ khối volume Blender đều dùng giá trị đã nhân.",
+    "Mặt trời mọc 6h ở hướng Đông, lặn 18h30 ở hướng Tây-Tây Nam; trăng ngược phía mặt trời."
+  ],
+  "game_day_seconds": 75,
+  "sun_path": {
+    "rise_hour": 6.0,
+    "set_hour": 18.5,
+    "max_elevation": 68,
+    "rise_azimuth": 95,
+    "set_azimuth": 255
+  },
+  "moon": {
+    "color": "#8FA8FF",
+    "energy": 0.18,
+    "elevation": 38,
+    "azimuth": 120
+  },
+  "sun_energy_to_blender": 4.5,
+  "fog_scale": 0.15,
+  "cycle": [
+    {
+      "hour": 0.0,
+      "sun_color": "#000000",
+      "sun_energy": 0.0,
+      "sky_top": "#0E1830",
+      "sky_horizon": "#22304E",
+      "fog_color": "#1A2440",
+      "fog_density": 0.004,
+      "ambient": 0.22,
+      "windows": 1.0,
+      "clouds": 0.15,
+      "cloud_color": "#3A4560"
+    },
+    {
+      "hour": 4.8,
+      "sun_color": "#000000",
+      "sun_energy": 0.0,
+      "sky_top": "#14223F",
+      "sky_horizon": "#3A3E5C",
+      "fog_color": "#2A3048",
+      "fog_density": 0.0045,
+      "ambient": 0.25,
+      "windows": 1.0,
+      "clouds": 0.2,
+      "cloud_color": "#4A4E68"
+    },
+    {
+      "hour": 6.0,
+      "sun_color": "#FFB27A",
+      "sun_energy": 0.55,
+      "sky_top": "#4C6E9E",
+      "sky_horizon": "#E7A887",
+      "fog_color": "#C9A58F",
+      "fog_density": 0.0045,
+      "ambient": 0.45,
+      "windows": 0.3,
+      "clouds": 0.45,
+      "cloud_color": "#F2C4A8"
+    },
+    {
+      "hour": 8.0,
+      "sun_color": "#FFE2BF",
+      "sun_energy": 1.05,
+      "sky_top": "#4F86C6",
+      "sky_horizon": "#BFD7E6",
+      "fog_color": "#C8D6E0",
+      "fog_density": 0.0025,
+      "ambient": 0.75,
+      "windows": 0.0,
+      "clouds": 0.55,
+      "cloud_color": "#F4F1EA"
+    },
+    {
+      "hour": 12.0,
+      "sun_color": "#FFF4E5",
+      "sun_energy": 1.25,
+      "sky_top": "#4F86C6",
+      "sky_horizon": "#BFD7E6",
+      "fog_color": "#CAD8E2",
+      "fog_density": 0.0018,
+      "ambient": 0.85,
+      "windows": 0.0,
+      "clouds": 0.5,
+      "cloud_color": "#F4F1EA"
+    },
+    {
+      "hour": 15.5,
+      "sun_color": "#FFDDB0",
+      "sun_energy": 1.15,
+      "sky_top": "#4F86C6",
+      "sky_horizon": "#E2D6BE",
+      "fog_color": "#DCD3C0",
+      "fog_density": 0.0022,
+      "ambient": 0.8,
+      "windows": 0.0,
+      "clouds": 0.55,
+      "cloud_color": "#F4EDE0"
+    },
+    {
+      "hour": 17.3,
+      "sun_color": "#FFB878",
+      "sun_energy": 1.0,
+      "sky_top": "#4A73A8",
+      "sky_horizon": "#F0C08F",
+      "fog_color": "#E6C29C",
+      "fog_density": 0.003,
+      "ambient": 0.7,
+      "windows": 0.0,
+      "clouds": 0.6,
+      "cloud_color": "#F8DEC0"
+    },
+    {
+      "hour": 18.4,
+      "sun_color": "#FF7A45",
+      "sun_energy": 0.35,
+      "sky_top": "#34456E",
+      "sky_horizon": "#D98C6A",
+      "fog_color": "#9A7E86",
+      "fog_density": 0.0035,
+      "ambient": 0.45,
+      "windows": 0.6,
+      "clouds": 0.55,
+      "cloud_color": "#E8A07E"
+    },
+    {
+      "hour": 19.5,
+      "sun_color": "#000000",
+      "sun_energy": 0.0,
+      "sky_top": "#14223F",
+      "sky_horizon": "#2B3B5C",
+      "fog_color": "#1E2A44",
+      "fog_density": 0.004,
+      "ambient": 0.25,
+      "windows": 1.0,
+      "clouds": 0.2,
+      "cloud_color": "#3A4560"
+    },
+    {
+      "hour": 24.0,
+      "sun_color": "#000000",
+      "sun_energy": 0.0,
+      "sky_top": "#0E1830",
+      "sky_horizon": "#22304E",
+      "fog_color": "#1A2440",
+      "fog_density": 0.004,
+      "ambient": 0.22,
+      "windows": 1.0,
+      "clouds": 0.15,
+      "cloud_color": "#3A4560"
+    }
+  ],
+  "presets": {
+    "_comment": "Giờ dùng cho ảnh duyệt Blender: 'golden' = key look ART_DIRECTION §2, 'night' = ô 'Ban đêm' của reference.",
+    "golden": 17.3,
+    "noon": 12.0,
+    "night": 22.0
+  },
+  "windows": {
+    "color": "#F2B35C",
+    "energy_godot": 2.5,
+    "energy_blender_w": 120,
+    "range": 9.0
+  },
+  "grading": {
+    "saturation": 1.08,
+    "contrast": 1.06,
+    "brightness": 1.0,
+    "glow": 0.06
+  }
+}

@@ -144,7 +144,7 @@ func apply(h: float) -> void:
 	sky_mat.set_shader_parameter("night", night)
 	sky_mat.set_shader_parameter("mountain_light", 0.35 + 0.65 * float(s["ambient"]))
 	env.fog_light_color = s["fog_color"]
-	env.fog_density = float(s["fog_density"])
+	env.fog_density = float(s["fog_density"]) * float(look.get("fog_scale", 0.15))   # cùng hệ số với khối sương Blender
 	env.ambient_light_energy = float(s["ambient"])
 	env.tonemap_exposure = 1.0 + 0.8 * night          # đêm vẫn đọc được hình khối (ART_DIRECTION §2)
 

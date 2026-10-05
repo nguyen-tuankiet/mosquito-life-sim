@@ -147,6 +147,10 @@ def main():
             shutil.copy2(f, C.GODOT_WORLD_DIR)
         # M3: thông số ánh sáng dùng chung (day_night.gd đọc res://world/generated/art_look.json)
         shutil.copy2(os.path.join(C.REPO, "docs", "art_look.json"), C.GODOT_WORLD_DIR)
+        # M4: zone / đường / kênh / vùng bay cho game (godot/world/village_map.gd đọc map_spec.json)
+        shutil.copy2(os.path.join(C.REPO, "docs", "map_spec.json"), C.GODOT_WORLD_DIR)
+        # Godot không import thư mục này (nạp GLB lúc chạy bằng GLTFDocument) → không sinh .import/texture rác
+        open(os.path.join(C.GODOT_WORLD_DIR, ".gdignore"), "w").close()
         # asset thực vật cho MultiMesh (Godot không đọc được assets/ ngoài project)
         fol = os.path.join(C.GODOT_WORLD_DIR, "foliage")
         shutil.rmtree(fol, ignore_errors=True)   # bỏ asset cũ không còn dùng

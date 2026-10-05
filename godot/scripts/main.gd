@@ -45,6 +45,7 @@ func _ready() -> void:
 		elif a.begins_with("--scenario="): scenario = a.substr(11)
 		elif a.begins_with("--sex="): forced_sex = a.substr(6)
 		elif a == "--start=adult": start_adult = true
+		elif a == "--legacy-world": adult.use_village = false   # thế giới nén cũ quanh nhà (không nạp map làng)
 		elif a.begins_with("--dayscale="): Game.day_scale = float(a.substr(11))
 	if scenario == "auto" or (scenario.begins_with("test_") and scenario != "test_quests"):
 		Game.gate_days = false
@@ -101,6 +102,10 @@ func _ready() -> void:
 			var n: Node3D = {"pupa": Bio.make_pupa(), "mosq": Bio.make_mosquito("F"), "egg": Bio.make_egg(false), "larva": Bio.make_larva(0, Color.WHITE)}[nm]
 			add_child(n)
 			print("SIZE ", nm, " ", Assets.aabb_of(n).size)
+		get_tree().quit()
+		return
+	if scenario == "test_village":
+		_test_village()
 		get_tree().quit()
 		return
 	if scenario == "intro":
@@ -160,6 +165,8 @@ func _on_died(c: String) -> void:
 	dead = true
 	dead_t = 0.0
 	cause = c
+	if scenario != "":
+		print("[died] ", c, " · mode=", mode)
 
 func _resolve_death() -> void:
 	mode = "over"
@@ -677,6 +684,8 @@ func _setup_scenario() -> void:
 				adult.body.global_position = Vector3(3.0, 1.3, 1.0)
 				adult.view_yaw = .5
 				adult.view_pitch = -.2
+		if scenario.begins_with("adult_v_"):
+			_village_shot(scenario.substr(8))
 		adult.snap_hosts()
 		if scenario == "adult_bed2":
 			for i in 40: adult.update(.03)
@@ -758,6 +767,30 @@ func _setup_scenario() -> void:
 				if p.k == "beetle": p.pos = Vector3(-2, -2.5, -1.5)
 				if p.k == "nymph": p.pos = Vector3(-3.5, -aquatic.depth + .5, 2.0); p.home = p.pos
 
+# M4: ảnh kiểm tra trong map làng — [giờ, Bible (x, z), cao trên mặt đất, yaw, pitch, khoảng cách camera]
+const VILLAGE_SHOTS := {
+	"jar": [17.3, Vector2(301.2, 83.2), .95, .25, -.08, 1.1], "yard": [17.3, Vector2(298, 100), 5.0, .1, -.22, 1.6],
+	"pond": [16.5, Vector2(214, 333), 1.4, PI / 2.0, -.06, 1.0], "paddy": [10.0, Vector2(368, 262), 1.6, -PI / 2.0 + .25, -.08, 1.0],
+	"road": [9.0, Vector2(291, 236), 1.6, .15, -.06, 1.0], "bamboo": [15.0, Vector2(30, 300), 1.0, -PI / 2.0, -.03, 1.0],
+	"canal": [16.0, Vector2(112, 118), 1.3, .3, -.1, 1.0], "night": [21.5, Vector2(300, 98), 2.0, 0.0, -.05, 1.4],
+	"high": [17.3, Vector2(300, 140), 9.0, .2, -.15, 1.4],
+}
+func _village_shot(k: String) -> void:
+	if adult.vmap == null or not VILLAGE_SHOTS.has(k):
+		print("[shot] không có map làng hoặc cảnh ", k)
+		return
+	var c: Array = VILLAGE_SHOTS[k]
+	adult.A["clock"] = c[0]
+	adult.A["weather"] = "normal"
+	adult._apply_weather()
+	var lp: Vector2 = adult.vmap.bible_to_local(c[1])
+	adult.body.global_position = Vector3(lp.x, adult.gy(lp.x, lp.y) + c[2], lp.y)
+	adult.view_yaw = c[3]
+	adult.view_pitch = c[4]
+	adult.debug_cam_dist = c[5]
+	adult._update_zone(adult.body.global_position)
+	print("[shot] ", k, " local=", adult.body.global_position, " zone=", adult.zone)
+
 func _save_shot() -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(shot_path)
@@ -806,6 +839,8 @@ func _auto(dt: float) -> void:
 				h.alert = 0.0
 			adult.pl["energy"] = 100.0
 			A["spray_at"] = -1.0
+			for d in adult.dragons:      # kiểm luồng chơi, không kiểm né chuồn chuồn (ao Z03 có nhiều chuồn chuồn)
+				d.st = "rest"; d.t = 99.0
 			if not adult.ending.is_empty(): return
 			var pl: Dictionary = adult.pl
 			var body: CharacterBody3D = adult.body
@@ -824,13 +859,112 @@ func _auto(dt: float) -> void:
 							adult.debug_land(h, 0)
 						Input.action_press("feed")
 			elif Game.L["sex"] == "F":
-				var sp: Vector3 = Game.SITES[3]["pos"]
-				body.global_position = Vector3(sp.x, .4, sp.y)
+				var sp: Vector3 = Game.site_pos(3)
+				body.global_position = Vector3(sp.x, Game.site_wy(3) + .3, sp.y)
 				adult.pl["landed"] = null
 				adult.pl["mode"] = "free"
 				Input.action_release("feed")
 				adult.v = Vector3.ZERO
 				Input.action_press("act")
+
+# ═════════ M4: kiểm tra map làng trong game ═════════
+var _tv_fail := 0
+func _tv(ok: bool, msg: String) -> void:
+	print("[village] ", "PASS " if ok else "FAIL ", msg)
+	if not ok: _tv_fail += 1
+
+func _test_village() -> void:
+	Game.new_lineage()
+	Game.L["sex"] = "F"
+	Game.L["site"] = 2
+	Game.new_generation_stats()
+	adult.enter(false)
+	var vm: VillageMap = adult.vmap
+	_tv(vm != null, "nạp map làng")
+	if vm == null:
+		return
+	# 1. nguồn nước ở đúng điểm đẻ trứng chuẩn (MAP_BIBLE §6) và đúng zone
+	var want := {"puddle": ["W01_puddle_rain", "Z07", Vector2(330, 450)], "bucket": ["W02_bucket", "Z01", Vector2(292, 66)],
+		"jar": ["W03_jar_chum", "Z01", Vector2(300, 80)], "pond": ["W05_pond", "Z03", Vector2(170, 337)],
+		"canal": ["W06_canal", "Z05", Vector2(100, 162)], "paddy": ["W07_paddy", "Z04", Vector2(385, 282)]}
+	for i in Game.SITES.size():
+		var id: String = Game.SITES[i]["id"]
+		var sp := Game.site_pos(i)
+		var b := vm.local_to_bible(sp.x, sp.y)
+		var w: Array = want[id]
+		_tv(Game.site_map.has(i) and Game.site_map[i]["id"] == w[0] and b.distance_to(w[2]) < .01, "%s ở %s (Bible %s)" % [id, w[0], b])
+		_tv(vm.zone_at(sp.x, sp.y) == w[1], "%s thuộc %s (zone_at = %s)" % [id, w[1], vm.zone_at(sp.x, sp.y)])
+		_tv(adult.bounds.has_point(Vector2(sp.x, sp.y)), "%s trong vùng bay" % id)
+		var g := vm.height_at(sp.x, sp.y)
+		var wy := Game.site_wy(i)
+		_tv(wy > g - .5 and wy < g + 3.0, "%s mặt nước %.2f so với đất/đáy %.2f" % [id, wy, g])
+	# 2. lần đầu sinh ra ở chum W03 = PlayerSpawn_FirstLife
+	var spn := vm.node_local("PlayerSpawn_FirstLife")
+	var bp: Vector3 = adult.body.global_position
+	_tv(Vector2(bp.x - spn.x, bp.z - spn.z).length() < .05, "vũ hóa tại PlayerSpawn_FirstLife (chum W03): %s" % bp)
+	# 3. nhà có nội thất trùng nhà H01, nền nhà = mặt đất map
+	_tv(absf(vm.height_at(0, 0)) < .01 and absf(adult.gy(0, 12) + .3) < .05, "nền nhà H01 = 0, sân thấp hơn 0,3 m")
+	# 4. giới hạn bay theo CameraBounds (MAP_BIBLE §12)
+	var r: Rect2 = adult.bounds
+	var b0 := vm.local_to_bible(r.position.x, r.position.y)
+	var b1 := vm.local_to_bible(r.end.x, r.end.y)
+	_tv(b0.distance_to(Vector2(10, 10)) < .01 and b1.distance_to(Vector2(490, 530)) < .01, "vùng bay = playable_rect [10,10,490,530]")
+	Game.q_force_all()
+	adult.A["spray_at"] = -1.0
+	for d in adult.dragons: d.st = "rest"; d.t = 99.0
+	adult.body.global_position = Vector3(r.end.x - .5, 50.0, r.end.y - .5)
+	adult.v = Vector3(20, 0, 20)
+	Input.action_press("fwd")
+	for k in 30: adult.update(1.0 / 60.0)
+	Input.action_release("fwd")
+	var q: Vector3 = adult.body.global_position
+	_tv(q.x <= r.end.x + .001 and q.z <= r.end.y + .001 and q.y <= adult.max_y + .001, "không bay ra ngoài vùng bay / quá trần %.1f m: %s" % [adult.max_y, q])
+	adult.body.global_position = Vector3(-100, -5.0, 100)
+	adult.update(1.0 / 60.0)
+	q = adult.body.global_position
+	_tv(q.y >= adult.gy(q.x, q.z), "không chui xuống đất: y=%.2f đất=%.2f" % [q.y, adult.gy(q.x, q.z)])
+	# 5. bay cao nhanh hơn (làng 500 m)
+	var lp := vm.bible_to_local(Vector2(400, 470))
+	var speeds := []
+	for h in [1.0, 9.0]:
+		adult.body.global_position = Vector3(lp.x, adult.gy(lp.x, lp.y) + h, lp.y)
+		adult.v = Vector3.ZERO
+		adult.view_yaw = 0.0
+		adult.view_pitch = 0.0
+		Input.action_press("fwd")
+		for k in 90: adult.update(1.0 / 60.0)
+		Input.action_release("fwd")
+		speeds.append(adult.v.length())
+	_tv(speeds[1] > speeds[0] * 2.0, "tốc độ sát đất %.2f m/s, bay cao %.2f m/s" % [speeds[0], speeds[1]])
+	# 6. người & vật nuôi theo zone (MAP_BIBLE §13)
+	adult.A["clock"] = 10.0
+	for k in 10: adult.update(1.0 / 60.0)
+	var by_zone := {}
+	for h in adult.hosts:
+		var z := "Z01" if adult.in_house(h.pos.x, h.pos.y) else vm.zone_at(h.pos.x, h.pos.y)
+		by_zone[h.k] = z
+	print("[village] vật chủ theo zone: ", by_zone)
+	for k in adult.VILLAGE_HOSTS:
+		var zw: String = adult.VILLAGE_HOSTS[k]["zone"]
+		var zg: String = by_zone.get(k, "")
+		_tv(zg == zw or (zw == "Z04" and zg == "Z08") or (zw == "Z02" and zg == "Z01"), "%s ở %s (đang ở %s)" % [k, zw, zg])
+	_tv(by_zone.get("cow", "") == "Z04", "trâu ở ruộng lúa Z04")
+	adult.A["clock"] = 22.0
+	adult.update(1.0 / 60.0)
+	var night_out := 0
+	for h in adult.hosts:
+		if h.def.get("day", false) and not h.away: night_out += 1
+	_tv(night_out == 0, "ban đêm người ngoài đồng / đường về nhà")
+	# 7. hành trình 1 → 8
+	Game.L["zones"] = {}
+	Game.G["zones"] = {}
+	var q0 := int(Game.G["quests_done"])
+	_tv(Game.zone_enter("Z01") == "journey" and Game.zone_enter("Z03") == "new" and Game.zone_enter("Z02") == "journey", "hành trình: Z01 → (Z03 ngoài thứ tự) → Z02")
+	_tv(int(Game.G["quests_done"]) == q0 + 2 and Game.journey_next() == "Z04", "thưởng 2 chặng, chặng kế tiếp Z04 (%s)" % Game.journey_next())
+	_tv(vm.zone_at(vm.bible_to_local(Vector2(30, 300)).x, vm.bible_to_local(Vector2(30, 300)).y) == "Z06" and vm.zone_at(vm.bible_to_local(Vector2(287, 260)).x, vm.bible_to_local(Vector2(287, 260)).y) == "Z08", "zone rừng tre Z06, đường làng Z08")
+	# 8. nguồn mật & chỗ ẩn
+	_tv(adult.flowers.size() >= 30 and adult.bushes.size() >= 100, "%d hoa, %d chỗ ẩn nấp" % [adult.flowers.size(), adult.bushes.size()])
+	print("[village] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])
 
 # ═════════ kiểm tra luật chơi ═════════
 var _tr := 0.0
