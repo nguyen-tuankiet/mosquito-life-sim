@@ -31,7 +31,7 @@ Game bắt đầu bằng một **story giới thiệu** (~70 giây): 9 tranh min
 - Làng rộng: **bay cao (Space) để bay nhanh hơn** (tới 6,5 m/s khi cao ≥ 7,5 m), nhưng chuồn chuồn ở ao, ruộng, kênh, đồng cỏ săn muỗi; bay thấp trong rừng tre để ẩn.
 - **Người dân sống theo lịch** (≈ 29 người ở 17 nhà): sáng ra đồng / ra chợ / ra ao / đi học, trưa về nhà nghỉ, chiều đi làm tiếp, chạng vạng (18–21h) ngồi hóng mát trước sân — lúc dễ hút máu nhất; đêm ở trong nhà. Đến gần sẽ thấy nhãn việc đang làm.
 - **NPC nói chuyện kiểu miền Tây** (bong bóng thoại trên đầu, xem `docs/DIALOGUE.md`): người làng nói chuyện đời thường theo việc đang làm, hàng xóm hỏi han nhau; khi bị muỗi làm phiền thì tuỳ tính cách — gãi, đập, chửi vui ("Má nó, chích gì chích dữ vậy!") hoặc mặc kệ.
-- **Tên các con vật** (hiện trên đầu khi muỗi ở trong 15 m, đổi màu vàng → đỏ khi chúng nghi ngờ): chó **Nguyên**, gà mái **Trọng**, trâu **Vy**, mèo **Nhi**, chuột **Thức**, chim bồ câu **Hân**, lợn **Giang**.
+- **Tên các con vật** (chỉ tên, hiện trên đầu khi muỗi ở trong 15 m, đổi màu vàng → đỏ khi chúng nghi ngờ): chó **Nguyên**, gà mái **Trọng**, trâu **Vy**, mèo **Nhi**, chuột **Thức**, chim bồ câu **Hân**, lợn **Giang**.
 - Người & vật nuôi theo khu vực: gia đình trong nhà, gà ngoài sân, lợn trong vườn, trâu + bác nông dân ngoài ruộng, người qua đường trên đường làng (hai người này chỉ ra ngoài ban ngày).
 - 6 nguồn nước đẻ trứng: vũng nước mưa, xô, chum nước, ao làng, kênh mương, ruộng lúa → môi trường dưới nước ở thế hệ sau khác nhau. Muỗi luôn vũ hóa ngoài trời, tại đúng nguồn nước nơi nó lớn lên.
 - Chuyển giai đoạn mô phỏng đời thực: trứng nở (vỏ rỗng còn nổi), lột xác (xác lột trôi đi), hóa nhộng, vũ hóa (vỏ nhộng nổi trên mặt nước, cánh nhăn nở dần khi hong khô).
