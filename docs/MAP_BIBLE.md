@@ -399,6 +399,21 @@ houses:
     - "Không đặt nhà trong bán kính 12 m của mặt nước."
 ```
 
+### 7.1 Chợ làng (MAP v2.1)
+
+```yaml
+market:                               # map_spec.json → market
+  name: "Chợ làng"
+  center: [258, 248]                  # ngã ba R1 × ngõ M1, giữa làng chính và xóm ao (khoảng cỏ trống cũ)
+  size: [34, 22]                      # sân đất nện phẳng y = 0.3
+  hours: ["5:30–11:00", "15:00–18:00"]  # chợ sáng + chợ chiều; ngoài giờ chỉ còn sạp trống
+  stalls: 6 sạp mái bạt (2 dãy quay mặt vào sân), bàn bày mẹt rau/quả/ớt/cá, ghế đẩu, bao gạo
+  ground_sellers: 2 chỗ bán ngồi đất (mẹt + đòn gánh)
+  extras: [2 ô che lớn, 1 xe đẩy, 1 cây bóng mát]
+  lane M1: "R1 (282.5,248) → (240,249) → (218,258) — nối chợ sang vườn Z02"
+  game: "3 người bán + 3 người mua (giờ họp chợ); bay vào = khu Z08 'Chợ làng' — nhiều máu, nhiều tay đập"
+```
+
 ---
 
 ## 8. Vegetation
@@ -604,6 +619,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-05 | **MAP v2.1 — chợ làng** (§7.1) ở ngã ba R1 × ngõ mới M1, lấp khoảng trống giữa làng chính và xóm ao. Không đổi zone/nước/nhà. |
 | 2026-10-05 | **MAP v2 — làng đông đúc, tự nhiên hơn** (theo yêu cầu chủ dự án: "nhà cách xa nhau quá, map trống trải"): 7 → 18 nhà thành 3 xóm; thêm ngõ N1 (xóm Đông), N2 (sau H01); Z01 thêm rect xóm ao [220,300,282,375] sát ao; nhà lệch hướng vài độ; mỗi nhà có lô đất (chum, xô, gà, rơm, cây vườn, chuối, dừa, rào tre) + lối nhỏ ra đường. Khoảng cách tối thiểu 25 → 16 m. Không đổi kích thước map, zone khác, nước, ruộng, điểm đẻ trứng, H01. |
 | 2026-10-05 | **M4** — game dùng map này cho giai đoạn trưởng thành (§11.1 đã migrate). Không đổi số liệu bố cục; `map_spec.json` được copy sang `godot/world/generated/` để game tra zone/đường/kênh/vùng bay. |
 | 2026-10-03 | Mật độ rừng tre 0.35 → ~0.15 khóm/m² (`min_dist` 1.7 → 2.6 m) khi thay bằng model tre thật (khóm lớn ~15 cây, tán 6 m): rừng vẫn kín, giảm ~55% số khóm cho Godot. Không đổi vị trí zone. |

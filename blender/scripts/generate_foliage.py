@@ -60,7 +60,7 @@ def thin(X, Z, min_dist, count, rng):
 def allowed(spec, M, t, X, Z):
     """Mặt nạ luật Bible cho từng loại. Trả về mask True = được đặt."""
     zid = M.zone_id(X, Z)
-    base_block = M.road(X, Z, 0.5) | M.house(X, Z, 3.0) | M.landmark(X, Z)
+    base_block = M.road(X, Z, 0.5) | M.house(X, Z, 3.0) | M.landmark(X, Z) | M.market(X, Z, 1.0)
     W = spec["water"]
     ok = np.zeros(X.shape, bool)
     for z in spec["foliage"]["types"][t]["zones"]:

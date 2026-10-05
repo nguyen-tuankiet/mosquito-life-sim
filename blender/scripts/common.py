@@ -250,6 +250,14 @@ class Masks:
             m |= (np.abs(px - cx) < r) & (np.abs(pz - cz) < r)
         return m
 
+    def market(self, px, pz, margin=0.0):
+        """Mặt bằng chợ (MAP v2.1) — hình chữ nhật `market.center/size` + margin."""
+        mk = self.s.get("market")
+        if not mk:
+            return np.zeros(np.shape(px), dtype=bool)
+        (cx, cz), (w, d) = mk["center"], mk["size"]
+        return (np.abs(px - cx) < w / 2 + margin) & (np.abs(pz - cz) < d / 2 + margin)
+
     def landmark(self, px, pz, radius=4.0):
         m = np.zeros(np.shape(px), dtype=bool)
         for L in self.s["landmarks"].values():

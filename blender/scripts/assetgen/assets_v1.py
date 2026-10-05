@@ -49,11 +49,86 @@ def M():
         "blade_rice": L.mat("leaf_rice", L.tex_leaf("blade", 28, "#6FA033", "#B4DA5E"), clip=True, double=True),
         "reed": L.mat("leaf_reed", L.tex_leaf("reed", 29), clip=True, double=True),
         "lily": L.mat("leaf_lily", L.tex_leaf("lily", 30), clip=True, double=True),
+        # chợ (MAP v2.1)
+        "tarp_blue": L.mat("tarp_blue", None, (0.12, 0.30, 0.62), rough=0.7, double=True),
+        "tarp_red": L.mat("tarp_red", None, (0.62, 0.14, 0.10), rough=0.7, double=True),
+        "veg": L.mat("veg_green", None, (0.24, 0.50, 0.14)),
+        "fruit": L.mat("fruit_orange", None, (0.85, 0.48, 0.10)),
+        "chili": L.mat("chili_red", None, (0.70, 0.08, 0.06)),
+        "fish": L.mat("fish_silver", None, (0.62, 0.64, 0.66), rough=0.3, metal=0.2),
+        "rice_bag": L.mat("rice_bag", None, (0.86, 0.82, 0.70)),
     }
 
 
 def rng(seed):
     return np.random.default_rng(seed)
+
+
+# ───────────────────────── chợ (MAP v2.1) ─────────────────────────
+
+def _produce(b, m, R, cx, cy, z, kind, r=0.28):
+    """Mẹt tre (nia) tròn + một vun hàng: rau, quả, ớt, cá."""
+    b.lathe([(r, 0.0), (r + 0.02, 0.06)], m["bamboo_dry"], segs=14, close_top=False,
+            M=Matrix.Translation((cx, cy, z)))
+    b.disc((cx, cy), r, m["bamboo_dry"], segs=14, z=z + 0.005)
+    mat = {"veg": m["veg"], "fruit": m["fruit"], "chili": m["chili"], "fish": m["fish"]}[kind]
+    for i in range(7 if kind != "fish" else 4):
+        a = R.uniform(0, 2 * math.pi)
+        d = R.uniform(0, r * 0.55)
+        if kind == "fish":
+            b.box((cx + math.cos(a) * d, cy + math.sin(a) * d, z + 0.04), (0.26, 0.07, 0.04), mat, rot=R.uniform(0, 3.1))
+        else:
+            rr = 0.05 if kind != "veg" else 0.08
+            b.lathe([(0.0, 0.0), (rr, rr * 0.6), (rr * 0.7, rr * 1.5), (0.0, rr * 1.8)], mat, segs=6,
+                    M=Matrix.Translation((cx + math.cos(a) * d, cy + math.sin(a) * d, z + 0.02)))
+
+
+def market_stall_vn(m):
+    """Sạp chợ quê: 4 cột tre, mái bạt dốc một phía, bàn gỗ bày mẹt hàng; mặt trước (−Y) là phía khách."""
+    b = L.MB("market_stall_vn")
+    R = rng(81)
+    W, D = 3.2, 2.2
+    for x in (-W / 2, W / 2):
+        b.tube([(x, -D / 2, 0), (x, -D / 2, 2.35)], [0.05, 0.045], m["bamboo"], sides=6)
+        b.tube([(x, D / 2, 0), (x, D / 2, 2.05)], [0.05, 0.045], m["bamboo"], sides=6)
+    ov = 0.45
+    P = [(-W / 2 - ov, -D / 2 - ov, 2.45), (W / 2 + ov, -D / 2 - ov, 2.45), (W / 2 + ov, D / 2 + ov, 1.95),
+         (-W / 2 - ov, D / 2 + ov, 1.95)]
+    b.face(P, [(0, 0), (1, 0), (1, 1), (0, 1)], m["tarp_blue"] if R.random() < 0.6 else m["tarp_red"])
+    b.box((0, -0.15, 0.78), (W - 0.3, 1.2, 0.05), m["wood"])
+    for x in (-W / 2 + 0.3, W / 2 - 0.3):
+        for y in (-0.65, 0.35):
+            b.box((x, y, 0.38), (0.06, 0.06, 0.76), m["wood_dark"])
+    kinds = ["veg", "fruit", "chili", "fish", "veg"]
+    for i, x in enumerate((-1.0, 0.0, 1.0)):
+        _produce(b, m, R, x, -0.25, 0.805, kinds[(i + int(R.integers(0, 3))) % len(kinds)])
+    b.box((0.9, 0.75, 0.2), (0.35, 0.35, 0.4), m["wood"])          # ghế đẩu người bán
+    b.box((-1.1, 0.8, 0.25), (0.45, 0.35, 0.5), m["rice_bag"])     # bao gạo
+    return b
+
+
+def produce_basket_vn(m):
+    """Hàng bày dưới đất: 2 mẹt + quang gánh (đòn gánh tre), kiểu chợ quê ngồi bán."""
+    b = L.MB("produce_basket_vn")
+    R = rng(82)
+    _produce(b, m, R, -0.35, 0.0, 0.0, "veg", 0.3)
+    _produce(b, m, R, 0.35, 0.05, 0.0, "fruit", 0.3)
+    b.tube([(-1.0, 0.45, 0.04), (1.0, 0.5, 0.04)], [0.025, 0.025], m["bamboo_dry"], sides=5)
+    return b
+
+
+def market_umbrella_vn(m):
+    """Ô che lớn (dù bạt) cắm giữa chợ."""
+    b = L.MB("market_umbrella_vn")
+    b.tube([(0, 0, 0), (0, 0, 2.5)], [0.035, 0.03], m["alu"], sides=6)
+    b.lathe([(0.0, 0.0), (0.4, 0.0)], m["alu"], segs=10)
+    segs = 10
+    for k in range(segs):
+        a0, a1 = 2 * math.pi * k / segs, 2 * math.pi * (k + 1) / segs
+        mat = m["tarp_red"] if k % 2 else m["tarp_blue"]
+        b.face([(0, 0, 2.75), (1.4 * math.cos(a0), 1.4 * math.sin(a0), 2.2), (1.4 * math.cos(a1), 1.4 * math.sin(a1), 2.2)],
+               [(0.5, 1), (0, 0), (1, 0)], mat)
+    return b
 
 
 # ───────────────────────── nhà ─────────────────────────
@@ -552,4 +627,7 @@ REGISTRY = {
     "reed_clump": ("environment/ponds", reed_clump, False),
     "rice_patch_1m": ("environment/rice_fields", rice_patch_1m, False),
     "lily_pad_vn": ("environment/ponds", lily_pad_vn, False),
+    "market_stall_vn": ("environment/market", market_stall_vn, False),
+    "produce_basket_vn": ("environment/market", produce_basket_vn, False),
+    "market_umbrella_vn": ("environment/market", market_umbrella_vn, False),
 }

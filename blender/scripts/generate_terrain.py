@@ -60,6 +60,10 @@ def heightfield(spec, X, Z, res):
         m = (np.abs(X - cx) < r) & (np.abs(Z - cz) < r)
         H[m] = Hs["pad_y"]
 
+    # chợ (MAP v2.1): mặt bằng phẳng
+    if spec.get("market"):
+        H = np.where(C.Masks(spec).market(X, Z, 1.0), spec["market"]["y"], H)
+
     # đường (đắp nền) — trail thì giữ nền rừng
     for r in spec["roads"].values():
         if r["y"] is None:
@@ -154,6 +158,8 @@ def look_colors(spec, X, Z, H, zid):
         yard |= np.hypot(X - cx, Z - cz) < rad
     out[yard] = out[yard] * 0.25 + _lin(LOOK["yard"]) * 0.75
     out[C.paddy_bund_mask(spec, X, Z, spec["water"]["paddy_main"]["bund_w"] / 2 + 0.3) & M.paddy(X, Z)] = _lin(LOOK["bund"])
+    mk = M.market(X, Z, 1.5 * n)                     # sân chợ đất nện, mép loang
+    out[mk] = out[mk] * 0.15 + _lin(LOOK["yard"]) * 0.85
     out[M.road(X, Z)] = _lin(LOOK["road"])
     near = M.water(X, Z, 2.5) & (H < 0.15)          # bờ bùn ven kênh/ao
     out[near] = _lin(LOOK["mud"])

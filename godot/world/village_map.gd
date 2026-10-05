@@ -326,6 +326,26 @@ func _polyline_dist(p: Vector2, pts: Array) -> float:
 	return best
 
 
+## Chợ làng (MAP v2.1, map_spec.json → market): hình chữ nhật local (x, z); rỗng nếu map không có chợ.
+func market_rect() -> Rect2:
+	var mk: Dictionary = spec.get("market", {})
+	if mk.is_empty():
+		return Rect2()
+	var c := bible_to_local(Vector2(mk["center"][0], mk["center"][1]))
+	var sz := Vector2(mk["size"][0], mk["size"][1])
+	return Rect2(c - sz / 2.0, sz)
+
+
+func in_market(x: float, z: float) -> bool:
+	var r := market_rect()
+	return r.has_area() and r.grow(2.0).has_point(Vector2(x, z))
+
+
+## Giờ họp chợ [[mở, đóng], …] (giờ trong ngày).
+func market_hours() -> Array:
+	return spec.get("market", {}).get("hours", [])
+
+
 ## Vùng bay được (MAP_BIBLE §12 playable_rect, Bible) → Rect2 local (x, z).
 func playable_rect() -> Rect2:
 	var cam: Dictionary = spec.get("camera", {})
