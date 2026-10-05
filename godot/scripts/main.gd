@@ -15,6 +15,8 @@ var cause := ""
 var summary: Dictionary = {}
 var t := 0.0
 var title_cam: Camera3D
+var menu := StartMenu.new()
+var menu_t := 0.0
 
 # kiểm thử
 var shot_path := ""
@@ -118,7 +120,7 @@ func _ready() -> void:
 	elif scenario != "":
 		_setup_scenario()
 	elif not start_adult:
-		mode = "intro"
+		mode = "menu"
 	elif start_adult:
 		Game.new_lineage()
 		Game.L["sex"] = "F"
@@ -233,6 +235,25 @@ func _process(dt: float) -> void:
 		adult.pl["energy"] = 100.0
 	if not paused:
 		match mode:
+			"menu":
+				menu_t += dt
+				Input.mouse_mode = Input.MOUSE_MODE_HIDDEN   # con trỏ là con muỗi tự vẽ
+				var go := false
+				if menu_t > .4:
+					if _menu_click:
+						go = menu.click(get_viewport().get_mouse_position()) == "start"
+					elif menu.page == "home" and (Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("act")):
+						go = true
+					elif menu.page == "about" and Input.is_key_pressed(KEY_ESCAPE):
+						menu.page = "home"
+				_menu_click = false
+				if go:
+					Sfx.beep(480, .08, "sine", .03, 60)
+					hud.flash(Color(0, 0, 0), .6)
+					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+					menu.reset()
+					mode = "intro"
+					intro_t = 0.0
 			"intro":
 				_update_intro(dt, confirm)
 			"title":
@@ -304,9 +325,11 @@ func _process(dt: float) -> void:
 		_save_shot()
 
 var _click := false
+var _menu_click := false
 func _input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed:
 		_click = true
+		_menu_click = true
 
 func _clicked() -> bool:
 	var c := _click
@@ -315,6 +338,7 @@ func _clicked() -> bool:
 
 func _draw_mode() -> void:
 	match mode:
+		"menu": menu.draw(hud, menu_t, get_viewport().get_mouse_position())
 		"intro": _draw_intro()
 		"title": _draw_title()
 		"summary": _draw_summary()

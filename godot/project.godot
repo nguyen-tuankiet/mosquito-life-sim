@@ -17,6 +17,8 @@ window/stretch/aspect="keep"
 
 [rendering]
 
+renderer/rendering_method.web="gl_compatibility"
+
 environment/volumetric_fog/volume_size=32
 environment/volumetric_fog/volume_depth=32
 

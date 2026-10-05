@@ -146,8 +146,8 @@ func line(a: Vector2, b: Vector2, col: Color, w: float = 2.0) -> void:
 func poly(pts: PackedVector2Array, col: Color) -> void:
 	cmds.append({"t": "poly", "pts": pts, "c": col})
 
-func panel(pos: Vector2, size: Vector2, col: Color = Color(0.078, 0.149, 0.122, 0.8)) -> void:
-	cmds.append({"t": "panel", "p": pos, "s": size, "c": col})
+func panel(pos: Vector2, size: Vector2, col: Color = Color(0.078, 0.149, 0.122, 0.8), r: float = 12.0) -> void:
+	cmds.append({"t": "panel", "p": pos, "s": size, "c": col, "r": r})
 
 func bar(pos: Vector2, w: float, h: float, v: float, col: Color, label: String = "") -> void:
 	cmds.append({"t": "panel", "p": pos, "s": Vector2(w, h), "c": Color(0, 0, 0, .5), "r": h / 2.0})
