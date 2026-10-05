@@ -96,6 +96,15 @@ def allowed(spec, M, t, X, Z):
         bund = C.paddy_bund_mask(spec, X, Z, W["paddy_main"]["bund_w"])
         return ok & ~bund & ~base_block & ~M.landmark(X, Z, 6.0)
 
+    if t == "TreePoint" and "Z01" in spec["foliage"]["types"][t]["zones"]:
+        # MAP v2: vườn quanh nhà thưa dần ra mép Z01 (18 m) → rìa làng lượn tự nhiên, không thẳng theo hình chữ nhật
+        edge = np.full(X.shape, np.inf)
+        for x0, z0, x1, z1 in spec["zones"]["Z01"]["rects"]:
+            inside = (X >= x0) & (X <= x1) & (Z >= z0) & (Z <= z1)
+            d = np.minimum(np.minimum(X - x0, x1 - X), np.minimum(Z - z0, z1 - Z))
+            edge = np.where(inside, np.minimum(edge, d), edge)
+        jit = np.modf(np.abs(np.sin(X * 12.9898 + Z * 78.233) * 43758.5453))[0]
+        ok &= ~((zid == "Z01") & (edge / 18.0 < jit))
     block = base_block | M.water(X, Z, 0.8) | M.puddle(X, Z, 0.5)
     if t not in ("GrassPoint", "GrassTallPoint"):
         # luật Bible: không cây thân gỗ trong ruộng

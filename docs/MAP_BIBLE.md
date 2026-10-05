@@ -363,7 +363,7 @@ egg_sites:
 
 ## 7. Houses
 
-Nhà ngói đỏ / nhà gỗ mái ngói nâu, sân gạch + hàng rào tre. Hướng cửa chính ra **đường R1** (Z08).
+Nhà ngói đỏ / nhà gỗ mái ngói nâu, sân gạch + hàng rào tre. Cửa chính ra **đường/ngõ gần nhất** (R1, R2, R3, ngõ N1, N2) qua lối nhỏ.
 
 ```yaml
 houses:
@@ -378,16 +378,23 @@ houses:
     props: [chum_lon @ (300,80), xo_xanh @ (292,66), xo_do @ (298,70), chau_nhom @ (296,90),
             long_chim, ga_mai, ban_ghe_hien]
     npcs: [ba_ba, me, con_nho]        # đồng hồ sinh hoạt trong nhà (xem README)
-  H02: { pos: [360, 70],  size: [12, 8] }
-  H03: { pos: [395, 95],  size: [12, 8] }
-  H04: { pos: [255, 80],  size: [12, 8] }
-  H05: { pos: [255, 150], size: [12, 8] }
-  H06: { pos: [330, 155], size: [12, 8] }
-  H07: { pos: [385, 160], size: [12, 8] }
+  # MAP v2 (2026-10-05): 18 nhà thành 3 xóm, lệch hướng vài độ (turn) cho tự nhiên; H01 giữ nguyên (game lấy làm gốc)
+  # xóm Bắc quanh H01 + ngõ N2 (z ≈ 51):     H02 [360,70] cửa Bắc
+  # xóm Đông dọc ngõ N1 (z ≈ 121, x 287→418): H03 [395,95] Nam · H06 [330,155] Bắc · H07 [385,160] Bắc · H08 [318,107] Nam
+  #                                           H09 [352,134] Bắc · H10 [348,100] Nam · H11 [404,140] Bắc · H18 [412,112] Nam
+  # xóm Tây hai bên R2 (z = 100):            H04 [255,80] Đông · H05 [255,150] Đông · H12 [232,86] Nam · H13 [238,118] Bắc · H14 [265,122] Bắc
+  # xóm Ao dọc R3 (z = 337, sát ao Z03):      H15 [240,322] Nam · H16 [262,352] Bắc · H17 [236,358] Bắc
+  # kích thước 10–12 × 7–8 m; toạ độ đầy đủ + turn trong map_spec.json → houses.list
+
+  lots:                               # mỗi nhà (trừ H01) là một lô đất — sinh bởi generate_village.py → _lots()
+    front_yard: [chum (90%), xô (60%), chậu (35%), gà 1–3 (70%), dừa ở góc (45%)]
+    back_and_sides: [đống rơm (45%), 2–3 cây ăn trái, chuối hai bên (75%)]
+    fence: "rào tre phía sau (cách tim nhà 11 m + nửa sâu) và hai bên; phía trước để mở"
+    footpath: "lối đất 1,5 m từ cửa ra đường/ngõ gần nhất (≤ 45 m), hơi cong — sinh tự động khi đọc spec"
 
   rules:
-    - "Tất cả nhà nằm trong rect Z01 [220,40,425,185]."
-    - "Khoảng cách nhà–nhà ≥ 25 m."
+    - "Tất cả nhà nằm trong Z01: rect [220,40,425,185] (làng chính) + [220,300,282,375] (xóm ao)."
+    - "Khoảng cách nhà–nhà ≥ 16 m (v1: 25 m — quá thưa)."
     - "Nền nhà cao +0.6 m so với mặt ruộng."
     - "Không đặt nhà trong bán kính 12 m của mặt nước."
 ```
@@ -597,6 +604,7 @@ C Asset sheet = [`ASSET_GUIDELINES.md`](ASSET_GUIDELINES.md). Thứ tự milesto
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-10-05 | **MAP v2 — làng đông đúc, tự nhiên hơn** (theo yêu cầu chủ dự án: "nhà cách xa nhau quá, map trống trải"): 7 → 18 nhà thành 3 xóm; thêm ngõ N1 (xóm Đông), N2 (sau H01); Z01 thêm rect xóm ao [220,300,282,375] sát ao; nhà lệch hướng vài độ; mỗi nhà có lô đất (chum, xô, gà, rơm, cây vườn, chuối, dừa, rào tre) + lối nhỏ ra đường. Khoảng cách tối thiểu 25 → 16 m. Không đổi kích thước map, zone khác, nước, ruộng, điểm đẻ trứng, H01. |
 | 2026-10-05 | **M4** — game dùng map này cho giai đoạn trưởng thành (§11.1 đã migrate). Không đổi số liệu bố cục; `map_spec.json` được copy sang `godot/world/generated/` để game tra zone/đường/kênh/vùng bay. |
 | 2026-10-03 | Mật độ rừng tre 0.35 → ~0.15 khóm/m² (`min_dist` 1.7 → 2.6 m) khi thay bằng model tre thật (khóm lớn ~15 cây, tán 6 m): rừng vẫn kín, giảm ~55% số khóm cho Godot. Không đổi vị trí zone. |
 | 2026-10-03 | **Duyệt M1** (`check_greybox.py`) — sửa lỗi hình học: cầu R2 dời về đúng tâm kênh (114 → 111) và dài 16 → 24 m để phủ hết hai bờ; W07 dời (406,297) → (385,282) vì cũ nằm trên giao điểm bờ ruộng (khô); bờ thửa ruộng căn theo R4 (z = 300) thay vì chia đều 6 hàng (trước đó có 2 bờ cách nhau 2.5 m); R4 nối tới R1 qua cống L11; kênh nhánh hạ mặt nước 0.0 → −0.25 m để hợp lưu êm với kênh chính. |

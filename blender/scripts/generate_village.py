@@ -16,10 +16,10 @@ import numpy as np  # noqa: E402
 import common as C  # noqa: E402
 
 # độ nâng khác nhau để chỗ giao nhau không bị z-fighting (đường chính nằm trên)
-ROAD_Y_OFF = {"dirt_road": 0.05, "dirt_path": 0.04, "bund": 0.035, "trail": 0.03}
+ROAD_Y_OFF = {"dirt_road": 0.05, "dirt_path": 0.04, "bund": 0.035, "trail": 0.03, "footpath": 0.025}
 # tuyến tính (≈ sRGB #9A6B45 đường đất, #6E4B33 đất ẩm — ART_DIRECTION §3)
 ROAD_COLORS = {"dirt_road": (0.32, 0.15, 0.06), "dirt_path": (0.30, 0.15, 0.07),
-               "bund": (0.16, 0.30, 0.05), "trail": (0.16, 0.08, 0.035)}
+               "bund": (0.16, 0.30, 0.05), "trail": (0.16, 0.08, 0.035), "footpath": (0.22, 0.12, 0.05)}
 
 
 def _h(ctx, x, z):
@@ -88,6 +88,116 @@ CONTAINER_PH = {  # kind → (Point prefix, bán kính, cao, màu)
 }
 
 
+LOT_PH = {  # prefix → (dạng, bán kính, cao, màu) placeholder greybox
+    "HayPoint": ("cone", 1.2, 1.8, (0.80, 0.68, 0.35)),
+    "ChickenPoint": ("box", 0.3, 0.4, (0.75, 0.45, 0.25)),
+    "GardenTreePoint": ("cyl", 1.6, 6.0, (0.22, 0.42, 0.16)),
+    "GardenBananaPoint": ("cyl", 1.0, 3.5, (0.35, 0.55, 0.20)),
+    "GardenPalmPoint": ("cyl", 0.3, 11.0, (0.40, 0.35, 0.20)),
+}
+
+
+def _lots(spec, ctx, M, counts, n_fence):
+    """MAP v2 — mỗi nhà (trừ H01: sân do game dựng) là một lô đất: sân trước có chum/xô/chậu, gà;
+    sau và hai bên có rơm, cây ăn trái, chuối, dừa; rào tre phía sau + hai bên. Vật nào đè đường, nước,
+    ruộng, nhà khác, landmark hay điểm đẻ trứng thì bỏ (vật không đặt trên mép nền nhà để khỏi lơ lửng)."""
+    lots = spec["houses"].get("lots")
+    if not lots:
+        return n_fence
+    col = C.collection("Lots", ctx["root"])
+    fs = spec["fences"]
+    eggs = [e["pos"] for e in spec["egg_sites"].values()]
+    pads = [(h["pos"], C.house_pad_r(h) + 1.0) for h in spec["houses"]["list"].values()]
+
+    def free(x, z, margin=1.0):
+        X, Z = np.array([x]), np.array([z])
+        if (M.road(X, Z, margin)[0] or M.water(X, Z, 1.5)[0] or M.paddy(X, Z, 1.0)[0] or M.puddle(X, Z, 1.0)[0]
+                or M.landmark(X, Z, 3.0)[0]):
+            return False
+        if any(math.dist((x, z), e) < 1.5 for e in eggs):
+            return False
+        # ngoài mọi nền nhà (+1 m): không chồng lên nhà, không đứng trên bậc nền
+        return all(max(abs(x - c[0]), abs(z - c[1])) > r for c, r in pads)
+
+    num = {}
+
+    def put(prefix, x, z, rot, ph_kind=None, props=None):
+        num[prefix] = num.get(prefix, 0) + 1
+        p = _point(f"{prefix}_{num[prefix]:03d}", ctx, col, x, z, rot=rot, props=props, size=0.5)
+        kind, r, hgt, colr = LOT_PH[prefix]
+        mat = C.material("MAT_PH_" + prefix, colr)
+        if kind == "box":
+            _ph(p, C.box("tmp", (r, r, hgt), (0, 0, 0), col, mat))
+        else:
+            _ph(p, C.cylinder("tmp", r, hgt, (0, 0, 0), col, mat, seg=8, r_top=0.1 if kind == "cone" else r))
+        return p
+
+    for hid, h in spec["houses"]["list"].items():
+        if h.get("hero"):
+            continue
+        rng = np.random.default_rng(lots["seed"] + int(hid[1:]))
+        (fx, fz), (sx, sz) = C.house_axes(spec, h)
+        hx, hz = h["pos"]
+        hw, hd = h["size"][0] / 2, h["size"][1] / 2
+        r = C.house_pad_r(h) + 2.0
+        at = lambda u, v: (hx + sx * u + fx * v, hz + sz * u + fz * v)  # noqa: E731
+        side = 1.0 if rng.random() < 0.5 else -1.0
+        # sân trước: chum + xô (+ chậu), gà
+        for prefix, u, v, prob, ck in (("JarPoint", side * hw * 0.7, r + 0.6, 0.9, "jar"),
+                                       ("BucketPoint", side * (hw * 0.7 + 1.0), r + 0.9, 0.6, "bucket"),
+                                       ("BasinPoint", -side * hw * 0.6, r + 1.2, 0.35, "basin")):
+            x, z = at(u, v)
+            if rng.random() < prob and free(x, z):
+                counts[prefix] = counts.get(prefix, 0) + 1
+                pt = _point(f"{prefix}_{counts[prefix]:02d}", ctx, col, x, z, rot=float(rng.uniform(0, 6.28)),
+                            props={"egg_site": "", "zone": "Z01", "game_site": "", "lot": hid}, size=0.5)
+                cp, cr, ch, cc = CONTAINER_PH[ck]
+                _ph(pt, C.cylinder("tmp", cr, ch, (0, 0, 0), col, C.material("MAT_PH_" + cp, cc), seg=16))
+        if rng.random() < 0.7:
+            for _ in range(int(rng.integers(1, 4))):
+                x, z = at(float(rng.uniform(-hw, hw)), float(rng.uniform(r + 1.5, r + 5.0)))
+                if free(x, z, 0.5):
+                    put("ChickenPoint", x, z, float(rng.uniform(0, 6.28)), props={"lot": hid})
+        # sau nhà & hai bên: rơm, cây ăn trái, chuối, dừa
+        if rng.random() < 0.45:
+            x, z = at(float(rng.uniform(-hw, hw)), -(r + 2.5))
+            if free(x, z, 1.5):
+                put("HayPoint", x, z, float(rng.uniform(0, 6.28)), props={"lot": hid})
+        for _ in range(int(rng.integers(2, 4))):
+            x, z = at(float(rng.uniform(-hw - 3, hw + 3)), -float(rng.uniform(r + 4.0, r + 9.0)))
+            if free(x, z, 1.5):
+                put("GardenTreePoint", x, z, float(rng.uniform(0, 6.28)), props={"lot": hid})
+        for sgn in (-1.0, 1.0):
+            if rng.random() < 0.75:
+                x, z = at(sgn * float(rng.uniform(r + 1.5, r + 3.5)), float(rng.uniform(-hd - 2, hd)))
+                if free(x, z, 1.2):
+                    put("GardenBananaPoint", x, z, float(rng.uniform(0, 6.28)), props={"lot": hid})
+        if rng.random() < 0.45:
+            x, z = at(-side * (hw + 3.0), r + 3.5)
+            if free(x, z, 1.5):
+                put("GardenPalmPoint", x, z, float(rng.uniform(0, 6.28)), props={"lot": hid})
+        # rào tre: sau nhà + hai bên (để trống phía trước — sân mở ra lối/đường)
+        ub, vb, us = hw + lots["fence_side"], -lots["fence_back"] - hd, hw + lots["fence_side"]
+        seg = fs["segment_len"]
+        lines = [((-ub, vb), (ub, vb))] + [((sg * us, vb), (sg * us, hd)) for sg in (-1.0, 1.0)]
+        for (u0, v0), (u1, v1) in lines:
+            L = math.hypot(u1 - u0, v1 - v0)
+            k = max(1, int(L // seg))
+            for i in range(k):
+                t = (i + 0.5) / k
+                x, z = at(u0 + (u1 - u0) * t, v0 + (v1 - v0) * t)
+                if not free(x, z, 0.8):
+                    continue
+                dx, dz = at(u1, v1)[0] - at(u0, v0)[0], at(u1, v1)[1] - at(u0, v0)[1]
+                n_fence += 1
+                p = _point(f"FencePoint_{n_fence:03d}", ctx, col, x, z, rot=-math.atan2(dz, dx),
+                           props={"lot": hid}, size=0.5)
+                _ph(p, C.box("tmp", (seg, 0.08, fs["height"]), (0, 0, 0), col,
+                             C.material("MAT_PH_Bamboo", (0.72, 0.62, 0.38))))
+    print(f"  lô đất: {sum(num.values())} vật + rào → {n_fence} đoạn rào tổng; {num}")
+    return n_fence
+
+
 def build(spec, ctx):
     fr = ctx["frame"]
     root = ctx["root"]
@@ -115,7 +225,7 @@ def build(spec, ctx):
     for hid, h in Hs["list"].items():
         x, z = h["pos"]
         facing = C.house_facing(spec, h)
-        p = _point(f"HousePoint_{hid[1:]}", ctx, hcol, x, z, rot=C.FACING_ROT[facing], y=Hs["pad_y"],
+        p = _point(f"HousePoint_{hid[1:]}", ctx, hcol, x, z, rot=C.house_rot(spec, h), y=Hs["pad_y"],
                    props={"house_id": hid, "facing": facing, "footprint": list(h["size"]),
                           "hero": bool(h.get("hero", False)), "zone": "Z01"}, size=3)
         _house_placeholder(p, h["size"], Hs["wall_h"], hcol)
@@ -137,6 +247,9 @@ def build(spec, ctx):
                 continue
             if run["door_gap"] and any(abs(z - dz) < run["door_gap"] for dz in doors):
                 continue  # chừa lối vào nhà
+            if any(C.dist_to_polyline(np.array([x]), np.array([z]), r["points"])[0] < r["w"] / 2 + 1.5
+                   for rid, r in spec["roads"].items() if rid != run["along"]):
+                continue  # chừa chỗ ngõ / lối nhỏ nhập vào đường
             for s in run["sides"]:
                 px, pz = x - tz * run["offset"] * s, z + tx * run["offset"] * s
                 if M.water(np.array([px]), np.array([pz]), 0.5)[0]:
@@ -162,6 +275,9 @@ def build(spec, ctx):
                    props={"egg_site": wid, "zone": e["zone"], "game_site": e["game_site"] or ""}, size=0.5)
         _ph(p, C.cylinder("tmp", r, hgt, (0, 0, 0), ccol, C.material("MAT_PH_" + prefix, colr), seg=16,
                           r_top=r * (0.8 if e["kind"] == "jar" else 1.0)))
+
+    # ── Lô đất từng hộ (MAP v2): chum, xô, rơm, gà, cây vườn, rào tre ──
+    n = _lots(spec, ctx, M, counts, n)
 
     # ── Landmark §10 ──
     lcol = C.collection("Landmarks", root)

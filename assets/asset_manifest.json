@@ -20,6 +20,7 @@
     {"match": "HousePoint_05", "asset": "house_vn_01.glb", "fallback": "house2.glb", "fit": "footprint"},
     {"match": "HousePoint_06", "asset": "house_vn_03.glb", "fallback": "house2.glb", "fit": "footprint"},
     {"match": "HousePoint_07", "asset": "house_vn_02.glb", "fallback": "house2.glb", "fit": "footprint"},
+    {"match": "HousePoint_*",  "asset": ["house_vn_01.glb", "house_vn_02.glb"], "fallback": "house2.glb", "fit": "footprint"},
 
     {"match": "JarPoint_*",    "asset": "water_jar_vn.glb", "fallback": "pot.glb",    "fit": "height:0.9"},
     {"match": "BucketPoint_*", "asset": "bucket_vn.glb",    "fallback": "bucket.glb", "fit": "height:0.35"},
@@ -31,6 +32,11 @@
     {"match": "TreePoint_*",    "asset": ["fruit_tree_01.glb", "fruit_tree_02.glb"], "fallback": "trees.glb", "fit": "height:7"},
     {"match": "BananaPoint_*",  "asset": "banana_clump_vn.glb", "fallback": "banana.glb",                 "fit": "height:4"},
     {"match": "CoconutPoint_*", "asset": "coconut_palm.glb", "fallback": "palm.glb",                       "fit": "height:13"},
+    {"match": "GardenTreePoint_*",   "asset": ["fruit_tree_01.glb", "fruit_tree_02.glb"], "fallback": "trees.glb", "fit": "height:6"},
+    {"match": "GardenBananaPoint_*", "asset": "banana_clump_vn.glb", "fallback": "banana.glb", "fit": "height:3.5"},
+    {"match": "GardenPalmPoint_*",   "asset": "coconut_palm.glb", "fallback": "palm.glb", "fit": "height:11"},
+    {"match": "HayPoint_*",          "asset": "haystack_vn.glb", "fallback": "hay.glb", "fit": "height:1.6"},
+    {"match": "ChickenPoint_*",      "asset": "chicken_vn.glb", "fallback": "chicken.glb", "fit": "height:0.4"},
 
     {"match": "LandmarkPoint_L03",  "asset": "power_pole_vn.glb", "fallback": "post.glb", "fit": "height:8"},
     {"match": "LandmarkPoint_L04",  "asset": "chicken_vn.glb",    "fallback": "chicken.glb", "fit": "height:0.4"},
