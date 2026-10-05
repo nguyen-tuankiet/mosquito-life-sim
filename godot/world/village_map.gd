@@ -326,6 +326,75 @@ func _polyline_dist(p: Vector2, pts: Array) -> float:
 	return best
 
 
+# ───────── mạng đường đi bộ cho người dân (MAP v2.2) ─────────
+var _astar: AStar2D
+var _path_pts: PackedVector2Array = PackedVector2Array()
+
+## Lưới đường đi bộ từ mọi đường/ngõ/lối nhỏ trong map_spec.json (lấy mẫu mỗi 4 m, nối đầu mút vào đường gần nhất).
+func build_paths(step: float = 4.0) -> int:
+	_astar = AStar2D.new()
+	_path_pts = PackedVector2Array()
+	var ends: Array = []          # [id, road]
+	var road_ids: Dictionary = {}  # road → [ids]
+	for rid in spec.get("roads", {}):
+		var pts: Array = spec["roads"][rid]["points"]
+		var ids: Array = []
+		for i in range(pts.size() - 1):
+			var a := bible_to_local(Vector2(pts[i][0], pts[i][1]))
+			var b := bible_to_local(Vector2(pts[i + 1][0], pts[i + 1][1]))
+			var n := maxi(1, int(ceil(a.distance_to(b) / step)))
+			for k in range(n + (1 if i == pts.size() - 2 else 0)):
+				var p := a.lerp(b, float(k) / n)
+				var id := _path_pts.size()
+				_path_pts.append(p)
+				_astar.add_point(id, p)
+				if not ids.is_empty():
+					_astar.connect_points(ids[-1], id)
+				ids.append(id)
+		road_ids[rid] = ids
+		ends.append([ids[0], rid])
+		ends.append([ids[-1], rid])
+	for e in ends:
+		var p: Vector2 = _path_pts[e[0]]
+		var best := -1
+		var bd := 3.5
+		for rid in road_ids:
+			if rid == e[1]:
+				continue
+			for id in road_ids[rid]:
+				var d := p.distance_to(_path_pts[id])
+				if d < bd:
+					bd = d
+					best = id
+		if best >= 0:
+			_astar.connect_points(e[0], best)
+	return _path_pts.size()
+
+
+## Lộ trình đi bộ (local x, z) từ `from` tới `to` theo đường làng; điểm cuối là `to`.
+func route(from: Vector2, to: Vector2) -> Array:
+	if _astar == null or _path_pts.is_empty() or from.distance_to(to) < 6.0:
+		return [to]
+	var a := _astar.get_closest_point(from)
+	var b := _astar.get_closest_point(to)
+	var out: Array = []
+	for p in _astar.get_point_path(a, b):
+		out.append(p)
+	# bỏ điểm đầu nếu nó nằm "ngược" (đã đi quá nút gần nhất)
+	if out.size() > 1 and from.distance_to(out[1]) < out[0].distance_to(out[1]):
+		out.pop_front()
+	out.append(to)
+	return out
+
+
+## Cửa nhà (đầu lối nhỏ P_Hxx) — local; Vector2.INF nếu nhà không có lối.
+func house_door(hid: String) -> Vector2:
+	var r: Dictionary = spec.get("roads", {}).get("P_" + hid, {})
+	if r.is_empty():
+		return Vector2.INF
+	return bible_to_local(Vector2(r["points"][0][0], r["points"][0][1]))
+
+
 ## Chợ làng (MAP v2.1, map_spec.json → market): hình chữ nhật local (x, z); rỗng nếu map không có chợ.
 func market_rect() -> Rect2:
 	var mk: Dictionary = spec.get("market", {})
