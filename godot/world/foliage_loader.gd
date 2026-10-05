@@ -7,7 +7,7 @@ extends Node3D
 
 const CELL := 64.0
 const VIS_RANGE := {
-	"GrassPoint": 70.0, "GrassTallPoint": 110.0, "RicePoint": 140.0, "ReedPoint": 120.0,
+	"GrassPoint": 55.0, "GrassTallPoint": 110.0, "RicePoint": 140.0, "ReedPoint": 120.0,
 	"LilyPoint": 120.0, "ShrubPoint": 180.0, "BambooPoint": 240.0,
 }
 

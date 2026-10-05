@@ -31,7 +31,11 @@ INCOMING = os.path.join(C.REPO, "assets", "_incoming")
 PREVIEW = os.path.join(C.REPO, "docs", "reference", "assets")
 
 
-def load_source(path):
+def load_source(path, cfg=None):
+    """Nạp file thô → 1 mesh trong toạ độ thế giới.
+    cfg: drop_materials (bỏ mesh chỉ dùng các vật liệu này, vd. đế đất), keep_fraction (giữ ngẫu nhiên một phần
+    mesh con — cho model mỗi lá cỏ là 1 mesh, giảm tam giác mà không làm vỡ hình như decimate)."""
+    cfg = cfg or {}
     bpy = C.bpy_mod()
     if path.endswith(".zip"):
         tmp = tempfile.mkdtemp()
@@ -46,8 +50,17 @@ def load_source(path):
     # bỏ mesh chỉ dùng làm hình hiển thị xương (importer glTF tạo "Icosphere" cho armature)
     bone_shapes = {pb.custom_shape for a in bpy.context.scene.objects if a.type == "ARMATURE"
                    for pb in a.pose.bones if pb.custom_shape}
+    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH" and o not in bone_shapes]
+    drop = set(cfg.get("drop_materials", []))
+    if drop:
+        meshes = [o for o in meshes if not ({m.name for m in o.data.materials if m} and
+                                            {m.name for m in o.data.materials if m} <= drop)]
+    if cfg.get("keep_fraction"):
+        rng = np.random.default_rng(cfg.get("seed", 0))
+        meshes = sorted(meshes, key=lambda o: o.name)
+        meshes = [o for o in meshes if rng.random() < cfg["keep_fraction"]]
     baked = []
-    for o in [o for o in bpy.context.scene.objects if o.type == "MESH" and o not in bone_shapes]:
+    for o in meshes:
         e = o.evaluated_get(dg)
         me = bpy.data.meshes.new_from_object(e, preserve_all_data_layers=True, depsgraph=dg)
         me.transform(e.matrix_world)
@@ -201,6 +214,24 @@ def single_material(ob, name, uv="box"):
         box_uv(ob, {0: 1.0 if name != "bamboo_dry" else 0.6})
 
 
+def relight(ob):
+    """Vật liệu unlit (quét 3D Sketchfab: Emission + Transparent) → Principled BSDF nhận ánh sáng, giữ texture."""
+    bpy = C.bpy_mod()
+    for i, m in enumerate(ob.data.materials):
+        if not m or not m.use_nodes or any(n.type == "BSDF_PRINCIPLED" for n in m.node_tree.nodes):
+            continue
+        tex = next((n.image for n in m.node_tree.nodes if n.type == "TEX_IMAGE" and n.image), None)
+        nm = bpy.data.materials.new(m.name + "_lit")
+        nm.use_nodes = True
+        b = nm.node_tree.nodes["Principled BSDF"]
+        b.inputs["Roughness"].default_value = 0.9
+        if tex:
+            t = nm.node_tree.nodes.new("ShaderNodeTexImage")
+            t.image = tex
+            nm.node_tree.links.new(t.outputs["Color"], b.inputs["Base Color"])
+        ob.data.materials[i] = nm
+
+
 def shrink_textures(ob, max_tex):
     for m in ob.data.materials:
         if not m or not m.use_nodes:
@@ -231,6 +262,40 @@ def water_disc(ob, frac):
     if m.name not in [x.name for x in ob.data.materials if x]:
         ob.data.materials.append(m)
     f.material_index = [x.name for x in ob.data.materials].index(m.name)
+    bm.to_mesh(ob.data)
+    bm.free()
+    return r
+
+
+def underlay(ob, u):
+    """Lót một đĩa nền (vd. rơm rải) dưới model, dùng vật liệu của một file thô khác. u: {source, radius, tile}."""
+    import bmesh
+    bpy = C.bpy_mod()
+    before = set(bpy.data.materials)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(INCOMING, u["source"]))
+    mats = [m for m in set(bpy.data.materials) - before]
+    for o in list(bpy.context.scene.objects):
+        if o is not ob:
+            bpy.data.objects.remove(o)
+    m = mats[0]
+    ob.data.materials.append(m)
+    mi = len(ob.data.materials) - 1
+    r, tile, seg = u.get("radius", 2.5), u.get("tile", 2.0), 24
+    rng = np.random.default_rng(1)
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    uv = bm.loops.layers.uv.active or bm.loops.layers.uv.new("UVMap")
+    c = bm.verts.new((0, 0, 0.015))
+    ring = []
+    for i in range(seg):                       # mép loang lổ, không tròn đều
+        a = 2 * math.pi * i / seg
+        k = r * rng.uniform(0.75, 1.0)
+        ring.append(bm.verts.new((k * math.cos(a), k * math.sin(a), 0.01)))
+    for i in range(seg):
+        f = bm.faces.new((c, ring[i], ring[(i + 1) % seg]))
+        f.material_index = mi
+        for loop in f.loops:
+            loop[uv].uv = (loop.vert.co.x / tile, loop.vert.co.y / tile)
     bm.to_mesh(ob.data)
     bm.free()
     return r
@@ -298,7 +363,7 @@ def main():
         from assetgen import lib as L
         L.MAT_CACHE.clear()       # scene mới → bỏ material/texture cache của lần trước
         L.TEX_CACHE.clear()
-        ob = load_source(src)
+        ob = load_source(src, cfg)
         n0 = tris(ob)
         dims = normalize(ob, cfg)
         n1 = decimate(ob, cfg["tris"])
@@ -307,10 +372,14 @@ def main():
             auto_house(ob, cfg)
         elif mode.startswith("single:"):
             single_material(ob, mode.split(":", 1)[1], cfg.get("uv", "box"))
-        shrink_textures(ob, cfg.get("max_tex", 1024))
+        if cfg.get("relight"):
+            relight(ob)
         extra = ""
+        if cfg.get("underlay"):
+            extra += f", lớp nền r={underlay(ob, cfg['underlay']):.1f} m"
         if cfg.get("water_disc"):
-            extra = f", mặt nước r={water_disc(ob, cfg['water_disc']):.2f} m"
+            extra += f", mặt nước r={water_disc(ob, cfg['water_disc']):.2f} m"
+        shrink_textures(ob, cfg.get("max_tex", 1024))   # sau cùng: gồm cả texture của lớp nền
         ob.name = name
         ob.data.name = name
         for p in ob.data.polygons:

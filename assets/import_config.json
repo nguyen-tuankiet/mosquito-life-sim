@@ -4,7 +4,9 @@
     "source: file thô trong assets/_incoming/ (gitignore). folder: thư mục đích trong assets/.",
     "rotate_z: độ, để mặt trước nhìn -Y. size: {\"x\"|\"y\"|\"z\": mét} (giữ tỉ lệ) hoặc {\"xyz\": [x, y, z]} (từng trục).",
     "tris: ngân sách tam giác. materials: keep | auto_house | single:<vật liệu procedural trong assetgen/assets_v1.M()>.",
-    "water_disc: thêm mặt nước tại tỉ lệ chiều cao (lu, xô)."
+    "water_disc: thêm mặt nước tại tỉ lệ chiều cao (lu, xô).",
+    "drop_materials: bỏ mesh chỉ dùng các vật liệu này (vd. đế đất). keep_fraction (+seed): giữ ngẫu nhiên một phần mesh con (cỏ mỗi lá 1 mesh).",
+    "relight: đổi vật liệu unlit (quét 3D) sang PBR. underlay: {source, radius, tile} lót đĩa nền (rơm rải) dưới model. max_tex: cạnh texture tối đa."
   ],
   "assets": {
     "house_vn_01": {
@@ -150,6 +152,48 @@
       "materials": "keep",
       "max_tex": 1024,
       "origin": "biến thể của bamboo.glb (xoay 137°, thấp hơn) để rừng tre đồng bộ một phong cách"
+    },
+    "haystack_vn": {
+      "source": "round_straw_bale.glb",
+      "folder": "environment/gardens",
+      "rotate_z": 0,
+      "size": {
+        "z": 1.5
+      },
+      "tris": 40000,
+      "materials": "keep",
+      "max_tex": 512,
+      "underlay": {
+        "source": "dry_straw_ground.glb",
+        "radius": 2.6,
+        "tile": 2.0
+      },
+      "_note": "kiện rơm tròn (quét 3D, 398k tris) + lớp rơm rải dưới chân từ dry_straw_ground.glb",
+      "origin": "model do chủ dự án cung cấp (round_straw_bale.glb + dry_straw_on_the_ground_tile_texture.glb, nguồn Sketchfab)",
+      "relight": true,
+      "_tris_note": "quét 3D: < ~40k tris thì UV atlas vỡ (lỗ trắng); chỉ 2 đống rơm trong map"
+    },
+    "grass_clump_vn": {
+      "source": "patch_of_grass.glb",
+      "folder": "environment/grasslands",
+      "rotate_z": 0,
+      "size": {
+        "xyz": [
+          1.6,
+          1.6,
+          0.22
+        ]
+      },
+      "tris": 4000,
+      "materials": "keep",
+      "max_tex": 512,
+      "drop_materials": [
+        "Soil"
+      ],
+      "keep_fraction": 0.04,
+      "seed": 7,
+      "_note": "9437 lá cỏ = 9437 mesh: giữ ngẫu nhiên 4% số lá (decimate làm vỡ lá), bỏ đế đất; lá cao 0.22 m",
+      "origin": "model do chủ dự án cung cấp (patch_of_grass.glb, nguồn Sketchfab)"
     }
   }
 }
