@@ -11,6 +11,8 @@
 | `environment/grasslands/coconut_palm.glb` | model do chủ dự án cung cấp (`coconut_palm.glb`, cặp 2 cây dừa) | chưa ghi — **chủ dự án bổ sung** | cao 13 m, 6.6k tris, texture ≤ 1K |
 | `creatures/chicken_vn.glb` | model do chủ dự án cung cấp (`chicken.glb`, nguồn Sketchfab) | chưa ghi — **kiểm tra giấy phép Sketchfab** | áp tư thế rig → mesh tĩnh, cao 0.45 m, texture 2K → 1K |
 | `creatures/water_buffalo.glb` | model do chủ dự án cung cấp (`african_buffalo.glb`, nguồn Sketchfab) — **trâu châu Phi**, tạm thay trâu nước VN | chưa ghi — **kiểm tra giấy phép Sketchfab** | áp tư thế rig → mesh tĩnh, xoay 45°, cao 1.5 m |
+| `environment/gardens/haystack_vn.glb` | model do chủ dự án cung cấp: `round_straw_bale.glb` (quét 3D) + lớp rơm rải từ `dry_straw_on_the_ground_tile_texture.glb` (nguồn Sketchfab) | chưa ghi — **kiểm tra giấy phép Sketchfab** | vật liệu unlit → PBR (`relight`), 398k → 40k tris (thấp hơn thì UV vỡ), texture ≤ 512, cao 1.5 m, lớp rơm r = 2.6 m |
+| `environment/grasslands/grass_clump_vn.glb` | model do chủ dự án cung cấp: `patch_of_grass.glb` (nguồn Sketchfab) | chưa ghi — **kiểm tra giấy phép Sketchfab** | 9437 lá → giữ 4% (`keep_fraction`), bỏ đế đất, mảng 1.6 × 1.6 m cao 0.22 m |
 | `environment/gardens/flower_pot_vn.glb` | Poly Haven — *Potted Plant 02* | CC0 | 70k → 8k tris, texture 4K → 1K (chưa đặt vào map: chưa có Point chậu cây) |
 
 Ảnh concept: OpenArt (Wan 2.7 Image), xem `docs/reference/concepts/README.md`.

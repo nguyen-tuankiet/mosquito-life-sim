@@ -34,7 +34,7 @@
 
     {"match": "LandmarkPoint_L03",  "asset": "power_pole_vn.glb", "fallback": "post.glb", "fit": "height:8"},
     {"match": "LandmarkPoint_L04",  "asset": "chicken_vn.glb",    "fallback": "chicken.glb", "fit": "height:0.4"},
-    {"match": "LandmarkPoint_L05*", "asset": "haystack_vn.glb",   "fallback": "hay.glb",  "fit": "height:3"},
+    {"match": "LandmarkPoint_L05*", "asset": "haystack_vn.glb",   "fallback": "hay.glb"},
     {"match": "LandmarkPoint_L06*", "asset": "banyan_tree.glb",   "fallback": "trees.glb","fit": "height:14"},
     {"match": "LandmarkPoint_L07",  "asset": "bamboo_hut_vn.glb", "fallback": "hut.glb",  "fit": "height:2.6"},
     {"match": "LandmarkPoint_L08",  "asset": "pond_jetty_vn.glb", "fallback": "dock.glb", "align": "origin"},
@@ -51,6 +51,6 @@
     "LilyPoint":      {"asset": "lily_pad_vn.glb",  "fallback": "lilypad.glb"},
     "RicePoint":      {"asset": "rice_patch_1m.glb", "fallback": "wheat.glb",  "fit": "height:0.9"},
     "GrassTallPoint": {"asset": "grass_tall.glb",   "fallback": "grass.glb",   "fit": "height:1"},
-    "GrassPoint":     {"asset": "grass_clump_vn.glb", "fallback": "grass.glb",  "fit": "height:0.45"}
+    "GrassPoint":     {"asset": "grass_clump_vn.glb", "fallback": "grass.glb"}
   }
 }
