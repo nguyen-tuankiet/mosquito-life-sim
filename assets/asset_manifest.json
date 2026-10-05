@@ -35,6 +35,11 @@
     {"match": "GardenTreePoint_*",   "asset": ["fruit_tree_01.glb", "fruit_tree_02.glb"], "fallback": "trees.glb", "fit": "height:6"},
     {"match": "GardenBananaPoint_*", "asset": "banana_clump_vn.glb", "fallback": "banana.glb", "fit": "height:3.5"},
     {"match": "GardenPalmPoint_*",   "asset": "coconut_palm.glb", "fallback": "palm.glb", "fit": "height:11"},
+    {"match": "MarketStallPoint_*",  "asset": "market_stall_vn.glb"},
+    {"match": "ProducePoint_*",      "asset": "produce_basket_vn.glb"},
+    {"match": "UmbrellaPoint_*",     "asset": "market_umbrella_vn.glb"},
+    {"match": "CartPoint_*",         "asset": "cart_vn.glb", "fallback": "cart.glb", "fit": "height:1.1"},
+    {"match": "MarketTreePoint_*",   "asset": "banyan_tree.glb", "fallback": "trees.glb", "fit": "height:10"},
     {"match": "HayPoint_*",          "asset": "haystack_vn.glb", "fallback": "hay.glb", "fit": "height:1.6"},
     {"match": "ChickenPoint_*",      "asset": "chicken_vn.glb", "fallback": "chicken.glb", "fit": "height:0.4"},
 

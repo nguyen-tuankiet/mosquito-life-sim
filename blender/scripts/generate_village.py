@@ -112,7 +112,7 @@ def _lots(spec, ctx, M, counts, n_fence):
     def free(x, z, margin=1.0):
         X, Z = np.array([x]), np.array([z])
         if (M.road(X, Z, margin)[0] or M.water(X, Z, 1.5)[0] or M.paddy(X, Z, 1.0)[0] or M.puddle(X, Z, 1.0)[0]
-                or M.landmark(X, Z, 3.0)[0]):
+                or M.landmark(X, Z, 3.0)[0] or M.market(X, Z, 2.0)[0]):
             return False
         if any(math.dist((x, z), e) < 1.5 for e in eggs):
             return False
@@ -198,6 +198,42 @@ def _lots(spec, ctx, M, counts, n_fence):
     return n_fence
 
 
+MARKET_PH = {  # prefix → (kích thước hộp placeholder, màu)
+    "MarketStallPoint": ((3.2, 2.2, 2.4), (0.20, 0.35, 0.65)),
+    "ProducePoint": ((1.2, 0.8, 0.2), (0.40, 0.55, 0.20)),
+    "UmbrellaPoint": ((2.8, 2.8, 2.7), (0.65, 0.15, 0.10)),
+    "CartPoint": ((1.0, 2.0, 1.0), (0.45, 0.32, 0.20)),
+    "MarketTreePoint": ((3.0, 3.0, 10.0), (0.22, 0.40, 0.16)),
+}
+
+
+def _market(spec, ctx):
+    """Chợ nhỏ ở ngã ba R1 × M1: sạp mái bạt quanh sân, người bán ngồi đất, ô che, xe đẩy, cây bóng mát."""
+    mk = spec.get("market")
+    if not mk:
+        return
+    col = C.collection("Market", ctx["root"])
+    n = {}
+
+    def put(prefix, x, z, rot_deg=0.0, props=None):
+        n[prefix] = n.get(prefix, 0) + 1
+        p = _point(f"{prefix}_{n[prefix]:02d}", ctx, col, x, z, rot=math.radians(rot_deg),
+                   props=dict(props or {}, market=mk["name"]), size=0.6)
+        size, colr = MARKET_PH[prefix]
+        _ph(p, C.box("tmp", size, (0, 0, 0), col, C.material("MAT_PH_" + prefix, colr)))
+
+    for x, z, r in mk["stalls"]:
+        put("MarketStallPoint", x, z, r)
+    for x, z, r in mk["ground_sellers"]:
+        put("ProducePoint", x, z, r)
+    for x, z in mk["umbrellas"]:
+        put("UmbrellaPoint", x, z)
+    for x, z, r in mk["carts"]:
+        put("CartPoint", x, z, r)
+    put("MarketTreePoint", *mk["shade_tree"])
+    print(f"  chợ: {n}")
+
+
 def build(spec, ctx):
     fr = ctx["frame"]
     root = ctx["root"]
@@ -278,6 +314,9 @@ def build(spec, ctx):
 
     # ── Lô đất từng hộ (MAP v2): chum, xô, rơm, gà, cây vườn, rào tre ──
     n = _lots(spec, ctx, M, counts, n)
+
+    # ── Chợ làng (MAP v2.1) ──
+    _market(spec, ctx)
 
     # ── Landmark §10 ──
     lcol = C.collection("Landmarks", root)

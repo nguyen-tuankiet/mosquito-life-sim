@@ -980,6 +980,23 @@
     "indoor_ceiling_y": 3.4
    }
   },
+  "CartPoint_01": {
+   "pos": [
+    27.0,
+    0.25,
+    -28.0
+   ],
+   "rot_y": 1.3963,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "CartPoint"
+   }
+  },
   "ChickenPoint_001": {
    "pos": [
     114.526,
@@ -11514,6 +11531,125 @@
     "swapped_asset": "LIB_lily_pad_vn"
    }
   },
+  "MarketStallPoint_01": {
+   "pos": [
+    -3.0,
+    0.3,
+    -30.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketStallPoint_02": {
+   "pos": [
+    6.5,
+    0.3,
+    -31.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketStallPoint_03": {
+   "pos": [
+    16.0,
+    0.3,
+    -30.5
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketStallPoint_04": {
+   "pos": [
+    -2.0,
+    0.3,
+    -12.5
+   ],
+   "rot_y": 3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketStallPoint_05": {
+   "pos": [
+    8.0,
+    0.3,
+    -12.0
+   ],
+   "rot_y": 3.1416,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketStallPoint_06": {
+   "pos": [
+    18.0,
+    0.3,
+    -12.5
+   ],
+   "rot_y": 3.2289,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketStallPoint"
+   }
+  },
+  "MarketTreePoint_01": {
+   "pos": [
+    -14.0,
+    0.25,
+    -29.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "MarketTreePoint"
+   }
+  },
   "PlayerSpawn_FirstLife": {
    "pos": [
     50.0,
@@ -11529,6 +11665,40 @@
    "props": {
     "egg_site": "W03_jar_chum",
     "stage": "egg"
+   }
+  },
+  "ProducePoint_01": {
+   "pos": [
+    1.0,
+    0.3,
+    -23.0
+   ],
+   "rot_y": 0.3491,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "ProducePoint"
+   }
+  },
+  "ProducePoint_02": {
+   "pos": [
+    13.0,
+    0.3,
+    -19.0
+   ],
+   "rot_y": -0.2618,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "ProducePoint"
    }
   },
   "ReedPoint_v00__ASSET": {
@@ -11564,6 +11734,20 @@
     "source_file": "assets/_procedural/environment/rice_fields/rice_patch_1m.glb",
     "swapped_asset": "LIB_rice_patch_1m"
    }
+  },
+  "RootNode": {
+   "pos": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {}
   },
   "ShrubPoint_v00__ASSET": {
    "pos": [
@@ -18887,6 +19071,40 @@
     "point_type": "TreePoint",
     "variant": 5336,
     "zone": "Z01"
+   }
+  },
+  "UmbrellaPoint_01": {
+   "pos": [
+    -6.0,
+    0.3,
+    -22.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "UmbrellaPoint"
+   }
+  },
+  "UmbrellaPoint_02": {
+   "pos": [
+    22.0,
+    0.3,
+    -23.0
+   ],
+   "rot_y": 0.0,
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "props": {
+    "market": "Chợ làng",
+    "point_type": "UmbrellaPoint"
    }
   },
   "Zone_Z01a": {

@@ -51,6 +51,16 @@ const VILLAGE_HOSTS := {
 	"neighbor": {"name": "Bác hàng xóm", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[290, 121], [318, 123], [350, 120], [382, 124], [416, 122]], "sp": .9, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z01"},
 	"villager": {"name": "Người qua đường", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "path": [[287, 45], [287, 185], [287, 335], [287, 465]], "sp": 1.25, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "day": true, "zone": "Z08"},
 }
+# Chợ làng (MAP v2.1): người bán + người mua, chỉ có mặt giờ họp chợ (map_spec.json → market.hours).
+# home "market" + off = lệch (m) so với tâm chợ; yaw: hướng mặt (0 = Nam).
+const MARKET_HOSTS := {
+	"seller1": {"name": "Cô bán rau", "model": "woman", "h": 1.6, "reward": 1.3, "nr": 2.6, "alert": 1.15, "swat": 1.2, "reach": 1.9, "home": "market", "off": Vector2(-11, -9.4), "yaw": 0.0, "amp": 0.0, "sp": 0.0, "r": .3, "cy": .95, "walk": "Female_Idle", "idle": "Female_Idle", "market": true, "zone": "Z08"},
+	"seller2": {"name": "Bác bán cá", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.2, "reach": 2.0, "home": "market", "off": Vector2(0, 10.9), "yaw": PI, "amp": 0.0, "sp": 0.0, "r": .32, "cy": 1.0, "walk": "Man_Idle", "idle": "Man_Idle", "market": true, "zone": "Z08"},
+	"seller3": {"name": "Bà bán quả", "model": "woman", "h": 1.55, "reward": 1.2, "nr": 2.4, "alert": 1.0, "swat": 1.1, "reach": 1.6, "home": "market", "off": Vector2(-7.2, -.9), "yaw": .4, "amp": 0.0, "sp": 0.0, "r": .3, "cy": .6, "walk": "Female_Sitting", "idle": "Female_Sitting", "market": true, "zone": "Z08"},
+	"buyer1": {"name": "Người đi chợ", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "home": "market", "off": Vector2(-2, 0), "amp": 5.0, "sp": .22, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "market": true, "zone": "Z08"},
+	"buyer2": {"name": "Người đi chợ", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "home": "market", "off": Vector2(5, 2), "amp": 4.0, "sp": .27, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "market": true, "zone": "Z08"},
+	"buyer3": {"name": "Em bé đi chợ", "model": "hoodie", "h": 1.15, "reward": .9, "nr": 3.0, "alert": 1.3, "swat": .95, "reach": 1.5, "home": "market", "off": Vector2(1, -3), "amp": 3.5, "sp": .4, "r": .25, "cy": .6, "walk": "Walk", "idle": "Idle", "market": true, "zone": "Z08"},
+}
 # chuồn chuồn (kẻ săn muỗi trưởng thành) theo zone: nhiều ở ao, ruộng, kênh, đồng cỏ (Bible x, z)
 const VILLAGE_DRAGONS := [[170, 337], [195, 320], [400, 250], [100, 200], [400, 460], [270, 120]]
 
@@ -185,6 +195,7 @@ var vmap: VillageMap = null          # M4: map làng thật; null → thế gi�
 var bounds := Rect2(-38, -24, 76, 48)  # vùng bay (x, z) local
 var max_y := 16.0
 var zone := ""                       # khu vực hiện tại (Z01…Z08)
+var in_market := false               # đang ở chợ làng (MAP v2.1)
 var _zone_t := 0.0
 var use_village := true              # main.gd tắt bằng --legacy-world
 
@@ -1107,7 +1118,7 @@ func _make_world(weather: String) -> void:
 		var d: Dictionary = animals[k]
 		var h := Host.new()
 		h.k = k; h.def = d; h.human = false
-		h.pos = d["home"]; h.y = gy(h.pos.x, h.pos.y) + float(d["cy"]); h.ph = rnd(0, 6)
+		h.pos = d["home"]; h.y = gy(h.pos.x, h.pos.y) + float(d["cy"]); h.ph = rnd(0, 6); h.yaw = float(d.get("yaw", 0.0))
 		if d.has("path"):
 			h.path = d["path"]
 			h.seg = randi() % maxi(1, h.path.size() - 1)
@@ -1170,8 +1181,11 @@ func _village_hosts() -> Dictionary:
 		var d: Dictionary = ANIMALS[k].duplicate()
 		d["home"] = _home_local(VILLAGE_HOMES.get(k, d["home"]))
 		out[k] = d
-	for k in VILLAGE_HOSTS:
-		var d: Dictionary = VILLAGE_HOSTS[k].duplicate()
+	var extra := VILLAGE_HOSTS.duplicate()
+	if vmap.market_rect().has_area():
+		extra.merge(MARKET_HOSTS)
+	for k in extra:
+		var d: Dictionary = extra[k].duplicate()
 		if d.has("path"):
 			var pts: Array = []
 			for b in d["path"]:
@@ -1179,11 +1193,13 @@ func _village_hosts() -> Dictionary:
 			d["path"] = pts
 			d["home"] = pts[0]
 		else:
-			d["home"] = _home_local(d["home"])
+			d["home"] = _home_local(d["home"], d.get("off", Vector2.ZERO))
 		out[k] = d
 	return out
 
-func _home_local(h) -> Vector2:
+func _home_local(h, off: Vector2 = Vector2.ZERO) -> Vector2:
+	if h is String and h == "market":
+		return vmap.market_rect().get_center() + off
 	if h is String:
 		var lp := vmap.node_local("LandmarkPoint_" + String(h))
 		return Vector2(lp.x, lp.z) if lp != Vector3.INF else Vector2(10, 10)
@@ -1611,19 +1627,22 @@ func update(dt: float) -> void:
 	var stealth: float = bf["stealth"] * maxf(.5, 1.0 - .05 * Game.tv("det"))
 	for h in hosts:
 		var df: Dictionary = h.def
+		if not h.human:
+			h.away = false
 		if h.human:
 			update_human(h, dt)
 			if h.away:
 				h.alert = 0.0; h.st = "idle"
 				continue
-		elif df.get("day", false) and night_amt(A["clock"]) > .5:
-			h.away = true     # người ngoài đồng / đường chỉ ra ngoài ban ngày
+		elif _off_hours(df):
+			h.away = true     # người ngoài đồng / đường chỉ ra ngoài ban ngày; chợ chỉ đông giờ họp chợ
 			h.alert = 0.0; h.st = "idle"
 			continue
 		elif not h.path.is_empty():
 			h.away = false
 			_walk_path(h, dt)
 		elif df["amp"] > 0.0:
+			h.away = false
 			var home: Vector2 = df["home"]
 			h.rest_t -= dt
 			if h.rest_t <= 0.0:
@@ -1812,6 +1831,15 @@ func update(dt: float) -> void:
 			spray_mesh.visible = false
 	_animate(dt)
 
+## Ngoài giờ có mặt: người ngoài đồng/đường về nhà ban đêm; người ở chợ chỉ có giờ họp chợ.
+func _off_hours(df: Dictionary) -> bool:
+	if df.get("market", false) and vmap != null:
+		for iv in vmap.market_hours():
+			if A["clock"] >= float(iv[0]) and A["clock"] < float(iv[1]):
+				return false
+		return true
+	return df.get("day", false) and night_amt(A["clock"]) > .5
+
 ## M4: đi qua lại trên đường (người qua đường R1, nông dân trên bờ ruộng R4); dừng lại nhìn khi nghi có muỗi.
 func _walk_path(h: Host, dt: float) -> void:
 	h.y = gy(h.pos.x, h.pos.y) + float(h.def["cy"])
@@ -1839,6 +1867,14 @@ func _walk_path(h: Host, dt: float) -> void:
 ## M4: khu vực hiện tại + hành trình 1 → 8 (Game.zone_enter thưởng khi tới đúng chặng kế tiếp).
 func _update_zone(p: Vector3) -> void:
 	var z := "Z01" if in_house(p.x, p.z, 0.0) else vmap.zone_at(p.x, p.z)
+	in_market = vmap.in_market(p.x, p.z)
+	if in_market:
+		z = "Z08"          # chợ ở ngã ba đường làng: người qua lại đông nhất (MAP_BIBLE §13 Z08)
+		if not Game.G.get("market_seen", false):
+			Game.G["market_seen"] = true
+			var open := not _off_hours({"market": true})
+			hud_ref.banner("CHỢ LÀNG" + ("" if open else " · ĐÃ TAN"), ("Nhiều người, nhiều mùi: nhiều máu để hút — nhưng cũng nhiều tay đập nhất làng." if open
+				else "Chợ họp sáng 5h30–11h và chiều 15h–18h — giờ này vắng người, chỉ còn sạp trống."))
 	zone = z
 	match Game.zone_enter(z):
 		"journey":
@@ -2447,6 +2483,12 @@ func _draw_village_map(hud: Node) -> void:
 		var pts: Array = rd["points"]
 		for i in range(pts.size() - 1):
 			hud.line(mb.call(Vector2(pts[i][0], pts[i][1])), mb.call(Vector2(pts[i + 1][0], pts[i + 1][1])), Color(.86, .74, .55), maxf(1.5, float(rd["w"]) * sc))
+	var mr := vmap.market_rect()
+	if mr.has_area():
+		var a: Vector2 = ml.call(mr.position.x, mr.position.y)
+		var b: Vector2 = ml.call(mr.end.x, mr.end.y)
+		hud.rect(a, b - a, Color(.86, .62, .3))
+		hud.text("Chợ", (a + b) / 2.0 + Vector2(0, -9), 11, Color(1, .95, .8), 1)
 	for key in vmap.nodes_with_prefix("HousePoint_"):
 		var lp := vmap.node_local(key)
 		var c: Vector2 = ml.call(lp.x, lp.z)
@@ -2477,7 +2519,7 @@ func _draw_village_map(hud: Node) -> void:
 	var side := Vector2(-fdir.y, fdir.x)
 	hud.poly(PackedVector2Array([pc + fdir * 8.0, pc - fdir * 4.0 + side * 5.0, pc - fdir * 4.0 - side * 5.0]), Color.WHITE)
 	hud.text("N", Vector2(mx + mw - 10, my + 11), 13, Color(1, 1, 1, .9))
-	var zn := String(Game.ZONES.get(zone, {}).get("name", "Làng quê"))
+	var zn := "Chợ làng" if in_market else String(Game.ZONES.get(zone, {}).get("name", "Làng quê"))
 	hud.text("Khu vực: %s" % zn, Vector2(mx + 2, my - 34), 15, Color(1, .92, .65))
 	var jt := "Hành trình %d/8" % Game.journey_count()
 	if nxt != "":

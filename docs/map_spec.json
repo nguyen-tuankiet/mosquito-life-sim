@@ -29,7 +29,18 @@
     "R5_meadow_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[285, 470], [330, 470], [330, 460]]},
     "T1_bamboo_trail":{"type": "trail",      "w": 1.5, "y": null, "points": [[0, 215], [80, 215]]},
     "N1_east_lane":   {"type": "dirt_path",  "w": 2.5, "y": 0.3, "points": [[287.5, 121], [318, 123], [350, 120], [382, 124], [418, 122]]},
-    "N2_north_lane":  {"type": "dirt_path",  "w": 2.5, "y": 0.3, "points": [[287.5, 52], [318, 51], [350, 53], [388, 50]]}
+    "N2_north_lane":  {"type": "dirt_path",  "w": 2.5, "y": 0.3, "points": [[287.5, 52], [318, 51], [350, 53], [388, 50]]},
+    "M1_market_lane": {"type": "dirt_path",  "w": 3,   "y": 0.3, "points": [[282.5, 248], [240, 249], [218, 258]]}
+  },
+  "market": {
+    "_comment": "MAP v2.1 — chợ nhỏ ở ngã ba R1 × M1, giữa làng chính và xóm ao (khoảng cỏ trống cũ). Góc độ: 0 = mặt trước nhìn Nam (+z).",
+    "name": "Chợ làng", "center": [258, 248], "size": [34, 22], "y": 0.3,
+    "hours": [[5.5, 11.0], [15.0, 18.0]],
+    "stalls": [[247, 239.5, 0], [256.5, 239, 0], [266, 239.5, 0], [248, 257.5, 180], [258, 258, 180], [268, 257.5, 185]],
+    "ground_sellers": [[251, 247, 20], [263, 251, -15]],
+    "umbrellas": [[244, 248], [272, 247]],
+    "carts": [[277, 242, 80]],
+    "shade_tree": [236, 241]
   },
   "bridges": {
     "B1_R2": {"road": "R2_bridge_lane", "at": [111, 100], "len": 24, "w": 3, "deck_y": 1.2}

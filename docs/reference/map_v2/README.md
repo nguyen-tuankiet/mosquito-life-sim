@@ -28,6 +28,16 @@ Bố cục 2D: [`../layout/01_house.png`](../layout/01_house.png)
 
 ## Chưa làm (để giữ phạm vi nhỏ)
 
-- Chợ nhỏ ở ngã ba, cổng làng, giếng/ghế đá quanh ao.
-- Khoảng đất trống giữa làng chính (z 185) và xóm ao (z 300) vẫn là cỏ.
+- ~~Chợ nhỏ ở ngã ba~~ → **v2.1 đã làm** (xem dưới). Còn: cổng làng, giếng/ghế đá quanh ao.
 - Người dân sống theo lịch cả làng (ra đồng, đi chợ, nghỉ trưa) — hiện mới có gia đình H01 theo lịch, người ngoài đường chỉ đi qua lại ban ngày.
+
+## v2.1 — Chợ làng
+
+Ngã ba R1 × ngõ M1, sân 34 × 22 m giữa làng chính và xóm ao: 6 sạp mái bạt (rau, quả, ớt, cá), 2 chỗ bán ngồi đất,
+2 ô che, xe đẩy, cây bóng mát. Model procedural mới: `market_stall_vn`, `produce_basket_vn`, `market_umbrella_vn`
+(`blender/scripts/assetgen/assets_v1.py`). Trong game: 3 người bán + 3 người mua chỉ có mặt giờ họp chợ
+(5h30–11h, 15h–18h); bay vào chợ hiện "Chợ làng" (khu Z08 — nguy hiểm nhất); minimap vẽ ô chợ.
+
+| | |
+|---|---|
+| ![](market.webp) chợ sáng ở tầm muỗi | ![](market_top.webp) chợ nhìn từ trên |

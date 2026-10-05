@@ -774,6 +774,7 @@ const VILLAGE_SHOTS := {
 	"road": [9.0, Vector2(291, 236), 1.6, .15, -.06, 1.0], "bamboo": [15.0, Vector2(30, 300), 1.0, -PI / 2.0, -.03, 1.0],
 	"canal": [16.0, Vector2(112, 118), 1.3, .3, -.1, 1.0], "night": [21.5, Vector2(300, 98), 2.0, 0.0, -.05, 1.4],
 	"high": [17.3, Vector2(300, 140), 9.0, .2, -.15, 1.4],
+	"market": [8.5, Vector2(262, 262), 1.7, 0.05, -.06, 1.1], "market_top": [8.5, Vector2(258, 268), 9.0, 0.0, -.5, 1.4],
 	"lane": [9.5, Vector2(296, 121), 1.5, -PI / 2.0 + .05, -.05, 1.0], "hamlet": [16.0, Vector2(252, 330), 1.8, PI / 2.0 + .35, -.06, 1.0],
 }
 func _village_shot(k: String) -> void:
@@ -963,6 +964,24 @@ func _test_village() -> void:
 	_tv(Game.zone_enter("Z01") == "journey" and Game.zone_enter("Z03") == "new" and Game.zone_enter("Z02") == "journey", "hành trình: Z01 → (Z03 ngoài thứ tự) → Z02")
 	_tv(int(Game.G["quests_done"]) == q0 + 2 and Game.journey_next() == "Z04", "thưởng 2 chặng, chặng kế tiếp Z04 (%s)" % Game.journey_next())
 	_tv(vm.zone_at(vm.bible_to_local(Vector2(30, 300)).x, vm.bible_to_local(Vector2(30, 300)).y) == "Z06" and vm.zone_at(vm.bible_to_local(Vector2(287, 260)).x, vm.bible_to_local(Vector2(287, 260)).y) == "Z08", "zone rừng tre Z06, đường làng Z08")
+	# 7b. chợ làng (MAP v2.1): người bán/mua có mặt giờ họp chợ, vắng khi tan chợ
+	var mr: Rect2 = vm.market_rect()
+	_tv(mr.has_area() and vm.in_market(mr.get_center().x, mr.get_center().y), "có chợ làng %s" % mr)
+	var mk_n := func() -> int:
+		var c := 0
+		for h in adult.hosts:
+			if h.def.get("market", false) and not h.away and mr.grow(6.0).has_point(h.pos): c += 1
+		return c
+	adult.A["clock"] = 8.0
+	adult.update(1.0 / 60.0)
+	var n_open: int = mk_n.call()
+	adult.A["clock"] = 13.0
+	adult.update(1.0 / 60.0)
+	var n_noon: int = mk_n.call()
+	_tv(n_open == 6 and n_noon == 0, "chợ sáng 8h: %d người, trưa 13h tan chợ: %d người" % [n_open, n_noon])
+	adult.body.global_position = Vector3(mr.get_center().x, adult.gy(mr.get_center().x, mr.get_center().y) + 1.5, mr.get_center().y)
+	adult._update_zone(adult.body.global_position)
+	_tv(adult.in_market and adult.zone == "Z08", "bay vào chợ → khu vực Chợ làng (Z08)")
 	# 8. nguồn mật & chỗ ẩn
 	_tv(adult.flowers.size() >= 30 and adult.bushes.size() >= 100, "%d hoa, %d chỗ ẩn nấp" % [adult.flowers.size(), adult.bushes.size()])
 	print("[village] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])
