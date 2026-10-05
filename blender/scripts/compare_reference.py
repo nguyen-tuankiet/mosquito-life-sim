@@ -35,12 +35,23 @@ def font(size):
     return ImageFont.load_default()
 
 
+# Ô "THỜI TIẾT & THỜI GIAN" của reference: ban ngày / ban đêm — so với ảnh M3 cùng giờ.
+DAY_BOX, NIGHT_BOX = (1078, 832, 1290, 922), (1078, 927, 1290, 1017)
+PAIRS_NIGHT = [
+    ("09_key_shot", "Ban đêm (reference) ↔ key shot đêm", NIGHT_BOX),
+    ("01_house", "Ban đêm ↔ 1. Nhà dân đêm (đèn cửa)", NIGHT_BOX),
+    ("08_road", "Ban đêm ↔ 8. Đường làng đêm", NIGHT_BOX),
+    ("00_overview", "Ban đêm ↔ toàn cảnh đêm", NIGHT_BOX),
+]
+
+
 def main():
-    a = C.parse_args({"renders": os.path.join(C.REPO, "docs", "reference", "env"), "out": ""})
+    a = C.parse_args({"renders": os.path.join(C.REPO, "docs", "reference", "env"), "out": "", "night": False})
     out = a.out or os.path.join(a.renders, "compare_reference.webp")
     ref = Image.open(REF).convert("RGB")
     cw, ch, pad, head = 560, 315, 10, 34
-    rows = [p for p in PAIRS if os.path.isfile(os.path.join(a.renders, p[0] + ".webp"))]
+    pairs = PAIRS_NIGHT if a.night else PAIRS
+    rows = [p for p in pairs if os.path.isfile(os.path.join(a.renders, p[0] + ".webp"))]
     sheet = Image.new("RGB", (cw * 2 + pad * 3, (ch + head + pad) * len(rows) + 50), (22, 34, 40))
     d = ImageDraw.Draw(sheet)
     d.text((pad, 12), "REFERENCE A (trái)  ↔  RENDER (phải)", fill=(235, 240, 235), font=font(22))

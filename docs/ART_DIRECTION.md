@@ -27,6 +27,9 @@ hơi ẩm, nhiều nước đọng — nhìn qua là thấy "chỗ này muỗi s
 
 ## 2. Ánh sáng & thời gian
 
+> Giá trị số (màu nắng, màu trời, mật độ sương, đèn cửa sổ theo từng giờ) nằm ở [`art_look.json`](art_look.json),
+> dùng chung cho ảnh duyệt Blender (`blender/scripts/lighting.py`) và game (`godot/world/day_night.gd`).
+
 | Thời điểm | Đặc điểm (theo ảnh chính + ô "THỜI TIẾT & THỜI GIAN") |
 |---|---|
 | **Ban ngày (key look)** | Nắng **chiều muộn / giờ vàng**: mặt trời thấp, ánh vàng-cam ấm, bóng dài mềm; bầu trời xanh trong với mây tích trắng lớn; phía xa có lớp sương mỏng làm nhạt núi |

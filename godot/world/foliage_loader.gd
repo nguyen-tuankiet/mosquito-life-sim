@@ -11,6 +11,13 @@ const VIS_RANGE := {
 	"LilyPoint": 120.0, "ShrubPoint": 180.0, "BambooPoint": 240.0,
 }
 
+# M3 — gió: [biên độ ở ngọn (m), chiều cao đạt biên độ (m), tốc độ]; loại không có ở đây thì đứng yên (bèo)
+const WIND := {
+	"BambooPoint": [0.45, 9.0, 0.9], "RicePoint": [0.08, 0.9, 1.6], "GrassPoint": [0.04, 0.25, 1.8],
+	"GrassTallPoint": [0.12, 1.0, 1.5], "ReedPoint": [0.18, 2.0, 1.3], "ShrubPoint": [0.05, 1.6, 1.4],
+}
+const WIND_SHADER := preload("res://shaders/foliage_wind.gdshader")
+
 var instance_count := 0
 
 
@@ -28,7 +35,10 @@ func build(points_path: String, foliage_dir: String) -> int:
 			continue
 		var meshes: Array = []
 		for a in assets:
-			meshes.append(_load_mesh(foliage_dir + String(a["file"])))
+			var lm = _load_mesh(foliage_dir + String(a["file"]))
+			if lm != null and WIND.has(t):
+				lm[0] = _wind_mesh(lm[0], WIND[t])
+			meshes.append(lm)
 		var arr: Array = info["data"]
 		var stride: int = info["stride"]
 		# gom transform theo (biến thể, ô)
@@ -69,6 +79,32 @@ func build(points_path: String, foliage_dir: String) -> int:
 			add_child(mmi)
 			instance_count += xfs.size()
 	return instance_count
+
+
+## Bản sao mesh với material gió (foliage_wind.gdshader), giữ texture màu + alpha scissor của material gốc.
+func _wind_mesh(mesh: Mesh, w: Array) -> Mesh:
+	var m2 := mesh.duplicate() as ArrayMesh
+	if m2 == null:
+		return mesh
+	for i in m2.get_surface_count():
+		var src := m2.surface_get_material(i) as BaseMaterial3D
+		var sm := ShaderMaterial.new()
+		sm.shader = WIND_SHADER
+		if src:
+			sm.set_shader_parameter("albedo_tex", src.albedo_texture)
+			sm.set_shader_parameter("use_tex", src.albedo_texture != null)
+			sm.set_shader_parameter("albedo_color", src.albedo_color)
+			var cut := 0.0
+			if src.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
+				cut = src.alpha_scissor_threshold
+			elif src.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
+				cut = 0.5                     # lá alpha-blend → cắt để không lỗi thứ tự vẽ
+			sm.set_shader_parameter("alpha_cut", cut)
+		sm.set_shader_parameter("sway", float(w[0]))
+		sm.set_shader_parameter("sway_height", float(w[1]))
+		sm.set_shader_parameter("wind_speed", float(w[2]))
+		m2.surface_set_material(i, sm)
+	return m2
 
 
 ## Trả về [Mesh, Transform3D của mesh trong file] — lấy MeshInstance3D đầu tiên của GLB.
