@@ -144,7 +144,14 @@ def look_colors(spec, X, Z, H, zid):
     out = out * (1 - mix * 0.6) + alt * mix * 0.6
     # sân đất quanh nhà (bán kính sân + mép loang), còn lại của Z01 là cỏ
     Hs = spec["houses"]
-    yard = M.house(X, Z, Hs["yard_radius"] + 3.0 * n)
+    # MAP v2: sân bo tròn, lệch ra phía cửa (không còn ô vuông nâu quanh mỗi nhà); sau nhà là cỏ/vườn
+    yard = M.house(X, Z, 1.2)
+    for h in Hs["list"].values():
+        (fx, fz), _ = C.house_axes(spec, h)
+        cx = h["pos"][0] + fx * (h["size"][1] / 2 + 2.5)
+        cz = h["pos"][1] + fz * (h["size"][1] / 2 + 2.5)
+        rad = max(h["size"]) / 2 + (Hs["yard_radius"] - 5.0) + 2.5 * n
+        yard |= np.hypot(X - cx, Z - cz) < rad
     out[yard] = out[yard] * 0.25 + _lin(LOOK["yard"]) * 0.75
     out[C.paddy_bund_mask(spec, X, Z, spec["water"]["paddy_main"]["bund_w"] / 2 + 0.3) & M.paddy(X, Z)] = _lin(LOOK["bund"])
     out[M.road(X, Z)] = _lin(LOOK["road"])

@@ -123,7 +123,7 @@ def main():
         H = h(X, Z)
         if np.abs(H - spec["houses"]["pad_y"]).max() > TOL:
             bad.append(f"{hid} lệch {np.abs(H - spec['houses']['pad_y']).max():.2f} m")
-    R.add("Nền nhà", not bad, "7/7 nhà phẳng ở y = %.1f m" % spec["houses"]["pad_y"] if not bad else "; ".join(bad))
+    R.add("Nền nhà", not bad, "%d/%d nhà phẳng ở y = %.1f m" % (len(spec["houses"]["list"]), len(spec["houses"]["list"]), spec["houses"]["pad_y"]) if not bad else "; ".join(bad))
 
     # 4. đường
     bridge_spans = [(b["at"], b["len"] / 2 + 1) for b in spec["bridges"].values()]

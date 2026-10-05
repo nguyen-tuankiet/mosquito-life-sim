@@ -28,7 +28,58 @@ FACING_ROT = {"south": 0.0, "east": math.pi / 2, "north": math.pi, "west": -math
 
 def load_spec(path=SPEC_PATH):
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        spec = json.load(f)
+    add_footpaths(spec)
+    return spec
+
+
+def house_rot(spec, h):
+    """Góc quay (rad, quanh trục đứng Blender) của nhà: hướng cửa + lệch `turn` (độ) cho tự nhiên."""
+    return FACING_ROT[house_facing(spec, h)] + math.radians(h.get("turn", 0.0))
+
+
+def house_axes(spec, h):
+    """(trước, ngang) — vector đơn vị toạ độ Bible: mặt trước nhà (cửa) và trục ngang của nhà."""
+    a = house_rot(spec, h)
+    return (math.sin(a), math.cos(a)), (math.cos(a), -math.sin(a))
+
+
+def house_pad_r(h):
+    """Nửa cạnh ô nền phẳng (vuông, trục thẳng) quanh nhà — generate_terrain đắp nền y = pad_y trong ô này."""
+    return max(h["size"]) / 2 + 1.0
+
+
+def add_footpaths(spec):
+    """MAP v2: lối nhỏ (type footpath) từ cửa mỗi nhà ra đường gần nhất — sinh tự động khi đọc spec để
+    terrain, mesh đường, rào (chừa lối), cây cỏ (tránh lối) đều thấy cùng một bộ đường."""
+    lots = spec["houses"].get("lots")
+    if not lots or any(r.get("auto") for r in spec["roads"].values()):
+        return
+    rng = np.random.default_rng(lots["seed"])
+    roads = [r for r in spec["roads"].values() if r["type"] in ("dirt_road", "dirt_path")]
+    for hid, h in spec["houses"]["list"].items():
+        if h.get("hero"):
+            continue
+        (fx, fz), (sx, sz) = house_axes(spec, h)
+        r0 = house_pad_r(h) + 0.5
+        ax, az = h["pos"][0] + fx * r0, h["pos"][1] + fz * r0
+        best = None
+        for r in roads:
+            for (px, pz), (qx, qz) in zip(r["points"][:-1], r["points"][1:]):
+                dx, dz = qx - px, qz - pz
+                t = min(1.0, max(0.0, ((ax - px) * dx + (az - pz) * dz) / (dx * dx + dz * dz)))
+                cx, cz = px + t * dx, pz + t * dz
+                d = math.hypot(ax - cx, az - cz)
+                if best is None or d < best[0]:
+                    best = (d, cx, cz)
+        if best is None or best[0] > lots["footpath_max"] or best[0] < 1.0:
+            continue
+        _, bx, bz = best
+        k = float(rng.uniform(-1.5, 1.5))           # lối hơi cong, không thẳng tắp
+        mx, mz = (ax + bx) / 2 + sx * k, (az + bz) / 2 + sz * k
+        spec["roads"]["P_" + hid] = {"type": "footpath", "w": lots["footpath_w"], "y": 0.3, "auto": True,
+                                    "points": [[round(ax, 2), round(az, 2)], [round(mx, 2), round(mz, 2)],
+                                               [round(bx, 2), round(bz, 2)]]}
 
 
 def parse_args(defaults):
@@ -215,11 +266,11 @@ def validate_spec(spec):
     warns = []
     M = Masks(spec)
     H = spec["houses"]
-    z01 = spec["zones"]["Z01"]["rects"][0]
+    z01 = spec["zones"]["Z01"]["rects"]
     items = list(H["list"].items())
     for hid, h in items:
         x, z = h["pos"]
-        if not (z01[0] <= x <= z01[2] and z01[1] <= z <= z01[3]):
+        if not in_rects(np.array([x]), np.array([z]), z01)[0]:
             warns.append(f"{hid} nằm ngoài Z01")
         hw = max(h["size"]) / 2
         if M.water(np.array([x]), np.array([z]), margin=H["min_water_clearance"] + hw)[0]:

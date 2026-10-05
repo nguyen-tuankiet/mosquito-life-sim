@@ -774,6 +774,7 @@ const VILLAGE_SHOTS := {
 	"road": [9.0, Vector2(291, 236), 1.6, .15, -.06, 1.0], "bamboo": [15.0, Vector2(30, 300), 1.0, -PI / 2.0, -.03, 1.0],
 	"canal": [16.0, Vector2(112, 118), 1.3, .3, -.1, 1.0], "night": [21.5, Vector2(300, 98), 2.0, 0.0, -.05, 1.4],
 	"high": [17.3, Vector2(300, 140), 9.0, .2, -.15, 1.4],
+	"lane": [9.5, Vector2(296, 121), 1.5, -PI / 2.0 + .05, -.05, 1.0], "hamlet": [16.0, Vector2(252, 330), 1.8, PI / 2.0 + .35, -.06, 1.0],
 }
 func _village_shot(k: String) -> void:
 	if adult.vmap == null or not VILLAGE_SHOTS.has(k):

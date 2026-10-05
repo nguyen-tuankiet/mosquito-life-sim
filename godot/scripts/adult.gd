@@ -48,6 +48,7 @@ const VILLAGE_HOSTS := {
 	"hen": {"name": "Gà mái", "model": "chicken", "h": .5, "reward": .7, "nr": 1.6, "alert": 1.2, "swat": 1.0, "reach": .8, "home": "L04", "amp": 1.6, "sp": .5, "r": .18, "cy": .25, "walk": "Walk", "idle": "Idle", "eat": "Bite_Front", "zone": "Z01"},
 	"pig": {"name": "Lợn", "model": "pig", "h": .75, "reward": 1.0, "nr": 1.5, "alert": .6, "swat": .8, "reach": 1.0, "home": "L07", "amp": 0.0, "sp": 0.0, "r": .4, "cy": .38, "walk": "Idle", "idle": "Idle", "zone": "Z02"},
 	"farmer": {"name": "Bác nông dân", "model": "man", "h": 1.72, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[300, 300], [400, 300], [488, 300]], "sp": 1.0, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z04"},
+	"neighbor": {"name": "Bác hàng xóm", "model": "man", "h": 1.7, "reward": 1.3, "nr": 2.6, "alert": 1.1, "swat": 1.15, "reach": 2.0, "path": [[290, 121], [318, 123], [350, 120], [382, 124], [416, 122]], "sp": .9, "r": .32, "cy": 1.0, "walk": "Man_Walk", "idle": "Man_Idle", "day": true, "zone": "Z01"},
 	"villager": {"name": "Người qua đường", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "path": [[287, 45], [287, 185], [287, 335], [287, 465]], "sp": 1.25, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "day": true, "zone": "Z08"},
 }
 # chuồn chuồn (kẻ săn muỗi trưởng thành) theo zone: nhiều ở ao, ruộng, kênh, đồng cỏ (Bible x, z)
@@ -929,7 +930,7 @@ func _build_village_yard() -> void:
 		flowers.append(f)
 		placed += 1
 	# chỗ ẩn nấp / đậu nghỉ: chuối, dừa, cây vườn trong map (rừng tre Z06 = ẩn khi bay thấp, xem update())
-	for prefix in ["BananaPoint_", "CoconutPoint_", "TreePoint_"]:
+	for prefix in ["BananaPoint_", "CoconutPoint_", "TreePoint_", "GardenTreePoint_", "GardenBananaPoint_", "GardenPalmPoint_", "HayPoint_"]:
 		for key in vmap.nodes_with_prefix(prefix):
 			var lp := vmap.node_local(key)
 			bushes.append(Vector3(lp.x, gy(lp.x, lp.z) + .9, lp.z))
