@@ -126,6 +126,16 @@ class Host extends RefCounted:
 	var path: Array = []      # M4: đường đi lại (local) cho người qua đường / nông dân
 	var fast := 14.0          # MAP v2.2: tốc độ "đi xa" của người dân (đủ tới nơi trong ~2 s game-time)
 	var hidden_move := false  # đang đi xa ngoài tầm nhìn → ẩn, hiện lại khi tới nơi hoặc khi muỗi lại gần
+	# thoại (godot/scripts/talk.gd)
+	var persona := ""         # hien / nong / ron / gia / nit / thatha / coc; "" = thú, không nói
+	var me := "tao"           # tiếng tự xưng
+	var say_text := ""
+	var say_t := 0.0
+	var say_cd := 0.0
+	var chat_t := 0.0
+	var q_text := ""          # câu đáp chờ nói (hàng xóm nói chuyện với nhau)
+	var q_t := 0.0
+	var bit_said := false
 	var seg := 0
 	var dir := 1
 
@@ -1161,6 +1171,8 @@ func _make_world(weather: String) -> void:
 		dyn.add_child(h.node)
 		hosts.append(h)
 	for h in hosts:
+		_assign_persona(h)
+	for h in hosts:
 		var rmat := StandardMaterial3D.new()
 		rmat.albedo_color = Color(1, .12, .1, .2)
 		rmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -1764,6 +1776,7 @@ func update(dt: float) -> void:
 	var stealth: float = bf["stealth"] * maxf(.5, 1.0 - .05 * Game.tv("det"))
 	for h in hosts:
 		var df: Dictionary = h.def
+		_talk_update(h, dt, ppos)
 		if not h.human and not df.has("res"):
 			h.away = false
 		if h.human:
@@ -1823,9 +1836,11 @@ func update(dt: float) -> void:
 					if h.sleeping: h.wake = 12.0
 				var hit_r := .55 if (h.k == "dad" or h.k == "mom") else .45
 				if ppos.distance_to(h.lock) < hit_r:
+					_say(h, "hit", 1.0, true)
 					kill("Bị %s đập chết" % df["name"])
 					return
 				fx_text("hụt!", h.lock + Vector3(0, .1, 0), .16, 1.0)
+				_say(h, "miss", .85, true)
 				Sfx.beep(220, .12, "square", .05, -100)
 			continue
 		var d := host_dist(h)
@@ -1849,6 +1864,7 @@ func update(dt: float) -> void:
 		if g > 0.0: h.alert += g * dt
 		else: h.alert = maxf(0.0, h.alert - .14 * dt)
 		if h.alert >= 1.0 and h.cd <= 0.0:
+			_say(h, "swat", .8, true)
 			h.st = "wind"
 			h.t = .7 if h.k == "kid" else .9
 			h.track = ppos
@@ -1864,6 +1880,12 @@ func update(dt: float) -> void:
 		elif h.alert >= .7: rs = "scratch"
 		elif h.alert >= .4: rs = "notice"
 		if rs != h.react:
+			if rs == "notice":
+				_say(h, "night_hear" if h.sleeping else "hear", .7)
+			elif rs == "scratch":
+				_say(h, "scratch", .9, h.say_t <= 0.0)
+			elif rs == "" and h.react == "scratch":
+				_say(h, "lost", .5)
 			if rs == "notice": Sfx.beep(520, .09, "triangle", .05)
 			elif rs == "scratch":
 				Sfx.beep(760, .09, "square", .05)
@@ -1971,6 +1993,96 @@ func update(dt: float) -> void:
 			A["spray"] = null; A["spray_at"] = -1.0
 			spray_mesh.visible = false
 	_animate(dt)
+
+# ═════════════ thoại NPC (Talk) ═════════════
+const PERSONA_FIXED := {"dad": "ron", "mom": "nong", "kid": "nit", "seller1": "hien", "seller2": "coc", "seller3": "gia",
+	"buyer1": "ron", "buyer2": "thatha", "buyer3": "nit", "villager": "nong"}
+const ADULT_PERSONAS := ["hien", "nong", "ron", "thatha", "coc", "hien", "thatha", "ron"]
+const HUMAN_CTX := {"cook": "cook", "eat": "eat", "tv": "tv", "chore": "chore", "read": "read", "water": "water", "study": "study",
+	"play": "play", "exercise": "exercise", "sleep": "sleep", "walk": "walk", "stand": "walk"}
+const RES_CTX := {"field": "field", "market": "market_buy", "yard": "yard", "sit": "sit", "pond": "pond", "school": "kid"}
+
+func _assign_persona(h: Host) -> void:
+	var model := String(h.def.get("model", ""))
+	if not model in ["man", "woman", "hoodie"]:
+		return                                   # thú không nói
+	if PERSONA_FIXED.has(h.k):
+		h.persona = PERSONA_FIXED[h.k]
+	elif h.def.has("res"):
+		var role := String(h.def["res"])
+		h.persona = "nit" if role == "kid" else ("gia" if role == "elder" else ADULT_PERSONAS[absi(hash(h.k)) % ADULT_PERSONAS.size()])
+	else:
+		h.persona = "thatha"
+	h.me = Talk.self_term(h.persona, model == "woman")
+	h.chat_t = rnd(2.0, 12.0)
+
+func _talk_ctx(h: Host) -> String:
+	if h.def.has("res"):
+		return RES_CTX.get(h.act, "")
+	if h.human:
+		return HUMAN_CTX.get(h.act, "")
+	if h.k.begins_with("seller"):
+		return "market_sell"
+	if h.k.begins_with("buyer"):
+		return "market_buy"
+	return "walk"
+
+## NPC nói một câu theo ngữ cảnh. force: bỏ qua thời gian nghỉ giữa hai câu (phản ứng tức thì: đập, hụt…).
+func _say(h: Host, ctx: String, chance: float = 1.0, force: bool = false) -> void:
+	if h.persona == "" or h.away or ctx == "":
+		return
+	if not force and (h.say_cd > 0.0 or randf() > chance):
+		return
+	var line := Talk.pick(ctx, h.persona, h.k, h.me)
+	h.say_cd = rnd(5.0, 10.0)
+	if line == "":
+		return                                   # im lặng / mặc kệ
+	h.say_text = line
+	h.say_t = clampf(1.6 + line.length() * .06, 2.2, 4.8)
+
+func _talk_update(h: Host, dt: float, ppos: Vector3) -> void:
+	if h.persona == "":
+		return
+	h.say_t -= dt
+	h.say_cd -= dt
+	if h.q_t > 0.0:
+		h.q_t -= dt
+		if h.q_t <= 0.0 and not h.away:
+			h.say_text = h.q_text
+			h.say_t = clampf(1.6 + h.q_text.length() * .06, 2.2, 4.8)
+			h.say_cd = rnd(5.0, 9.0)
+	# bị đốt: có người kêu, có người mặc kệ
+	var mine: bool = pl.get("landed") != null and pl["landed"]["h"] == h and pl.get("sucking", false)
+	if mine and not h.bit_said:
+		h.bit_said = true
+		_say(h, "bitten", .6)
+	elif not mine and pl.get("landed") == null:
+		h.bit_said = false
+	# nói chuyện đời thường khi muỗi ở gần (nghe được)
+	h.chat_t -= dt * Talk.talk_rate(h.persona)
+	if h.chat_t > 0.0 or h.away or h.hidden_move or h.react != "" or h.st == "wind":
+		return
+	h.chat_t = rnd(9.0, 20.0)
+	if Vector2(ppos.x - h.pos.x, ppos.z - h.pos.y).length() > 20.0 or h.say_t > 0.0:
+		return
+	var busy := 0              # tối đa 2 người tán gẫu cùng lúc quanh muỗi (phản ứng với muỗi thì không giới hạn)
+	for o in hosts:
+		if o.say_t > 0.0 and Vector2(ppos.x - o.pos.x, ppos.z - o.pos.y).length() < 22.0:
+			busy += 1
+	if busy >= 2:
+		return
+	for o in hosts:
+		if o != h and o.persona != "" and not o.away and not o.hidden_move and o.say_t <= 0.0 and o.q_t <= 0.0 \
+				and o.react == "" and o.pos.distance_to(h.pos) < 5.0 and h.persona != "nit" and o.persona != "nit" and randf() < .45:
+			var pair := Talk.chat_pair()
+			if pair.size() == 2:
+				h.say_text = pair[0]
+				h.say_t = clampf(1.6 + String(pair[0]).length() * .06, 2.2, 4.8)
+				h.say_cd = rnd(6.0, 10.0)
+				o.q_text = pair[1]
+				o.q_t = h.say_t * .8
+				return
+	_say(h, _talk_ctx(h), .85)
 
 ## Ngoài giờ có mặt: người ngoài đồng/đường về nhà ban đêm; người ở chợ chỉ có giờ họp chợ.
 func _off_hours(df: Dictionary) -> bool:
@@ -2385,6 +2497,45 @@ func draw_hud(hud: Node) -> void:
 	else:
 		_draw_legacy_map(hud)
 	var pp := body.global_position
+	# bong bóng thoại (godot/scripts/talk.gd): gần trước, bỏ bong bóng chồng lên nhau, tối đa 4
+	var talkers: Array = []
+	for h in hosts:
+		if h.say_t > 0.0 and not h.away and not h.hidden_move and h.say_text != "":
+			talkers.append(h)
+	talkers.sort_custom(func(a, b): return Vector2(a.pos.x - pp.x, a.pos.y - pp.z).length() < Vector2(b.pos.x - pp.x, b.pos.y - pp.z).length())
+	var drawn: Array = []
+	for h in talkers:
+		if drawn.size() >= 4:
+			break
+		var top2: float = (1.2 if h.sleeping else float(h.def["h"]) + .45 + gy(h.pos.x, h.pos.y)) if h.human else h.y + float(h.def["h"]) * .55
+		var wp2 := Vector3(h.pos.x, top2, h.pos.y)
+		var d2 := pp.distance_to(wp2)
+		if d2 > 22.0 or cam.is_position_behind(wp2):
+			continue
+		var s2b := cam.unproject_position(wp2)
+		if s2b.x < 20 or s2b.x > W - 20 or s2b.y < 30 or s2b.y > H - 30:
+			continue
+		var a := clampf(h.say_t / .4, 0.0, 1.0) * clampf(1.3 - d2 / 22.0, .45, 1.0)
+		var lines := _wrap_words(h.say_text, 30)
+		var wbox := 0.0
+		for ln in lines:
+			wbox = maxf(wbox, float(String(ln).length()) * 8.6)
+		var hb := 22.0 * lines.size() + 10.0
+		var bp := s2b + Vector2(-wbox / 2.0 - 10.0, -64.0 - hb)
+		var box := Rect2(bp, Vector2(wbox + 20.0, hb))
+		var clash := false
+		for r in drawn:
+			if (r as Rect2).intersects(box):
+				clash = true
+		if clash:
+			continue
+		drawn.append(box)
+		hud.panel(bp, Vector2(wbox + 20.0, hb), Color(1, 1, .97, .9 * a))
+		hud.poly(PackedVector2Array([s2b + Vector2(-7, -64), s2b + Vector2(7, -64), s2b + Vector2(0, -52)]), Color(1, 1, .97, .9 * a))
+		var ly := bp.y + 16.0
+		for ln in lines:
+			hud.text(String(ln), Vector2(s2b.x, ly), 16, Color(.12, .1, .08, a), 1)
+			ly += 22.0
 	# nhãn & thanh cảnh giác trên đầu vật chủ
 	for h in hosts:
 		if h.away: continue
@@ -2524,6 +2675,19 @@ func draw_hud(hud: Node) -> void:
 		hud.text(ending["sub"], Vector2(W / 2, H / 2 + 24), 20, Color(1, .91, .66), 1)
 
 # ═════════════ HÚT MÁU: chọn dấu X → giữ chuột phải bay tới & hút → thả ra tự rút lui ═════════════
+func _wrap_words(t: String, n: int) -> Array:
+	var out: Array = []
+	var cur := ""
+	for w in t.split(" "):
+		if cur.length() + w.length() + 1 > n and cur != "":
+			out.append(cur)
+			cur = w
+		else:
+			cur = w if cur == "" else cur + " " + w
+	if cur != "":
+		out.append(cur)
+	return out
+
 func _draw_legacy_map(hud: Node) -> void:
 	var H := 720.0
 	var sc := 3.0
