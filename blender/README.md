@@ -19,7 +19,8 @@ blender/
     ├── generate_foliage.py   Forest (tre), Grassland, lúa, sậy, cây… procedural, seed cố định (chỉ stage env)
     ├── swap_assets.py        placeholder → .glb thật theo assets/asset_manifest.json (chỉ stage env)
     ├── check_greybox.py      M1: kiểm tra tự động (chìm/lơ lửng, nền nhà, đường, mặt nước, bounds)
-    ├── render_views.py       ảnh duyệt 3D bằng Cycles CPU (greybox: góc xiên; env: postcard tầm mắt người)
+    ├── render_views.py       ảnh duyệt 3D bằng Cycles CPU (greybox: góc xiên; env: postcard tầm mắt người; --time: M3)
+    ├── lighting.py           M3: trời/mây/trăng/sao, nắng theo giờ, sương volume, đèn cửa sổ (docs/art_look.json)
     ├── compare_reference.py  ghép ảnh reference ↔ render (duyệt M2/M3)
     ├── make_assets.py        M2: dựng asset P0 procedural v1 → assets/_procedural/ (+ contact sheet)
     ├── import_asset.py       dọn model thật (AI 3D / library) từ assets/_incoming/ theo assets/import_config.json
@@ -44,6 +45,12 @@ python blender/scripts/make_assets.py --sheet                        # assets/_p
 python blender/scripts/import_asset.py --preview                     # model thật: assets/_incoming → assets/…
 blender -b -P blender/scripts/generate_map.py -- --stage env --res 1 --swap --godot
 python blender/scripts/render_views.py && python blender/scripts/compare_reference.py   # docs/reference/env/
+
+# M3 — ánh sáng / mood theo docs/art_look.json → docs/reference/m3/<giờ>/
+python blender/scripts/render_views.py --time golden            # giờ vàng (key look)
+python blender/scripts/render_views.py --time night --samples 32
+python blender/scripts/compare_reference.py --renders docs/reference/m3/golden
+python blender/scripts/compare_reference.py --renders docs/reference/m3/night --night
 ```
 
 Không cài Blender: `pip install bpy numpy` (Python 3.11) rồi `python blender/scripts/generate_map.py --stage greybox --godot`.

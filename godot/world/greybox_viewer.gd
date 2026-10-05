@@ -7,6 +7,7 @@ extends Node3D
 ## Điều khiển: giữ chuột phải + kéo = nhìn · WASD = bay · Q/E = xuống/lên · Shift = nhanh
 ##             1…8 = bay tới zone 1…8 · 0 = toàn cảnh · Tab = bật/tắt nhãn · F = bật/tắt sương
 ##             G = bật/tắt cây cỏ · R = mưa (hiện vũng nước tạm thời)
+##             M3: T = chạy/dừng thời gian (75 s/ngày) · [ ] = lùi/tiến 1 giờ · H = giờ vàng · J = trưa · N = đêm
 
 const GEN_DIR := "res://world/generated/"
 const MAP_NAME := "vietnamese_rural_village"
@@ -23,6 +24,14 @@ var pitch := -0.6
 var env: Environment
 var info: Label
 var foliage: Node3D
+var foliage_loader = null     # foliage_loader.gd (không định kiểu: gọi build/_wind_mesh)
+# M3 — gió cho cây lẻ trong GLB (tên mesh = tên asset): [biên độ ngọn (m), chiều cao (m), tốc độ]
+const TREE_WIND := {
+	"banana_clump_vn": [0.25, 3.5, 1.0], "coconut_palm": [0.45, 13.0, 0.7], "fruit_tree_01": [0.15, 7.0, 0.9],
+	"fruit_tree_02": [0.15, 7.0, 0.9], "banyan_tree": [0.12, 14.0, 0.6],
+}
+var day_night = null          # day_night.gd (không định kiểu để gọi hour/apply/auto của script)
+var base_info := ""
 var puddles: Array[Node3D] = []
 const WATER_SHADER := preload("res://shaders/water_surface.gdshader")
 # mặt nước theo tên mesh (MAP_BIBLE §5 / §6): màu, hướng chảy
@@ -36,7 +45,6 @@ const WATER_LOOK := {
 
 
 func _ready() -> void:
-	_setup_env()
 	cam = Camera3D.new()
 	cam.far = 3000.0
 	add_child(cam)
@@ -68,6 +76,7 @@ func _ready() -> void:
 	add_child(root)
 	_fix_materials(root)
 	_load_layout()
+	_setup_day_night()
 	var n_fol := 0
 	if stage == "env":
 		var loader = preload("res://world/foliage_loader.gd").new()   # không định kiểu: gọi build() của script
@@ -75,35 +84,35 @@ func _ready() -> void:
 		add_child(loader)
 		n_fol = loader.build(GEN_DIR + "map_points.json", GEN_DIR + "foliage/")
 		foliage = loader
+		foliage_loader = loader
+		_wind_trees(root, {})
 	_fly_overview()
-	info.text = ("%s · %s · %d cây cỏ\nChuột phải: nhìn · WASD/QE: bay · Shift: nhanh · 1–8: zone · 0: toàn cảnh"
-		+ " · Tab: nhãn · F: sương · G: cây cỏ · R: mưa") % [
-			"M2 ENVIRONMENT" if stage == "env" else "M1 GREYBOX", MAP_NAME, n_fol]
+	base_info = ("%s · %s · %d cây cỏ\nChuột phải: nhìn · WASD/QE: bay · Shift: nhanh · 1–8: zone · 0: toàn cảnh"
+		+ " · Tab: nhãn · F: sương · G: cây cỏ · R: mưa\nT: chạy thời gian · [ ]: ±1 giờ · H: giờ vàng · J: trưa · N: đêm") % [
+			"M3 CINEMATIC" if stage == "env" else "M1 GREYBOX", MAP_NAME, n_fol]
+	info.text = base_info
 
 
-func _setup_env() -> void:
-	var we := WorldEnvironment.new()
-	env = Environment.new()
-	env.background_mode = Environment.BG_SKY
-	var sky := Sky.new()
-	var mat := ProceduralSkyMaterial.new()
-	mat.sky_top_color = Color(0.35, 0.58, 0.85)
-	mat.sky_horizon_color = Color(0.78, 0.85, 0.9)
-	sky.sky_material = mat
-	env.sky = sky
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.fog_enabled = false
-	env.fog_light_color = Color(0.8, 0.85, 0.9)
-	env.fog_density = 0.002
-	we.environment = env
-	add_child(we)
-	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-35, -60, 0)   # nắng chiều thấp, xem docs/ART_DIRECTION.md
-	sun.light_color = Color(1.0, 0.9, 0.75)
-	sun.shadow_enabled = true
-	sun.directional_shadow_max_distance = 400.0
-	add_child(sun)
+func _wind_trees(n: Node, cache: Dictionary) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		for key in TREE_WIND:
+			if mi.mesh and (String(mi.mesh.resource_name).begins_with(key) or String(mi.name).begins_with(key)):
+				if not cache.has(mi.mesh):
+					cache[mi.mesh] = foliage_loader._wind_mesh(mi.mesh, TREE_WIND[key])
+				mi.mesh = cache[mi.mesh]
+				break
+	for c in n.get_children():
+		_wind_trees(c, cache)
+
+
+func _setup_day_night() -> void:
+	# M3: trời, nắng, trăng, sương, đèn cửa sổ theo docs/art_look.json (generate_map.py --godot copy sang generated/)
+	day_night = preload("res://world/day_night.gd").new()
+	day_night.name = "DayNight"
+	add_child(day_night)
+	day_night.setup(GEN_DIR + "art_look.json", GEN_DIR + "map_layout.json")
+	env = day_night.env
 
 
 func _fix_materials(n: Node) -> void:
@@ -209,8 +218,16 @@ func _unhandled_input(e: InputEvent) -> void:
 			_fly_overview()
 		elif k == KEY_TAB:
 			labels.visible = not labels.visible
-		elif k == KEY_F:
+		elif k == KEY_F and env:
 			env.fog_enabled = not env.fog_enabled
+		elif k == KEY_T and day_night:
+			day_night.auto = not day_night.auto
+		elif (k == KEY_BRACKETLEFT or k == KEY_BRACKETRIGHT) and day_night:
+			day_night.hour = fmod(day_night.hour + (1.0 if k == KEY_BRACKETRIGHT else 23.0), 24.0)
+			day_night.apply(day_night.hour)
+		elif (k == KEY_H or k == KEY_J or k == KEY_N) and day_night:
+			day_night.hour = 17.3 if k == KEY_H else (12.0 if k == KEY_J else 22.0)
+			day_night.apply(day_night.hour)
 		elif k == KEY_G and foliage:
 			foliage.visible = not foliage.visible
 		elif k == KEY_R:
@@ -219,6 +236,9 @@ func _unhandled_input(e: InputEvent) -> void:
 
 
 func _process(dt: float) -> void:
+	if day_night and base_info != "":
+		var hh := float(day_night.hour)
+		info.text = base_info + "\n%02d:%02d%s" % [int(hh), int(fmod(hh, 1.0) * 60.0), "  ▶" if day_night.auto else ""]
 	var v := Vector3.ZERO
 	if Input.is_key_pressed(KEY_W): v.z -= 1
 	if Input.is_key_pressed(KEY_S): v.z += 1

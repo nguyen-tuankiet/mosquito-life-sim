@@ -145,6 +145,8 @@ def main():
         os.makedirs(C.GODOT_WORLD_DIR, exist_ok=True)
         for f in files:
             shutil.copy2(f, C.GODOT_WORLD_DIR)
+        # M3: thông số ánh sáng dùng chung (day_night.gd đọc res://world/generated/art_look.json)
+        shutil.copy2(os.path.join(C.REPO, "docs", "art_look.json"), C.GODOT_WORLD_DIR)
         # asset thực vật cho MultiMesh (Godot không đọc được assets/ ngoài project)
         fol = os.path.join(C.GODOT_WORLD_DIR, "foliage")
         shutil.rmtree(fol, ignore_errors=True)   # bỏ asset cũ không còn dùng

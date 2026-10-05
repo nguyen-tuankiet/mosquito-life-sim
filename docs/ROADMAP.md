@@ -68,10 +68,17 @@ house · trees · rice · bamboo · pond · canal.
 
 sunlight · fog · water · shadows · vegetation · color grading.
 
-- [ ] Nắng giờ vàng + đêm trăng theo `docs/ART_DIRECTION.md §2`; chu kỳ ngày–đêm nối với đồng hồ game (75 s/ngày)
-- [ ] Sương xa, shader nước (ao tĩnh / kênh chảy / ruộng nông / vũng), bóng đổ, gió lay tre-chuối-lúa
-- [ ] Color grading khớp bảng màu §3; asset P1
-- [ ] **Xác nhận**: so ảnh chụp game với ảnh reference ngày + đêm
+- [x] Thông số dùng chung Blender ↔ Godot: [`docs/art_look.json`](art_look.json) (khoá màu/nắng/sương theo giờ, đường đi mặt trời, trăng, đèn cửa sổ, grading)
+- [x] Nắng giờ vàng + đêm trăng: Blender `blender/scripts/lighting.py` (ảnh duyệt), Godot `godot/world/day_night.gd`
+      (chu kỳ ngày–đêm, `auto` = 75 s/ngày khớp `DAY_LEN_ADULT`); trời có mây, trăng, sao (`village_sky.gdshader`)
+- [x] Sương xa (Blender: khối volume; Godot: fog + sun scatter), bóng đổ mặt trời/trăng, đèn vàng trước cửa từng nhà ban đêm
+- [x] Gió lay tre / lúa / cỏ / sậy / bụi (`foliage_wind.gdshader`, gán trong `foliage_loader.gd`); shader nước có từ M2
+- [x] Color grading AgX + bão hoà/tương phản (`art_look.json → grading`)
+- [x] Gió cho cây lẻ trong GLB (chuối, dừa, cây vườn, cây đa) — `greybox_viewer.gd → TREE_WIND`
+- [x] Dãy núi xa phía Bắc trên bầu trời (MAP_BIBLE L14) — Blender `lighting.py` + Godot `village_sky.gdshader`
+- [ ] Asset P1
+- [x] Ảnh so sánh ngày + đêm → [`M3_REVIEW.md`](reference/m3/M3_REVIEW.md)
+- [ ] **Xác nhận** (chủ dự án): mood ngày/đêm; chạy thử trong Godot (chưa chạy được trong môi trường Claude)
 
 ### M4 — Gameplay · *lúc này mới thành game*
 

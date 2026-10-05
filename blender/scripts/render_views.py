@@ -61,7 +61,8 @@ def shots(spec):
 
 
 def main():
-    a = C.parse_args({"blend": C.BLEND_PATH, "out": "", "samples": 16, "width": 960, "height": 540})
+    a = C.parse_args({"blend": C.BLEND_PATH, "out": "", "samples": 16, "width": 960, "height": 540, "time": "",
+                      "haze": True})
     bpy = C.bpy_mod()
     bpy.ops.wm.open_mainfile(filepath=os.path.abspath(a.blend))
     spec = C.load_spec()
@@ -69,6 +70,12 @@ def main():
     sc = bpy.context.scene
     stage = sc.get("map_stage", "greybox")
     out_dir = a.out or os.path.join(C.REPO, "docs", "reference", "greybox" if stage == "greybox" else "env")
+    look = None
+    if a.time:                                   # M3: ánh sáng theo docs/art_look.json
+        import lighting
+        look = lighting.load_look()
+        hour = float(look["presets"].get(a.time, a.time))
+        out_dir = a.out or os.path.join(C.REPO, "docs", "reference", "m3", a.time)
     shot_list = shots(spec) if stage == "greybox" else shots_env(spec)
     sc.render.engine = "CYCLES"
     sc.cycles.device = "CPU"
@@ -83,19 +90,22 @@ def main():
     sc.render.image_settings.quality = 85
     sc.view_settings.view_transform = "AgX" if "AgX" in [i.name for i in type(sc.view_settings).bl_rna.properties["view_transform"].enum_items] else "Filmic"
 
-    # trời + nắng chiều (ART_DIRECTION §2)
-    world = bpy.data.worlds.new("Sky")
-    world.use_nodes = True
-    bg = world.node_tree.nodes["Background"]
-    bg.inputs["Color"].default_value = (0.45, 0.62, 0.85, 1)
-    bg.inputs["Strength"].default_value = 0.9
-    sc.world = world
-    sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
-    sun.data.energy = 3.5
-    sun.data.color = (1.0, 0.9, 0.75)
-    sun.data.angle = math.radians(2)
-    sun.rotation_euler = (math.radians(58), 0, math.radians(-120))
-    sc.collection.objects.link(sun)
+    if look is not None:
+        lighting.apply(sc, hour, look, haze=a.haze)
+    # trời + nắng chiều phẳng (M1/M2 — giữ để ảnh duyệt cũ tái lập được)
+    world = None if look is not None else bpy.data.worlds.new("Sky")
+    if world is not None:
+        world.use_nodes = True
+        bg = world.node_tree.nodes["Background"]
+        bg.inputs["Color"].default_value = (0.45, 0.62, 0.85, 1)
+        bg.inputs["Strength"].default_value = 0.9
+        sc.world = world
+        sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
+        sun.data.energy = 3.5
+        sun.data.color = (1.0, 0.9, 0.75)
+        sun.data.angle = math.radians(2)
+        sun.rotation_euler = (math.radians(58), 0, math.radians(-120))
+        sc.collection.objects.link(sun)
 
     for ob in bpy.data.objects:
         if ob.type == "EMPTY" and ob.instance_type != "COLLECTION":
@@ -132,6 +142,8 @@ def main():
         cam.data.lens = 18 if y < 5 else 28
         sc.render.filepath = os.path.join(os.path.abspath(out_dir), name + ".webp")
         bpy.ops.render.render(write_still=True)
+        if look is not None:
+            lighting.grade_image(sc.render.filepath, look["grading"])
         print("✓", sc.render.filepath)
 
 
