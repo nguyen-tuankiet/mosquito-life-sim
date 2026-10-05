@@ -31,11 +31,11 @@ const FAMILY := {
 		"sched": [[0, "sleep", "bed"], [6.7, "brush", "sink"], [6.95, "eat", "table"], [7.4, "away", "out"], [16.5, "play", "sofa"], [18.4, "study", "table"], [19, "eat", "table"], [19.6, "study", "table"], [20.4, "play", "sofa"], [21, "brush", "sink"], [21.4, "sleep", "bed"]]},
 }
 const ANIMALS := {
-	"mouse": {"name": "Chuột", "model": "mouse", "h": .13, "reward": .6, "nr": 1.4, "alert": .8, "swat": .8, "reach": .5, "home": Vector2(-16, 1), "amp": 2.5, "sp": 1.1, "r": .14, "cy": .08, "walk": "Rat_Walk", "idle": "Rat_Idle"},
-	"dog": {"name": "Chó", "model": "dog", "h": .6, "reward": 1.0, "nr": 1.9, "alert": 1.0, "swat": 1.0, "reach": 1.0, "home": Vector2(-12, -2), "amp": 3.0, "sp": .5, "r": .45, "cy": .35, "walk": "Walk", "idle": "Idle", "eat": "Eating"},
-	"cat": {"name": "Mèo", "model": "cat", "h": .32, "reward": .9, "nr": 2.0, "alert": 1.3, "swat": 1.1, "reach": .9, "home": Vector2(3, 2.6), "amp": 1.1, "sp": .6, "r": .28, "cy": .2, "walk": "Walk", "idle": "Idle", "eat": "Idle_Eating"},
-	"bird": {"name": "Chim", "model": "pigeon", "h": .28, "reward": .8, "nr": 2.4, "alert": 1.4, "swat": 1.4, "reach": 4.0, "home": Vector2(33, 8), "amp": 0.0, "sp": 0.0, "r": .22, "cy": 3.45, "walk": "Walk", "idle": "Idle"},
-	"cow": {"name": "Trâu", "model": "cow", "h": 1.4, "reward": 1.1, "nr": 1.5, "alert": .5, "swat": .95, "reach": 2.0, "home": Vector2(27, 4.5), "amp": 1.5, "sp": .4, "r": .9, "cy": .9, "walk": "Walk", "idle": "Idle"},
+	"mouse": {"name": "Chuột", "nick": "Thức", "model": "mouse", "h": .13, "reward": .6, "nr": 1.4, "alert": .8, "swat": .8, "reach": .5, "home": Vector2(-16, 1), "amp": 2.5, "sp": 1.1, "r": .14, "cy": .08, "walk": "Rat_Walk", "idle": "Rat_Idle"},
+	"dog": {"name": "Chó", "nick": "Nguyên", "model": "dog", "h": .6, "reward": 1.0, "nr": 1.9, "alert": 1.0, "swat": 1.0, "reach": 1.0, "home": Vector2(-12, -2), "amp": 3.0, "sp": .5, "r": .45, "cy": .35, "walk": "Walk", "idle": "Idle", "eat": "Eating"},
+	"cat": {"name": "Mèo", "nick": "Nhi", "model": "cat", "h": .32, "reward": .9, "nr": 2.0, "alert": 1.3, "swat": 1.1, "reach": .9, "home": Vector2(3, 2.6), "amp": 1.1, "sp": .6, "r": .28, "cy": .2, "walk": "Walk", "idle": "Idle", "eat": "Idle_Eating"},
+	"bird": {"name": "Chim", "nick": "Hân", "model": "pigeon", "h": .28, "reward": .8, "nr": 2.4, "alert": 1.4, "swat": 1.4, "reach": 4.0, "home": Vector2(33, 8), "amp": 0.0, "sp": 0.0, "r": .22, "cy": 3.45, "walk": "Walk", "idle": "Idle"},
+	"cow": {"name": "Trâu", "nick": "Vy", "model": "cow", "h": 1.4, "reward": 1.1, "nr": 1.5, "alert": .5, "swat": .95, "reach": 2.0, "home": Vector2(27, 4.5), "amp": 1.5, "sp": .4, "r": .9, "cy": .9, "walk": "Walk", "idle": "Idle"},
 }
 
 # ── M4: thế giới trưởng thành nằm trong map làng thật (godot/world/village_map.gd) ──
@@ -45,8 +45,8 @@ const VILLAGE_HOMES := {"mouse": Vector2(-16, 1), "dog": Vector2(-12, 8), "cat":
 # Người & vật nuôi theo zone (MAP_BIBLE §13). home: landmark hoặc Bible (x, z); path: đường đi lại (Bible), sp: m/s;
 # day: chỉ xuất hiện ban ngày.
 const VILLAGE_HOSTS := {
-	"hen": {"name": "Gà mái", "model": "chicken", "h": .5, "reward": .7, "nr": 1.6, "alert": 1.2, "swat": 1.0, "reach": .8, "home": "L04", "amp": 1.6, "sp": .5, "r": .18, "cy": .25, "walk": "Walk", "idle": "Idle", "eat": "Bite_Front", "zone": "Z01"},
-	"pig": {"name": "Lợn", "model": "pig", "h": .75, "reward": 1.0, "nr": 1.5, "alert": .6, "swat": .8, "reach": 1.0, "home": "L07", "amp": 0.0, "sp": 0.0, "r": .4, "cy": .38, "walk": "Idle", "idle": "Idle", "zone": "Z02"},
+	"hen": {"name": "Gà mái", "nick": "Trọng", "model": "chicken", "h": .5, "reward": .7, "nr": 1.6, "alert": 1.2, "swat": 1.0, "reach": .8, "home": "L04", "amp": 1.6, "sp": .5, "r": .18, "cy": .25, "walk": "Walk", "idle": "Idle", "eat": "Bite_Front", "zone": "Z01"},
+	"pig": {"name": "Lợn", "nick": "Giang", "model": "pig", "h": .75, "reward": 1.0, "nr": 1.5, "alert": .6, "swat": .8, "reach": 1.0, "home": "L07", "amp": 0.0, "sp": 0.0, "r": .4, "cy": .38, "walk": "Idle", "idle": "Idle", "zone": "Z02"},
 	"villager": {"name": "Người qua đường", "model": "woman", "h": 1.62, "reward": 1.3, "nr": 2.8, "alert": 1.2, "swat": 1.2, "reach": 2.0, "path": [[287, 45], [287, 185], [287, 335], [287, 465]], "sp": 1.25, "r": .3, "cy": .95, "walk": "Female_Walk", "idle": "Female_Idle", "day": true, "zone": "Z08"},
 }
 # Chợ làng (MAP v2.1): người bán + người mua, chỉ có mặt giờ họp chợ (map_spec.json → market.hours).
@@ -1837,7 +1837,7 @@ func update(dt: float) -> void:
 				var hit_r := .55 if (h.k == "dad" or h.k == "mom") else .45
 				if ppos.distance_to(h.lock) < hit_r:
 					_say(h, "hit", 1.0, true)
-					kill("Bị %s đập chết" % df["name"])
+					kill("Bị %s đập chết" % _who(h))
 					return
 				fx_text("hụt!", h.lock + Vector3(0, .1, 0), .16, 1.0)
 				_say(h, "miss", .85, true)
@@ -2001,6 +2001,12 @@ const ADULT_PERSONAS := ["hien", "nong", "ron", "thatha", "coc", "hien", "thatha
 const HUMAN_CTX := {"cook": "cook", "eat": "eat", "tv": "tv", "chore": "chore", "read": "read", "water": "water", "study": "study",
 	"play": "play", "exercise": "exercise", "sleep": "sleep", "walk": "walk", "stand": "walk"}
 const RES_CTX := {"field": "field", "market": "market_buy", "yard": "yard", "sit": "sit", "pond": "pond", "school": "kid"}
+
+## Tên gọi trong thông báo: con vật có tên → "Nguyên (chó)", người → tên/vai như cũ.
+func _who(h: Host) -> String:
+	if h.def.has("nick"):
+		return "%s (%s)" % [h.def["nick"], String(h.def["name"]).to_lower()]
+	return String(h.def["name"])
 
 func _assign_persona(h: Host) -> void:
 	var model := String(h.def.get("model", ""))
@@ -2497,6 +2503,21 @@ func draw_hud(hud: Node) -> void:
 	else:
 		_draw_legacy_map(hud)
 	var pp := body.global_position
+	# tên con vật trên đầu (chủ dự án đặt): tên to + loài nhỏ, đổi màu theo mức cảnh giác; trong 15 m
+	for h in hosts:
+		if h.human or h.away or not h.def.has("nick"):
+			continue
+		var tp := Vector3(h.pos.x, h.y + float(h.def["r"]) * .7 + .12, h.pos.y)
+		var td := pp.distance_to(tp)
+		if td > 15.0 or cam.is_position_behind(tp):
+			continue
+		var ts := cam.unproject_position(tp)
+		if ts.x < 20 or ts.x > W - 20 or ts.y < 30 or ts.y > H - 30:
+			continue
+		var ta := clampf(1.4 - td / 15.0, .35, 1.0)
+		var tc := Color(1, 1, 1, ta).lerp(Color(1, .8, .3, ta), clampf(h.alert / .5, 0.0, 1.0)).lerp(Color(1, .3, .25, ta), clampf((h.alert - .5) / .5, 0.0, 1.0))
+		hud.text(String(h.def["nick"]), ts + Vector2(0, -22), 20, tc, 1, true)
+		hud.text(String(h.def["name"]).to_lower(), ts + Vector2(0, -5), 13, Color(.92, .95, .9, ta * .85), 1)
 	# bong bóng thoại (godot/scripts/talk.gd): gần trước, bỏ bong bóng chồng lên nhau, tối đa 4
 	var talkers: Array = []
 	for h in hosts:
@@ -2554,7 +2575,7 @@ func draw_hud(hud: Node) -> void:
 			hud.text("!", s + Vector2(0, -42), 40, Color(1, .6, .2), 1)
 		elif h.react == "wind":
 			hud.text("ĐẬP!", s + Vector2(0, -44), 34, Color(1, .24, .24), 1)
-		if L["sex"] == "F" and d < 7.0:
+		if L["sex"] == "F" and d < 7.0 and (h.human or not h.def.has("nick")):
 			var at: String = (" · " + String(ACTTXT.get("alert" if h.hunt > 0.0 else h.act, ""))) if h.human else ""
 			if h.def.has("res"):
 				at = " · " + String(RES_TXT.get(h.act, ""))
@@ -2573,7 +2594,7 @@ func draw_hud(hud: Node) -> void:
 			if not h.away:
 				var hp := Vector3(h.pos.x, 1.0 + gy(h.pos.x, h.pos.y) if h.human else h.y, h.pos.y)
 				var dd2 := pp.distance_to(hp)
-				if dd2 < bd: bd = dd2; best_t = {"p": hp, "c": Color(1, .35, .24), "t": h.def["name"]}
+				if dd2 < bd: bd = dd2; best_t = {"p": hp, "c": Color(1, .35, .24), "t": _who(h)}
 	if not best_t.is_empty() and bd < sr and bd > 1.0:
 		var col: Color = best_t["c"]
 		col.a = clampf(1.0 - bd / sr, .35, 1.0)
