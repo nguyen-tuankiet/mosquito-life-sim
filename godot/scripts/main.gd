@@ -108,6 +108,10 @@ func _ready() -> void:
 		_test_village()
 		get_tree().quit()
 		return
+	if scenario == "test_talk":
+		_test_talk()
+		get_tree().quit()
+		return
 	if scenario == "intro":
 		mode = "intro"
 		intro_t = float(OS.get_environment("INTRO_T")) if OS.get_environment("INTRO_T") != "" else 0.0
@@ -776,6 +780,7 @@ const VILLAGE_SHOTS := {
 	"high": [17.3, Vector2(300, 140), 9.0, .2, -.15, 1.4],
 	"market": [8.5, Vector2(262, 262), 1.7, 0.05, -.06, 1.1], "market_top": [8.5, Vector2(258, 268), 9.0, 0.0, -.5, 1.4],
 	"evening": [19.3, Vector2(318, 128), 1.8, PI - .15, -.08, 1.2], "field": [8.0, Vector2(330, 297), 1.8, -PI / 2.0 + .1, -.06, 1.1],
+	"evening2": [19.3, Vector2(319, 121), 1.6, 0.0, -.05, 1.1],
 	"lane": [9.5, Vector2(296, 121), 1.5, -PI / 2.0 + .05, -.05, 1.0], "hamlet": [16.0, Vector2(252, 330), 1.8, PI / 2.0 + .35, -.06, 1.0],
 }
 func _village_shot(k: String) -> void:
@@ -793,6 +798,10 @@ func _village_shot(k: String) -> void:
 	adult.debug_cam_dist = c[5]
 	adult._update_zone(adult.body.global_position)
 	adult.snap_residents()
+	var bp: Vector3 = adult.body.global_position
+	for h in adult.hosts:     # cho người gần đó nói ngay để ảnh có bong bóng thoại
+		if h.persona != "" and Vector2(h.pos.x - bp.x, h.pos.y - bp.z).length() < 22.0:
+			h.chat_t = randf() * .1
 	print("[shot] ", k, " local=", adult.body.global_position, " zone=", adult.zone)
 
 func _save_shot() -> void:
@@ -1026,6 +1035,110 @@ func _test_village() -> void:
 	# 8. nguồn mật & chỗ ẩn
 	_tv(adult.flowers.size() >= 30 and adult.bushes.size() >= 100, "%d hoa, %d chỗ ẩn nấp" % [adult.flowers.size(), adult.bushes.size()])
 	print("[village] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])
+
+# ═════════ thoại NPC miền Tây (talk.gd + data/thoai_mientay.json) ═════════
+func _test_talk() -> void:
+	var D := Talk.data()
+	_tv(not D.is_empty() and Talk.personas().size() == 7, "nạp kho thoại, %d tính cách" % Talk.personas().size())
+	var ctxs: Array = D["lines"].keys()
+	var total := 0
+	var long := []
+	var fake := 0
+	var marked := 0
+	for c in ctxs:
+		for p in D["lines"][c]:
+			for l in D["lines"][c][p]:
+				var t := String(l)
+				total += 1
+				if t.length() > 72: long.append(t)
+				for f in ["mèn ơi", "trời đất ơi", "nghen", " hen.", " hen!", " hen?"]:
+					if t.to_lower().contains(f): fake += 1
+				for m in ["hổng", "hông", "dzậy", "dìa", "quá trời", "dữ vậy", "thiệt", "coi", "hoài", "bây", "mậy", "chớ"]:
+					if t.contains(m):
+						marked += 1
+						break
+	print("[talk] %d câu trong %d ngữ cảnh + %d cặp hỏi–đáp" % [total, ctxs.size(), D["chat"].size()])
+	_tv(long.is_empty(), "câu ngắn (≤ 72 ký tự)%s" % ("" if long.is_empty() else ": " + str(long)))
+	_tv(fake <= 1, "không lạm dụng 'mèn ơi / trời đất ơi / nghen / hen' (%d lần)" % fake)
+	var ratio := float(marked) / total
+	_tv(ratio > .12 and ratio < .55, "khẩu ngữ Nam Bộ có mà không nhồi: %d%% câu có hổng/dìa/hoài/coi…" % int(ratio * 100))
+	var miss_ctx := []
+	for p in Talk.personas():
+		for c in Talk.ANNOYED:
+			if Talk.pool(c, p).is_empty(): miss_ctx.append("%s/%s" % [c, p])
+	_tv(miss_ctx.is_empty(), "mọi tính cách đều có câu cho mọi phản ứng với muỗi %s" % str(miss_ctx))
+	# dân làng thật trong game → tỉ lệ chửi vui khi bị muỗi làm phiền
+	Game.new_lineage()
+	Game.L["sex"] = "F"
+	Game.L["site"] = 2
+	Game.new_generation_stats()
+	adult.enter(false)
+	var people := []
+	for h in adult.hosts:
+		if h.persona != "": people.append(h)
+	var mix := {}
+	for h in people: mix[h.persona] = int(mix.get(h.persona, 0)) + 1
+	print("[talk] %d người biết nói, tính cách: %s" % [people.size(), mix])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 42
+	var rough := 0
+	var n := 0
+	var unfilled := 0
+	for k in 4000:
+		var h = people[rng.randi() % people.size()]
+		var c: String = ["scratch", "swat", "miss", "bitten", "hear", "lost", "hit"][rng.randi() % 7]
+		var l := Talk.pick(c, h.persona, "t%d" % k, h.me, rng)
+		if l == "": continue
+		n += 1
+		if Talk.last_rough: rough += 1
+		if l.contains("{"): unfilled += 1
+	var rr := float(rough) / maxf(n, 1)
+	_tv(rr >= .04 and rr <= .12, "chửi vui / cà khịa khi bị muỗi làm phiền: %.1f%% (mục tiêu 5–10%%)" % (rr * 100))
+	_tv(unfilled == 0, "đã thay hết {t}/{T}")
+	# phản ứng thật trong game: NPC bị làm phiền thì nói; hàng xóm đứng gần thì nói chuyện qua lại
+	adult.A["clock"] = 19.2
+	adult.snap_residents()
+	adult.A["spray_at"] = -1.0
+	for d in adult.dragons: d.st = "rest"; d.t = 99.0
+	var a1 = null
+	var a2 = null
+	for h in people:
+		if h.def.has("res") and h.act == "sit" and not h.away:
+			if a1 == null: a1 = h
+			elif a2 == null and (h.def["tg"]["in"] as Vector2).distance_to(a1.def["tg"]["in"]) > 30.0: a2 = h
+	_tv(a1 != null, "có người đang ngồi hóng mát lúc 19h")
+	if a1 == null: return
+	adult.body.global_position = Vector3(a1.pos.x + 1.5, adult.gy(a1.pos.x, a1.pos.y) + 1.4, a1.pos.y + 1.5)
+	a1.say_cd = 0.0
+	a1.alert = .75
+	var said := []
+	for k in 40:
+		adult.A["clock"] = 19.2
+		adult.update(1.0 / 30.0)
+		if a1.say_t > 0.0 and not said.has(a1.say_text): said.append(a1.say_text)
+	_tv(not said.is_empty(), "%s (%s) bị muỗi làm phiền → nói: %s" % [a1.def["name"], a1.persona, said])
+	if a2 != null:
+		a2.pos = a1.pos + Vector2(2.0, 0)
+		a2.def["tg"]["sit"] = a2.pos
+		a1.alert = 0.0; a1.react = ""; a2.alert = 0.0
+		a1.say_t = 0.0; a2.say_t = 0.0; a2.q_t = 0.0
+		var got := false
+		for tries in 30:
+			a1.chat_t = 0.0
+			a1.say_t = 0.0
+			adult.update(1.0 / 30.0)
+			if a2.q_t > 0.0:
+				got = true
+				print("[talk]   %s: “%s”  →  %s: “%s”" % [a1.def["name"], a1.say_text, a2.def["name"], a2.q_text])
+				break
+		_tv(got, "hai người ngồi gần nhau thì nói chuyện qua lại")
+	print("[talk] vài câu mẫu:")
+	for k in 14:
+		var h = people[rng.randi() % people.size()]
+		var c: String = ctxs[rng.randi() % ctxs.size()]
+		var l := Talk.pick(c, h.persona, "m%d" % k, h.me, rng)
+		if l != "": print("   [%s · %s] %s" % [Talk.data()["personas"][h.persona]["name"], c, l])
+	print("[talk] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])
 
 # ═════════ kiểm tra luật chơi ═════════
 var _tr := 0.0

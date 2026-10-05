@@ -30,6 +30,7 @@ Game bắt đầu bằng một **story giới thiệu** (~70 giây): 9 tranh min
 - **Hành trình 1 → 8:** bay vào khu vực kế tiếp theo thứ tự để được tính thêm một nhiệm vụ (thêm trứng) và xem thông tin về muỗi ở khu đó. Tiến độ giữ qua các thế hệ của dòng họ.
 - Làng rộng: **bay cao (Space) để bay nhanh hơn** (tới 6,5 m/s khi cao ≥ 7,5 m), nhưng chuồn chuồn ở ao, ruộng, kênh, đồng cỏ săn muỗi; bay thấp trong rừng tre để ẩn.
 - **Người dân sống theo lịch** (≈ 29 người ở 17 nhà): sáng ra đồng / ra chợ / ra ao / đi học, trưa về nhà nghỉ, chiều đi làm tiếp, chạng vạng (18–21h) ngồi hóng mát trước sân — lúc dễ hút máu nhất; đêm ở trong nhà. Đến gần sẽ thấy nhãn việc đang làm.
+- **NPC nói chuyện kiểu miền Tây** (bong bóng thoại trên đầu, xem `docs/DIALOGUE.md`): người làng nói chuyện đời thường theo việc đang làm, hàng xóm hỏi han nhau; khi bị muỗi làm phiền thì tuỳ tính cách — gãi, đập, chửi vui ("Má nó, chích gì chích dữ vậy!") hoặc mặc kệ.
 - Người & vật nuôi theo khu vực: gia đình trong nhà, gà ngoài sân, lợn trong vườn, trâu + bác nông dân ngoài ruộng, người qua đường trên đường làng (hai người này chỉ ra ngoài ban ngày).
 - 6 nguồn nước đẻ trứng: vũng nước mưa, xô, chum nước, ao làng, kênh mương, ruộng lúa → môi trường dưới nước ở thế hệ sau khác nhau. Muỗi luôn vũ hóa ngoài trời, tại đúng nguồn nước nơi nó lớn lên.
 - Chuyển giai đoạn mô phỏng đời thực: trứng nở (vỏ rỗng còn nổi), lột xác (xác lột trôi đi), hóa nhộng, vũ hóa (vỏ nhộng nổi trên mặt nước, cánh nhăn nở dần khi hong khô).
@@ -46,5 +47,6 @@ Toàn bộ model/texture dùng giấy phép **CC0** (Quaternius, Kenney, Poly Ha
 godot --headless --fixed-fps 60 --path . --quit-after 14000 -- --scenario=auto
 godot --headless --fixed-fps 60 --path . --quit-after 1500 -- --scenario=test_rules
 godot --headless --fixed-fps 60 --path . --quit-after 300 -- --scenario=test_village   # M4: map làng trong game
+godot --headless --fixed-fps 60 --path . --quit-after 300 -- --scenario=test_talk      # thoại NPC miền Tây
 godot --path . --fixed-fps 60 -- --scenario=adult_v_jar --shot=jar.png --frames=30          # ảnh: jar yard pond paddy road bamboo canal night high
 ```

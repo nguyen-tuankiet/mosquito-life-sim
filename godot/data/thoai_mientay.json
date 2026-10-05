@@ -1,0 +1,252 @@
+{
+  "_comment": [
+    "Kho thoại NPC — làng quê miền Tây Nam Bộ. Đọc bởi godot/scripts/talk.gd. Quy tắc viết: docs/DIALOGUE.md.",
+    "Khoá: ngữ cảnh → tính cách → danh sách câu. Tính cách '*' = ai cũng nói được.",
+    "Câu bắt đầu bằng '~' = chửi vui / cà khịa: chỉ bốc ra theo tỉ lệ rough_rate của tính cách (không phải lúc nào cũng chửi).",
+    "{t} = tiếng tự xưng của người nói (tao / tui / ông / bà / con), {T} = viết hoa đầu câu. Chuỗi rỗng = im lặng (mặc kệ)."
+  ],
+  "personas": {
+    "hien":   {"name": "Hiền",       "self": "tui", "rough_rate": 0.04, "talk_rate": 0.8},
+    "nong":   {"name": "Nóng tính",  "self": "tao", "rough_rate": 0.35, "talk_rate": 1.0},
+    "ron":    {"name": "Cà rỡn",     "self": "tao", "rough_rate": 0.22, "talk_rate": 1.3},
+    "gia":    {"name": "Lớn tuổi",   "self": "ông|bà", "rough_rate": 0.08, "talk_rate": 0.9},
+    "nit":    {"name": "Con nít",    "self": "con", "rough_rate": 0.0,  "talk_rate": 1.4},
+    "thatha": {"name": "Thật thà",   "self": "tui", "rough_rate": 0.08, "talk_rate": 0.9},
+    "coc":    {"name": "Cộc tính",   "self": "tao", "rough_rate": 0.30, "talk_rate": 0.5}
+  },
+
+  "lines": {
+    "field": {
+      "*": [
+        "Nắng dữ thiệt, cấy chưa xong khúc này nữa.",
+        "Nước ruộng cạn rồi, chiều phải bơm thêm.",
+        "Lúa năm nay coi bộ được.",
+        "Cái bờ này lở nữa rồi, mai đắp lại.",
+        "Ráng làm hết công này rồi nghỉ.",
+        "Cỏ gì mọc lẹ quá, mới làm tuần trước.",
+        "Chắc mai phải xịt rầy.",
+        "Cúi hoài mỏi lưng muốn chết.",
+        "Hồi sáng quên đem nón, rát hết cái mặt.",
+        "Ốc bươu vàng nhiều quá, lượm hoài không hết."
+      ],
+      "hien": ["Thôi làm từ từ, gấp chi.", "Để chiều mát rồi làm tiếp."],
+      "nong": ["Con chuột nào phá lúa {t} vầy nè!", "~Má nó, cái máy bơm lại tắt nữa rồi.", "Nói hoài mà nó hổng chịu đắp bờ."],
+      "ron": ["Lúa này mà trúng là {t} sắm xe mới. Nói chơi chứ.", "Ruộng {t} xanh hơn ruộng thằng Út, thấy hông?", "Làm xong ruộng này {t} đi ngủ ba ngày."],
+      "gia": ["Hồi xưa cấy tay hết, giờ có máy sướng quá rồi.", "Trời này coi bộ chiều mưa à.", "Đất này {t} làm từ hồi còn trẻ."],
+      "thatha": ["Làm ruộng thì cực, mà quen rồi.", "Năm rồi lỗ, năm nay ráng gỡ lại."],
+      "coc": ["Làm. Nói chi nhiều.", "Nắng gì nắng dữ."]
+    },
+
+    "market_sell": {
+      "*": [
+        "Rau mới hái hồi sáng nè, mua đi cô.",
+        "Cá còn tươi rói, mới bắt dưới ao lên.",
+        "Ba chục một ký, bớt hổng được đâu.",
+        "Lấy thêm bó hành đi, {t} cho luôn.",
+        "Sáng giờ chưa mở hàng nữa.",
+        "Ớt này cay lắm à, ăn coi chừng.",
+        "Bữa nay chợ vắng quá.",
+        "Chị lấy hai ký đi, em tính rẻ cho."
+      ],
+      "nong": ["Trả giá gì kỳ vậy, lỗ vốn sao bán.", "~Mua thì mua, hổng mua thì thôi, đứng bóp hoài dập hết rau {t}."],
+      "ron": ["Mua đi chị, ăn vô trẻ ra chục tuổi.", "Cá này còn ngoắc đuôi chào chị kìa."],
+      "gia": ["{T} bán ở đây mấy chục năm rồi, hổng có gian đâu.", "Mua giùm bà mớ rau cuối nè con."],
+      "thatha": ["Cá này hôm qua đó, bán rẻ cho nè.", "Rau hơi héo chút, mà ăn vẫn ngon."],
+      "coc": ["Ba chục. Không bớt.", "Lựa lẹ đi."]
+    },
+
+    "market_buy": {
+      "*": [
+        "Rau này bao nhiêu dzậy cô?",
+        "Bớt chút đi, mua hoài mà.",
+        "Cá này mua dìa kho tộ là ngon.",
+        "Ủa, bữa nay giá lên nữa hả?",
+        "Lấy một ký thôi, nhà có mấy người hà.",
+        "Để coi nhà còn nước mắm hông."
+      ],
+      "nong": ["Mắc dữ vậy, chợ trên rẻ hơn.", "~Bán gì mắc thấy ớn."],
+      "ron": ["Bán rẻ cho em đi, em ghé hoài mà.", "Bữa nay cô bán đẹp gái quá, bớt cho em chút."],
+      "gia": ["Mua ít đồ về cúng rằm.", "Hồi xưa có mấy cắc một bó, giờ mắc quá."],
+      "nit": ["Má ơi, mua bánh cho con đi.", "Con muốn ăn kẹo kéo.", "Mua cá lia thia cho con nuôi đi má."],
+      "thatha": ["Tui mua ít thôi, tiền chợ hổng nhiều.", "Cô thối dư tiền rồi nè."],
+      "coc": ["Bao nhiêu?", "Thôi khỏi, mắc."]
+    },
+
+    "yard": {
+      "*": [
+        "Phơi lúa cho khô, chiều mưa là mệt.",
+        "Con gà mái đẻ đâu mất tiêu rồi.",
+        "Để quét cái sân đã.",
+        "Cái lu này phải đậy lại, muỗi nó đẻ trứng.",
+        "Ai bỏ cái xô ngoài này dzậy?",
+        "Nồi cơm chín chưa ta?",
+        "Cái quạt này sửa mấy bữa rồi chưa xong.",
+        "Gà ơi, dìa ăn nè. Cục cục cục."
+      ],
+      "nong": ["Đứa nào phá cái hàng rào nữa đây?", "~Con chó này, ăn vụng nữa là biết tay."],
+      "ron": ["Con chó này nó lười hơn {t} nữa.", "Phơi đồ xong rồi, giờ phơi {t}."],
+      "gia": ["Mấy đứa nhỏ đi đâu hết rồi, kêu hoài hổng nghe.", "Để {t} lặt rau cho."],
+      "nit": ["Má ơi, con chơi ngoài sân nha!", "Con gà nó rượt con nè!"],
+      "thatha": ["Bữa nay trời đẹp, phơi đồ là khô liền.", "Nước trong lu còn ít, chiều phải xách thêm."],
+      "coc": ["Dọn hoài không hết.", "Bừa bộn quá."]
+    },
+
+    "sit": {
+      "*": [
+        "Tối nay mát ha.",
+        "Ăn cơm chưa? Dô đây ngồi chơi.",
+        "Nghe nói thằng Tư mới cưới vợ.",
+        "Mai đám giỗ bên nội, nhớ đi sớm.",
+        "Năm nay nước lên sớm hơn mọi năm.",
+        "Ngồi chút rồi vô ngủ, mai dậy sớm.",
+        "Thôi làm lẹ rồi dìa, đứng đây hồi muỗi nó ăn hết."
+      ],
+      "nong": ["Ồn quá, nhà ai mở nhạc lớn dữ vậy.", "Nói hoài mà tụi nó hổng nghe."],
+      "ron": ["Coi bộ tối nay có đứa đi coi mắt nha.", "Ngồi đây gió mát, khỏi cần quạt."],
+      "gia": ["Già rồi, ngồi đây coi mấy đứa nhỏ chơi là vui.", "Hồi đó xóm này có mấy nhà hà, giờ đông quá trời."],
+      "hien": ["Thôi để mai tính, giờ nghỉ cái đã.", "Ăn miếng bánh nè, {t} mới làm."],
+      "thatha": ["Lúa bán rồi mà chưa đủ trả nợ phân.", "Mai {t} ra chợ sớm, có cần mua gì hông?"],
+      "coc": ["Mệt. Ngồi chút.", "Đừng hỏi."]
+    },
+
+    "pond": {
+      "*": ["Nước ao bữa nay trong ghê.", "Chiều nay câu được mấy con rô.", "Bèo lên dày quá, phải vớt bớt."],
+      "gia": ["Hồi nhỏ tụi {t} tắm ao này hoài.", "Ao này hồi xưa cá nhiều lắm."],
+      "nit": ["Con cá kìa! Bự quá trời!", "Má hổng cho xuống nước, đứng coi thôi.", "Ê, thả thuyền giấy hông mậy?"],
+      "coc": ["Ai thả rác xuống ao vậy?"],
+      "ron": ["Con cá này nó né cần câu {t} hoài."]
+    },
+
+    "kid": {
+      "*": ["Trễ học rồi, chạy lẹ!", "Ê, đợi tao với!", "Chơi bắn bi hông mậy?", "Mai thi rồi mà chưa học bài.", "Tao về méc má mày đó."]
+    },
+
+    "walk": {
+      "*": ["Đi đâu đó?", "Ra đầu xóm chút.", "Trời này đi bộ mệt ghê.", "Ghé nhà bà Sáu chút rồi dìa."],
+      "ron": ["Đi đâu mà vội vậy, bộ có hẹn hả?"],
+      "coc": ["Tránh ra chút."]
+    },
+
+    "cook": {
+      "*": ["Canh chua nấu xong rồi, dọn cơm đi.", "Hết nước mắm rồi, mai nhớ mua.", "Cá kho để lửa riu riu thôi.", "Ai lấy cái vá đâu rồi?"],
+      "nong": ["Đã nói đừng đụng nồi canh mà!"]
+    },
+    "eat": {
+      "*": ["Ăn đi, ăn cho no.", "Canh bữa nay ngon à.", "Bây ăn thêm chén nữa đi.", "Đưa chén nước mắm qua đây."],
+      "nit": ["Con hổng ăn rau đâu.", "Con ăn no rồi, đi chơi được chưa?"]
+    },
+    "tv": {
+      "*": ["Đổi kênh coi đá banh đi.", "Phim này coi hoài không chán.", "Mở nhỏ nhỏ, con nó học bài."],
+      "ron": ["Phim gì khóc hoài vậy trời."]
+    },
+    "chore": {"*": ["Lau nhà rồi, đừng có đạp dơ.", "Đồ phơi chưa khô nữa.", "Để gom đồ dơ đi giặt."]},
+    "read": {"*": ["Coi nè, giá lúa lên rồi.", "Ủa, ai nhắn gì nè.", "Thằng Hai gọi về chưa ta?"]},
+    "water": {"*": ["Tưới mấy chậu kiểng cái đã.", "Cây ớt này ra trái rồi nè."]},
+    "study": {"nit": ["Má ơi bài này khó quá.", "Năm nhân sáu… ba chục.", "Mai cô kiểm tra bài cũ."], "*": ["Học bài đi con."]},
+    "play": {"nit": ["Ba ơi chơi với con đi!", "Con thắng rồi nè!"], "*": ["Chơi nhỏ nhỏ thôi."]},
+    "exercise": {"*": ["Một, hai… mỏi quá trời.", "Tập chút cho khỏe."]},
+    "sleep": {"*": ["Ừm…", "Khò…", ""]},
+
+    "hear": {
+      "*": ["Ủa, con gì kêu vo ve vậy ta?", "Nghe muỗi rồi đó.", "Có muỗi hả?", "Vo ve gì ngoài tai vậy?"],
+      "hien": ["Chắc có muỗi, lát đốt nhang muỗi."],
+      "nong": ["Lại muỗi nữa hả?", "~Con muỗi quỷ, ở đâu ra nữa đây."],
+      "ron": ["Muỗi nó tới thăm nữa kìa.", "Muỗi đi tìm {t} nữa rồi."],
+      "gia": ["Muỗi đâu ra nhiều dữ vậy.", "Chiều xuống là muỗi ra."],
+      "nit": ["Má ơi, có muỗi!", "Con nghe muỗi kêu nè."],
+      "thatha": ["Chiều nào cũng có muỗi hết."],
+      "coc": ["Muỗi.", ""]
+    },
+
+    "scratch": {
+      "*": ["Ngứa quá trời.", "Mới bị chích chỗ này.", "Gãi muốn trầy da luôn.", "Muỗi gì mà dữ vậy trời.", "Sưng lên một cục rồi nè.",
+            "~Má mày, con muỗi này cắn tao hoài!", "~Má nó, chích gì chích dữ vậy!"],
+      "hien": ["Thôi kệ, gãi chút là hết.", ""],
+      "nong": ["Bộ máu {t} ngon lắm hả?", "~Con quỷ này, mày chích tao hoài vậy?"],
+      "ron": ["Bộ {t} ngon lắm hay sao mà bâu hoài?", "Muỗi xóm này mê {t} rồi."],
+      "gia": ["Già rồi da mỏng, muỗi chích là sưng liền.", "Muỗi gì mà dai quá."],
+      "nit": ["Má ơi, con bị muỗi chích nè!", "Ngứa quá, ngứa quá!", "Con muỗi quỷ!"],
+      "thatha": ["Bị chích rồi, chắc tại đứng gần lu nước.", "Mai phải đậy lu lại mới được."],
+      "coc": ["Ngứa.", "~Đồ quỷ."]
+    },
+
+    "swat": {
+      "*": ["Để {t} đập nó.", "Đứng yên đó!", "Nè!", "Chết nè mày!"],
+      "nong": ["~Con quỷ này, mày chích tao hoài vậy?", "~Má mày, đứng yên đó!"],
+      "ron": ["Coi {t} đập nè, một phát là xong.", "Lại đây, lại đây…"],
+      "gia": ["Để {t} đập cho.", "Đứng yên coi."],
+      "nit": ["Con đập nó nè!", "Ba ơi muỗi đậu trên tay ba kìa!"],
+      "coc": ["Chết đi.", ""],
+      "hien": ["Thôi đập đại cho rồi."]
+    },
+
+    "miss": {
+      "*": ["Đập muốn chết mà hổng trúng.", "Hụt nữa rồi.", "Ủa, đâu mất tiêu rồi?", "Nó lẹ dữ vậy.", "~Đậu má, đập hoài không trúng!"],
+      "nong": ["~Má nó, chạy đâu rồi!", "Gặp lại là biết tay."],
+      "ron": ["Muỗi này chắc có tập võ.", "Thôi tha cho mày lần này."],
+      "gia": ["Mắt kém rồi, đập hổng trúng.", "Già rồi tay chậm."],
+      "nit": ["Hụt rồi! Hụt rồi!", "Nó bay lên kia kìa!"],
+      "coc": ["~Cha nó.", "Hừ."],
+      "hien": ["Thôi kệ nó.", ""],
+      "thatha": ["Bay lẹ quá, đập hổng kịp."]
+    },
+
+    "hit": {
+      "*": ["Trúng rồi!", "Chết chưa mày.", "Coi như xong một con.", "Đó, cho chừa."],
+      "ron": ["Thấy tay nghề {t} chưa?", "Một phát ăn liền."],
+      "nong": ["~Cho mày chích nữa nè!"],
+      "nit": ["Con đập trúng rồi má ơi!"],
+      "gia": ["Trúng rồi. Đi rửa tay cái."],
+      "coc": ["Xong."],
+      "hien": ["Tội nghiệp, mà kệ."]
+    },
+
+    "bitten": {
+      "*": ["Ui, chích rồi.", "Có con gì đậu trên tay nè.", "Ngứa ngứa chỗ này."],
+      "hien": ["Thôi kệ, một con muỗi ăn bao nhiêu.", ""],
+      "thatha": ["Cho nó ăn chút đi, đuổi hoài cũng vậy.", ""],
+      "gia": ["", "Muỗi đó hả, kệ nó."],
+      "nong": ["~Bộ máu tao ngon lắm hả?", "Đậu đâu đó…"],
+      "nit": ["Á! Muỗi!"],
+      "coc": [""],
+      "ron": ["Ăn từ từ thôi, đừng có ăn hết nha mày."]
+    },
+
+    "lost": {
+      "*": ["Bay mất tiêu rồi.", "Thôi đi rồi.", "Ủa, nãy còn nghe vo ve mà? Đâu mất tiêu rồi?", "Tối đốt nhang muỗi mới được."],
+      "ron": ["Sợ {t} rồi đó."],
+      "nong": ["Trốn đâu rồi, gặp lại là biết tay."],
+      "gia": ["Thôi đi rồi, ngồi nghỉ."],
+      "coc": [""]
+    },
+
+    "night_hear": {
+      "*": ["Ừm… muỗi…", "Ai giăng mùng chưa vậy?", "Vo ve hoài ngủ hổng được.", "~Má nó, giờ này còn cắn."],
+      "nit": ["Má ơi, muỗi…"],
+      "gia": ["Đốt nhang muỗi giùm cái."]
+    }
+  },
+
+  "chat": [
+    ["Ăn cơm chưa?", "Mới ăn rồi. Bên đó ăn chưa?"],
+    ["Lúa bên đó sao rồi?", "Cũng được, mà rầy nhiều quá."],
+    ["Mai đi đám giỗ hông?", "Đi chớ, bà con mà."],
+    ["Chợ bữa nay có gì hông?", "Cá rô đồng nhiều lắm, mà mắc."],
+    ["Thằng Hai dìa chưa?", "Chưa, nói Tết mới dìa."],
+    ["Trời này chắc mưa quá.", "Mưa thì đỡ, khô quá rồi."],
+    ["Bữa nay nóng dữ.", "Ừ, ngồi không cũng đổ mồ hôi."],
+    ["Tối coi đá banh hông?", "Coi chớ, tối nay đội nhà đá."],
+    ["Muỗi nhiều quá ha.", "Mấy cái lu ngoài sân đó, phải đậy lại."],
+    ["Con bây học lớp mấy rồi?", "Lớp năm rồi, lẹ ghê."],
+    ["Cho mượn cái cuốc chút nha.", "Lấy đi, để ngoài hè đó."],
+    ["Ông Bảy đỡ bệnh chưa?", "Đỡ rồi, bữa qua còn ra đồng."],
+    ["Nghe nói phân lên giá nữa.", "Lên hoài, làm hổng có lời."],
+    ["Chiều đi câu hông?", "Đi, ra ao sau nhà ông Sáu."],
+    ["~Thằng quỷ, nợ tao ly cà phê chưa trả.", "Mai, mai trả. Hối hoài."],
+    ["Tao nói rồi, đừng bán lúa sớm.", "Biết vậy hồi đó nghe mày."],
+    ["Bên đó có nước mắm hông, cho xin chút.", "Có, chờ chút lấy cho."],
+    ["Xe bây sửa xong chưa?", "Chưa, thằng thợ nó hẹn hoài."],
+    ["Mấy bữa nay hổng thấy ra chợ.", "Đau lưng, nằm nhà mấy bữa."],
+    ["Nhà bây nuôi heo nữa hả?", "Nuôi chơi hai con, Tết bán."]
+  ]
+}
