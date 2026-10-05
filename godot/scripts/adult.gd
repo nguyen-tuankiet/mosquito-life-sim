@@ -2002,10 +2002,10 @@ const HUMAN_CTX := {"cook": "cook", "eat": "eat", "tv": "tv", "chore": "chore", 
 	"play": "play", "exercise": "exercise", "sleep": "sleep", "walk": "walk", "stand": "walk"}
 const RES_CTX := {"field": "field", "market": "market_buy", "yard": "yard", "sit": "sit", "pond": "pond", "school": "kid"}
 
-## Tên gọi trong thông báo: con vật có tên → "Nguyên (chó)", người → tên/vai như cũ.
+## Tên gọi trong thông báo: con vật có tên → chỉ tên (vd. "Nguyên"), người → tên/vai như cũ.
 func _who(h: Host) -> String:
 	if h.def.has("nick"):
-		return "%s (%s)" % [h.def["nick"], String(h.def["name"]).to_lower()]
+		return String(h.def["nick"])
 	return String(h.def["name"])
 
 func _assign_persona(h: Host) -> void:
@@ -2503,7 +2503,7 @@ func draw_hud(hud: Node) -> void:
 	else:
 		_draw_legacy_map(hud)
 	var pp := body.global_position
-	# tên con vật trên đầu (chủ dự án đặt): tên to + loài nhỏ, đổi màu theo mức cảnh giác; trong 15 m
+	# tên con vật trên đầu (chủ dự án đặt): chỉ tên, đổi màu theo mức cảnh giác; trong 15 m
 	for h in hosts:
 		if h.human or h.away or not h.def.has("nick"):
 			continue
@@ -2516,8 +2516,7 @@ func draw_hud(hud: Node) -> void:
 			continue
 		var ta := clampf(1.4 - td / 15.0, .35, 1.0)
 		var tc := Color(1, 1, 1, ta).lerp(Color(1, .8, .3, ta), clampf(h.alert / .5, 0.0, 1.0)).lerp(Color(1, .3, .25, ta), clampf((h.alert - .5) / .5, 0.0, 1.0))
-		hud.text(String(h.def["nick"]), ts + Vector2(0, -22), 20, tc, 1, true)
-		hud.text(String(h.def["name"]).to_lower(), ts + Vector2(0, -5), 13, Color(.92, .95, .9, ta * .85), 1)
+		hud.text(String(h.def["nick"]), ts + Vector2(0, -10), 20, tc, 1, true)
 	# bong bóng thoại (godot/scripts/talk.gd): gần trước, bỏ bong bóng chồng lên nhau, tối đa 4
 	var talkers: Array = []
 	for h in hosts:
