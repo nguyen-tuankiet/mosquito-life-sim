@@ -781,6 +781,7 @@ const VILLAGE_SHOTS := {
 	"market": [8.5, Vector2(262, 262), 1.7, 0.05, -.06, 1.1], "market_top": [8.5, Vector2(258, 268), 9.0, 0.0, -.5, 1.4],
 	"evening": [19.3, Vector2(318, 128), 1.8, PI - .15, -.08, 1.2], "field": [8.0, Vector2(330, 297), 1.8, -PI / 2.0 + .1, -.06, 1.1],
 	"evening2": [19.3, Vector2(319, 121), 1.6, 0.0, -.05, 1.1],
+	"pets": [10.0, Vector2(302.5, 76.5), 1.1, PI / 2.0 - .85, -.14, .9],
 	"lane": [9.5, Vector2(296, 121), 1.5, -PI / 2.0 + .05, -.05, 1.0], "hamlet": [16.0, Vector2(252, 330), 1.8, PI / 2.0 + .35, -.06, 1.0],
 }
 func _village_shot(k: String) -> void:
@@ -797,6 +798,7 @@ func _village_shot(k: String) -> void:
 	adult.view_pitch = c[4]
 	adult.debug_cam_dist = c[5]
 	adult._update_zone(adult.body.global_position)
+	hud.banner_t = 99.0       # ảnh chụp: không che bằng bảng thông báo khu vực
 	adult.snap_residents()
 	var bp: Vector3 = adult.body.global_position
 	for h in adult.hosts:     # cho người gần đó nói ngay để ảnh có bong bóng thoại
@@ -1032,6 +1034,12 @@ func _test_village() -> void:
 		for i in range(r2.size() - 1): dlen += (r2[i] as Vector2).distance_to(r2[i + 1])
 		var straight: float = (sample.def["tg"]["in"] as Vector2).distance_to(sample.def["tg"]["field"])
 		_tv(r2.size() > 3 and dlen < straight * 2.5, "đường ra đồng theo đường làng: %d điểm, %.0f m (đường chim bay %.0f m)" % [r2.size(), dlen, straight])
+	# 7d. tên con vật (chủ dự án đặt)
+	var names := {}
+	for h in adult.hosts:
+		if h.def.has("nick"): names[h.k] = h.def["nick"]
+	var want_n := {"dog": "Nguyên", "hen": "Trọng", "cow": "Vy", "cat": "Nhi", "mouse": "Thức", "bird": "Hân", "pig": "Giang"}
+	_tv(names == want_n, "tên con vật: %s" % names)
 	# 8. nguồn mật & chỗ ẩn
 	_tv(adult.flowers.size() >= 30 and adult.bushes.size() >= 100, "%d hoa, %d chỗ ẩn nấp" % [adult.flowers.size(), adult.bushes.size()])
 	print("[village] %s — %d lỗi" % ["ĐẠT" if _tv_fail == 0 else "CHƯA ĐẠT", _tv_fail])
